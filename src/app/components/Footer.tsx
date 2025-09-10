@@ -154,11 +154,9 @@ const Footer = () => {
           <p>
             Designed and developed by{" "}
             <a href="#" className="hover:text-white font-semibold cursor-pointer">
-              Ashwani Kushwaha
-            </a>{" "} &amp;{" "}
-            <a href="#" className="hover:text-white font-semibold cursor-pointer">
-              Akanksha Pandey
+              Cognitive Geeks 
             </a>{" "}
+           
             {/* and supported by{" "}
             <Link href="#" className="hover:text-white font-semibold">
               CCC
