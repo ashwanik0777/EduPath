@@ -74,40 +74,34 @@ type MenuIconProps = {
 // Navigation configuration data
 const NAVIGATION_CONFIG: NavMenu[] = [
   {
-    key: "nss-home",
+    key: "home",
     label: "Home",
     icon: Home,
     directPath: "/",
   },
   {
-    key: "about-nss",
-    label: "About NSS",
+    key: "about",
+    label: "About",
     icon: User,
-    directPath: "/AboutNSS",
+    directPath: "/about",
   },
   {
-    key: "whos-who",
-    label: "Who's Who",
+    key: "Career Assessment",
+    label: "Career Assessment",
     icon: Users,
-    directPath: "/Who'sWho",
+    directPath: "/careerAssessment",
   },
   {
-    key: "nss-news",
-    label: "News",
+    key: "Government college",
+    label: "Government College",
     icon: FileText,
-    directPath: "News",
+    directPath: "/governmentCollege",
   },
   {
-    key: "nss-events",
-    label: "Events",
+    key: "StudyResources",
+    label: "Study Resources",
     icon: Calendar,
-    directPath: "/Events",
-  },
-  {
-    key: "nss-gallery",
-    label: "Photogallery",
-    icon: Camera,
-    directPath: "/PhotoGallery",
+    directPath: "/StudyResources",
   },
 ];
 
