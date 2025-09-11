@@ -343,13 +343,22 @@ const Navbar: React.FC = () => {
         <div className="px-4 md:px-">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
+            <div className="flex items-center space-x-8 ml-4">
             <Link href="/" className="flex items-center" aria-label="GBU Home">
               <img
-                src="/logo.svg"
-                alt="GBU Logo"
+                src="/J&KLogo.png"
+                alt="J&K Government Logo"
                 className="h-12 w-auto"
               />
             </Link>
+            <Link href="/" className="flex items-center" aria-label="GBU Home">
+              <img
+                src="/EduPathLogo.png"
+                alt="Edupath Logo"
+                className="h-12 w-auto rounded-full"
+              />
+            </Link>
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center">
