@@ -18,13 +18,22 @@ const Footer = () => {
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Logo and About */}
         <div>
+          <div className="flex space-x-4">
           <Link href="/" className="flex items-center" aria-label="GBU Home">
               <img
-                src="/logo.svg"
-                alt="GBU Logo"
-                className="h-14 w-auto bg-white rounded-lg py-1 px-2"
+                src="/J&KLogo.png"
+                alt="EduPath Logo"
+                className="h-14 w-auto bg-white rounded-full py-1 px-1"
               />
             </Link>
+          <Link href="/" className="flex items-center" aria-label="GBU Home">
+              <img
+                src="/EduPathLogo.png"
+                alt="EduPath Logo"
+                className="h-14 w-auto rounded-full py-1 px-1"
+              />
+            </Link>
+            </div>
           <p className="text-gray-400 text-sm mt-4">
             EduPath is a leading educational platform dedicated to providing high-quality learning resources and courses to students worldwide. Our mission is to empower learners with the skills and knowledge they need to succeed in their academic and professional journeys.
           </p>
@@ -92,15 +101,15 @@ const Footer = () => {
         {/* Contact */}
         <section aria-label="Contact information">
           <h3 className="font-semibold text-lg mb-3">Contact Us</h3>
-          <address className="not-italic text-gray-300 text-sm">
+          {/* <address className="not-italic text-gray-300 text-sm">
             <strong>Address:</strong>
             <br />
-            Gautam Buddha University
+            EduPath
             <br />
             Greater Noida, Uttar Pradesh
             <br />
             PIN: 201312
-          </address>
+          </address> */}
           <p className="mt-2 text-sm text-gray-300">
             <strong>Phone:</strong>{" "}
             <a
@@ -115,7 +124,7 @@ const Footer = () => {
               href="mailto:info@gbu.ac.in"
               className="hover:text-orange-500"
             >
-              info@gbu.ac.in
+              eduPath@edu.in
             </a>
           </p>
           <div className="mt-4">
@@ -147,7 +156,7 @@ const Footer = () => {
 
       {/* Bottom Line */}
       <div className="mt-6 border-t border-gray-700 pt-4 text-sm text-gray-400 flex flex-col md:flex-row justify-between">
-        <p>© 2025 Gautam Buddha University. All rights reserved.</p>
+        <p>© 2025 EduPath. All rights reserved.</p>
         <div>
           <p>
             Designed and developed by{" "}
