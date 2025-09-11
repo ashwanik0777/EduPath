@@ -1,12 +1,21 @@
-import React from 'react'
+import HeroSection from "@/app/components/about/HeroSection"
+import MissionVision from "@/app/components/about/MissionVision"
+import Journey from "@/app/components/about/Journey"
+import Values from "@/app/components/about/Values"
+import Achievements from "@/app/components/about/Achievements"
+import TeamSection from "@/app/components/about/TeamSection"
+import CTASection from "@/app/components/about/CTASection"
 
-const About = () => {
+export default function AboutPage() {
   return (
-    <div className='min-h-screen p-8'>
-      <h1>About Us</h1>
-      <p>Welcome to the About page of our application!</p>
-    </div>
+    <main>
+      <HeroSection />
+      <MissionVision />
+      <Journey />
+      <Values />
+      <Achievements />
+      <TeamSection />
+      <CTASection />
+    </main>
   )
 }
-
-export default About

@@ -101,7 +101,7 @@ const NAVIGATION_CONFIG: NavMenu[] = [
     key: "StudyResources",
     label: "Study Resources",
     icon: Calendar,
-    directPath: "/StudyResources",
+    directPath: "/studyResources",
   },
 ];
 
