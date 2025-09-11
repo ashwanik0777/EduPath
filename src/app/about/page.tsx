@@ -1,4 +1,4 @@
-import HeroSection from "@/app/components/about/HeroSection"
+import HeroSection from "@/app/components/HeroSection"
 import MissionVision from "@/app/components/about/MissionVision"
 import Journey from "@/app/components/about/Journey"
 import Values from "@/app/components/about/Values"
