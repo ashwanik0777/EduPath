@@ -1,14 +1,20 @@
-import React from 'react'
+"use client"
+import HeroSection from "../components/HeroSection"
+import SkillCategories from "@/app/components/studyResources/SkillCategories"
+import FeaturedResources from "@/app/components/studyResources/FeaturedResources"
+import FreeTools from "@/app/components/studyResources/FreeTools"
+import TestimonialsResources from "@/app/components/studyResources/TestimonialsResources"
+import CTAResources from "@/app/components/studyResources/CTAResources"
 
-const StudyResources = () => {
+export default function StudyResourcesPage() {
   return (
-    <div className='min-h-screen p-8 bg-gray-50'>
-      <h1>Study Resources</h1>
-      <p>Welcome to the Study Resources page. Here you will find various materials to aid your learning.</p>
-      {/* Add more content as needed */}
-
-    </div>
+    <main>
+      <HeroSection />
+      <SkillCategories />
+      <FeaturedResources />
+      <FreeTools />
+      <TestimonialsResources />
+      <CTAResources />
+    </main>
   )
 }
-
-export default StudyResources
