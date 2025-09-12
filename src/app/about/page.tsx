@@ -9,7 +9,11 @@ import CTASection from "@/app/components/about/CTASection"
 export default function AboutPage() {
   return (
     <main>
-      <HeroSection />
+      <HeroSection 
+  title="About CareerGuide" 
+  subtitle="Empowering students & professionals through world-class career guidance, assessments, and counselling services." 
+  bgTheme={2} 
+/>
       <MissionVision />
       <Journey />
       <Values />
