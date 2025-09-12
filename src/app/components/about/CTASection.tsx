@@ -1,16 +1,22 @@
+"use client"
+import { ArrowRight } from "lucide-react"
+
 export default function CTASection() {
   return (
-    <section className="py-20 bg-gradient-to-r from-[#3F3D56] to-[#6C63FF] text-white text-center">
+    <section className="py-20 bg-[#3F3D56] text-white text-center">
       <div className="max-w-3xl mx-auto px-6">
         <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Career?</h2>
-        <p className="mb-8 text-lg">
+        <p className="mb-8 text-lg max-w-xl mx-auto">
           Join thousands of students & professionals who have found clarity and success with CareerGuide.
         </p>
-        <a 
-          href="/contact" 
-          className="px-8 py-3 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-300 transition"
+        <a
+          href="/contact"
+          className="inline-flex items-center justify-center px-8 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow-md
+            hover:bg-yellow-300 hover:scale-105 transition transform duration-300 ease-in-out"
+          aria-label="Get Started Today"
         >
           Get Started Today
+          <ArrowRight className="ml-3 w-5 h-5" />
         </a>
       </div>
     </section>
