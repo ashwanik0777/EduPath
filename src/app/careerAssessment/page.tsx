@@ -10,7 +10,11 @@ import CTASection from "@/app/components/careerAssessment/CTASection"
 export default function CareerAssessmentPage() {
   return (
     <main>
-      <HeroSection />
+      <HeroSection 
+        title="Discover Your Ideal Career Path"
+        subtitle="Take our comprehensive career assessment to find the best fit for your skills and interests."
+        bgTheme={4}
+        />
       <WhyAssessment />
       <AssessmentsList />
       <HowItWorks />
