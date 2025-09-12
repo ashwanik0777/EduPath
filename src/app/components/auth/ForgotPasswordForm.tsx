@@ -10,7 +10,7 @@
 // import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/components/ui/card";
 // import { useToast } from "@/hooks/use-toast";
 // import { Mail, Lock, ArrowLeft, CheckCircle2 } from "lucide-react";
-// import { apiRequest } from "@/lib/queryClient";
+// import { apiRequest } from "@/app/lib/queryClient";
 
 // // Form validation schema
 // const forgotPasswordSchema = z.object({
