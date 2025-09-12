@@ -9,7 +9,11 @@ import CTAResources from "@/app/components/studyResources/CTAResources"
 export default function StudyResourcesPage() {
   return (
     <main>
-      <HeroSection />
+      <HeroSection 
+        title="Empower Your Learning Journey"
+        subtitle="Discover a wealth of resources to enhance your skills and knowledge."
+       bgTheme={10}
+      />
       <SkillCategories />
       <FeaturedResources />
       <FreeTools />
