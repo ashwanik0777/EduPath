@@ -79,8 +79,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(data.message || "Login failed")
       }
 
-      setUser(data.user)
-      router.push("/dashboard")
+      await checkAuth();
+      router.push("/studentDashboard")
     } catch (error) {
       throw error
     } finally {
@@ -106,8 +106,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(data.message || "Registration failed")
       }
 
-      setUser(data.user)
-      router.push("/dashboard")
+      await checkAuth();
+      router.push("/studentDashboard")
     } catch (error) {
       throw error
     } finally {

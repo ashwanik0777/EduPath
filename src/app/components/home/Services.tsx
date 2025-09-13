@@ -47,7 +47,7 @@ export default function Services() {
               <h3 className="font-bold text-[#2E358B] text-lg mb-1 text-center">{s.title}</h3>
               <p className="text-sm text-gray-700 text-center mb-2">{s.desc}</p>
               <div className="flex justify-center items-baseline mb-1">
-                <span className="text-[#C62862] text-base font-bold">{s.price.split(" ")}</span>
+                {/* <span className="text-[#C62862] text-base font-bold">{s.price.split(" ")}</span> */}
                 <span className="ml-2 text-[#2E969A] text-xl font-bold">{s.price.split(" ")[4]}</span>
               </div>
               <span className="block text-xs text-[#2E358B] mb-3 text-center">{s.audience}</span>

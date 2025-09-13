@@ -43,7 +43,7 @@ export default function Assessments() {
               </div>
               <h3 className="font-semibold text-[#2E358B] text-lg mb-1 text-center">{t.name}</h3>
               <p className="text-gray-600 text-center mb-1">{t.details}</p>
-              <p className="text-[#CD3A99] font-bold text-center mb-1">{t.price}</p>
+              {/* <p className="text-[#CD3A99] font-bold text-center mb-1">{t.price}</p> */}
               <span className="block text-xs text-gray-500 mb-5 text-center">{t.target}</span>
               <button
                 className="mt-auto px-4 py-2 rounded-xl bg-[#2E358B] text-white font-semibold shadow-sm

@@ -1,6 +1,6 @@
 "use client";
  import { useState } from "react";
-import { Link } from "wouter";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -39,6 +39,10 @@ const registerSchema = z.object({
   ], {
     errorMap: () => ({ message: "Please select your academic level" }),
   }),
+  dob: z.string().min(8, "Please enter your date of birth"),
+  gender: z.enum(["male", "female", "other"]).refine(val => !!val, {
+    message: "Please select your gender",
+  }),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -58,17 +62,19 @@ export default function Register() {
       password: "",
       fullName: "",
       academicLevel: undefined,
+      dob: "",
+      gender: undefined,
     },
     mode: "onChange",
   });
 
   const validateStep1 = () => {
-    const { fullName, email, password } = form.getValues();
-    const isValid = fullName.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && password.length >= 6;
+    const { fullName, email, password, dob, gender } = form.getValues();
+    const isValid = fullName.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && password.length >= 6 && dob.length >= 8 && gender;
     if (isValid) {
       setStep(2);
     } else {
-      form.trigger(["fullName", "email", "password"]);
+      form.trigger(["fullName", "email", "password", "dob", "gender"]);
     }
   };
 
@@ -76,9 +82,17 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      // Simulate backend registration delay
-      await new Promise((res) => setTimeout(res, 1500));
-      setSuccess(true);
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        setError(err.message || (err.errors && err.errors[0]?.message) || "Registration failed. Please try again.");
+      } else {
+        setSuccess(true);
+      }
     } catch (e: any) {
       setError(e.message || "Registration failed. Please try again.");
     } finally {
@@ -157,6 +171,39 @@ export default function Register() {
                         <FormControl>
                           <Input {...field} placeholder="Create a password (min. 6 characters)" type="password" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
                         </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )} />
+                  <FormField control={form.control} name="dob"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-indigo-200 flex items-center">
+                          <User className="h-4 w-4 mr-2 opacity-70" /> Date of Birth
+                        </FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="DD/MM/YYYY" type="text" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
+                        </FormControl>
+                        <FormMessage className="text-red-400" />
+                      </FormItem>
+                    )} />
+                  <FormField control={form.control} name="gender"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-indigo-200 flex items-center">
+                          <User className="h-4 w-4 mr-2 opacity-70" /> Gender
+                        </FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500">
+                              <SelectValue placeholder="Select your gender" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-indigo-900 border-indigo-700 text-indigo-200">
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage className="text-red-400" />
                       </FormItem>
                     )} />

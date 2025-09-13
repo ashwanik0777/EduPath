@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Link } from "wouter";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import { IoLogoGoogle, IoLogoFacebook, IoLogoTwitter, IoLogoApple } from "react-
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -30,15 +30,30 @@ export default function Login() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  // Pure UI submission
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setError("");
-    setSuccess(true);
+    setSuccess(false);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) {
+        setError(result.message || "Login failed. Please try again.");
+      } else {
+        setSuccess(true);
+        window.location.href = "/studentDashboard";
+      }
+    } catch (e: any) {
+      setError(e.message || "Login failed. Please try again.");
+    }
   };
 
   return (
@@ -93,9 +108,9 @@ export default function Login() {
                 <Input 
                   placeholder="Enter your email"
                   className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500"
-                  {...form.register("username")}
+                  {...form.register("email")}
                 />
-                <span className="text-red-400">{form.formState.errors.username?.message}</span>
+                <span className="text-red-400">{form.formState.errors.email?.message}</span>
               </div>
               <div>
                 <div className="flex justify-between items-center mb-1">

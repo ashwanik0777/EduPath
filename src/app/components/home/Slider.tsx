@@ -13,7 +13,7 @@ const heroSlides = [
     subtitle: "Empowering Students Through Service",
     description:
       "Join thousands of students making a difference in their communities through meaningful volunteer work and social service initiatives.",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUK1wl0QZRv9zqnpwlBOQC5xSQ-Tm9EXkPOEsHg5-xxAEXUtJ6ryLEpXC2GgzKx5Od6_E&usqp=CAU",
+    image: "https://teachfind.com/wp-content/uploads/2024/10/student-collaboration-project.jpg",
     cta: { text: "Join NSS Today", href: "/register" },
   },
   {
@@ -31,7 +31,7 @@ const heroSlides = [
     subtitle: "Creating Lasting Change",
     description:
       "Be part of initiatives that create real, measurable impact in education, health, environment, and social welfare.",
-    image: "https://baobinhduong.vn/image/fckeditor/upload/2023/20230614/images/mohinh%20(2).jpg",
+    image: "https://annenberg.usc.edu/sites/default/files/styles/article_full_content_1240x600/public/Brenda%20Gonzalez%20-%20Youth%20Activism%20is%20Creating%20Long%20Lasting%20Change.jpg?itok=MhYrd6o1",
     cta: { text: "See Our Impact", href: "/about" },
   },
 ]
