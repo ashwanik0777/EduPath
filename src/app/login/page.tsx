@@ -69,7 +69,7 @@ export default function Login() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-indigo-800 drop-shadow-md">EduPath</h1>
-              <p className="text-sm text-indigo-700">LEARNING PLATFORM</p>
+              <p className="text-sm text-indigo-700">Counseling PLATFORM</p>
             </div>
           </div>
           <div className="mb-16">
@@ -94,7 +94,7 @@ export default function Login() {
           <div className="mb-8 text-center md:text-left">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">Welcome Back!</h2>
             <p className="text-indigo-300 text-sm">
-              Sign in to continue to your personalized learning journey
+              Sign in to continue to your personalized Counseling journey
             </p>
           </div>
 

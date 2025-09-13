@@ -120,9 +120,9 @@ export default function Register() {
         {/* ... */}
         <div className="w-full max-w-md mt-16 md:mt-0">
           <div className="mb-8 text-center md:text-left">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">Join Our Learning Community</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">Join Our Counseling Community</h2>
             <p className="text-indigo-300 text-sm">
-              Create your account to start your personalized learning journey
+              Create your account to start your personalized journey
             </p>
           </div>
           <div className="mb-8">
@@ -291,7 +291,7 @@ export default function Register() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-indigo-800 drop-shadow-md">EduPath</h1>
-              <p className="text-sm text-indigo-700">LEARNING PLATFORM</p>
+              <p className="text-sm text-indigo-700">Counseling PLATFORM</p>
             </div>
           </div>
           <div className="mb-16 transition-transform duration-500 hover:translate-x-2">
@@ -299,7 +299,7 @@ export default function Register() {
               Get Started Today
             </h2>
             <p className="text-indigo-700 text-lg mb-8">
-              Join thousands of students unlocking their full potential with personalized AI-powered learning
+              Join thousands of students unlocking their full potential with personalized AI-powered Counseling
             </p>
             <Link href="/login">
               <Button variant="outline" className="h-12 px-6 bg-white/80 hover:bg-white text-indigo-800 border-indigo-300 hover:border-indigo-500 font-medium rounded-lg w-40 shadow-md btn-3d">
@@ -313,8 +313,8 @@ export default function Register() {
                 <Brain className="h-7 w-7 text-indigo-700" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-indigo-800">AI-Powered Learning</h3>
-                <p className="text-sm text-indigo-700">Personalized study plans that adapt to your learning style</p>
+                <h3 className="text-lg font-semibold text-indigo-800">AI-Powered Counseling</h3>
+                <p className="text-sm text-indigo-700">Personalized study plans that adapt to your Counseling style</p>
               </div>
             </div>
             <div className="flex items-center gap-4 transition-transform duration-500 hover:-translate-y-1">
@@ -323,7 +323,7 @@ export default function Register() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-indigo-800">Progress Analytics</h3>
-                <p className="text-sm text-indigo-700">Track your learning journey with detailed data insights</p>
+                <p className="text-sm text-indigo-700">Track your Counseling journey with detailed data insights</p>
               </div>
             </div>
             <div className="flex items-center gap-4 transition-transform duration-500 hover:-translate-y-1">
@@ -332,7 +332,7 @@ export default function Register() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-indigo-800">Smart Recommendations</h3>
-                <p className="text-sm text-indigo-700">Data-driven suggestions based on your learning patterns</p>
+                <p className="text-sm text-indigo-700">Data-driven suggestions based on your Counseling patterns</p>
               </div>
             </div>
           </div>

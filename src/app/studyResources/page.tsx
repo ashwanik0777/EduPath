@@ -10,7 +10,7 @@ export default function StudyResourcesPage() {
   return (
     <main>
       <HeroSection 
-        title="Empower Your Learning Journey"
+        title="Empower Your Counseling Journey"
         subtitle="Discover a wealth of resources to enhance your skills and knowledge."
        bgTheme={10}
       />

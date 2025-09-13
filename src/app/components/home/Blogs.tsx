@@ -25,7 +25,7 @@ const blogs = [
   },
   {
     title: "How To Reinvent Training With AI",
-    desc: "E-learning reinvented using AI.",
+    desc: "E-Counseling reinvented using AI.",
     img: "/blog.jpg",
     date: "Sep 10, 2025",
     category: "Technology",

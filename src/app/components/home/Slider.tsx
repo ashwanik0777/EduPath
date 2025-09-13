@@ -9,30 +9,30 @@ import { cn } from "@/app/lib/utils"
 const heroSlides = [
   {
     id: 1,
-    title: "National Service Scheme",
-    subtitle: "Empowering Students Through Service",
+    title: "Career Counseling Portal",
+    subtitle: "Guiding Your Future Path",
     description:
-      "Join thousands of students making a difference in their communities through meaningful volunteer work and social service initiatives.",
+      "Discover your true potential and find the perfect career path with our comprehensive counseling services and expert guidance.",
     image: "https://teachfind.com/wp-content/uploads/2024/10/student-collaboration-project.jpg",
-    cta: { text: "Join NSS Today", href: "/register" },
+    cta: { text: "Start Your Journey", href: "/register" },
   },
   {
     id: 2,
-    title: "Build Leadership Skills",
-    subtitle: "Develop Through Service",
+    title: "Personalized Guidance",
+    subtitle: "Tailored Career Solutions",
     description:
-      "Enhance your leadership abilities, communication skills, and social awareness while contributing to society's betterment.",
+      "Get one-on-one counseling sessions with experienced career advisors who understand your unique strengths and aspirations.",
     image: "https://www.sessionlab.com/wp-content/uploads/Leadership-training-workshop-discussion.jpg",
-    cta: { text: "Explore Opportunities", href: "/activities" },
+    cta: { text: "Book Consultation", href: "/counseling" },
   },
   {
     id: 3,
-    title: "Community Impact",
-    subtitle: "Creating Lasting Change",
+    title: "Shape Your Future",
+    subtitle: "Make Informed Decisions",
     description:
-      "Be part of initiatives that create real, measurable impact in education, health, environment, and social welfare.",
+      "Access comprehensive career assessments, industry insights, and educational pathways to make confident career choices.",
     image: "https://annenberg.usc.edu/sites/default/files/styles/article_full_content_1240x600/public/Brenda%20Gonzalez%20-%20Youth%20Activism%20is%20Creating%20Long%20Lasting%20Change.jpg?itok=MhYrd6o1",
-    cta: { text: "See Our Impact", href: "/about" },
+    cta: { text: "Explore Careers", href: "/careers" },
   },
 ]
 

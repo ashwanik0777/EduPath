@@ -7,7 +7,7 @@ export default function CTAResources() {
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-3xl font-extrabold mb-6 drop-shadow-lg flex justify-center items-center gap-3">
           <Rocket className="w-8 h-8" />
-          Start Learning Today!
+          Start Counseling Today!
         </h2>
         <p className="mb-10 text-lg max-w-lg mx-auto leading-relaxed">
           Unlock access to skill resources, exam prep, and career guidance — all for free.

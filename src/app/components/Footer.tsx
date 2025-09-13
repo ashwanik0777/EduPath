@@ -35,7 +35,7 @@ const Footer = () => {
             </Link>
             </div>
           <p className="text-gray-400 text-sm mt-4">
-            EduPath is a leading educational platform dedicated to providing high-quality learning resources and courses to students worldwide. Our mission is to empower learners with the skills and knowledge they need to succeed in their academic and professional journeys.
+            EduPath is a leading educational platform dedicated to providing high-quality Counseling resources and courses to students worldwide. Our mission is to empower learners with the skills and knowledge they need to succeed in their academic and professional journeys.
           </p>
          <div
       className="flex gap-4 mt-4 text-xl"

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "EduPath",
-  description: "Your personalized learning journey starts here.",
+  description: "Your personalized Counseling journey starts here.",
 };
 
 export default function RootLayout({

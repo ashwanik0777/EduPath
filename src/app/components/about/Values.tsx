@@ -9,7 +9,7 @@ const values = [
   },
   {
     title: "Innovation",
-    desc: "We bring the latest tools, assessments, and learning methods.",
+    desc: "We bring the latest tools, assessments, and Counseling methods.",
     icon: Zap,
   },
   {

@@ -5,11 +5,11 @@ const tools = [
   {
     name: "NCERT PDFs",
     desc: "Free NCERT books & solutions for all classes",
-    details: "Download comprehensive textbooks to boost your learning",
+    details: "Download comprehensive textbooks to boost your Counseling",
     icon: BookOpen,
   },
   {
-    name: "YouTube Learning Channels",
+    name: "YouTube Counseling Channels",
     desc: "Top free channels for JEE, NEET, UPSC",
     details: "Stay updated with expert tutorials and live sessions",
     icon: Youtube,

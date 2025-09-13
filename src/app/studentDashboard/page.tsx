@@ -26,7 +26,7 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-brand-purple">Welcome back, {user.name}!</h1>
-            <p className="text-muted-foreground mt-2">Continue your learning journey and explore new opportunities</p>
+            <p className="text-muted-foreground mt-2">Continue your Counseling journey and explore new opportunities</p>
           </div>
           <Button
             variant="outline"
@@ -41,7 +41,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="card-hover">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Learning Progress</CardTitle>
+              <CardTitle className="text-sm font-medium">Counseling Progress</CardTitle>
               <TrendingUp className="h-4 w-4 text-brand-purple" />
             </CardHeader>
             <CardContent>
@@ -86,13 +86,13 @@ export default function DashboardPage() {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Current Learning */}
+          {/* Current Counseling */}
           <div className="lg:col-span-2">
             <Card className="card-hover">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5 text-brand-purple" />
-                  Continue Learning
+                  Continue Counseling
                 </CardTitle>
                 <CardDescription>Pick up where you left off</CardDescription>
               </CardHeader>
