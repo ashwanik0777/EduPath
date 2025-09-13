@@ -1,4 +1,4 @@
-import { Card, CardContent } from "../ui/card"
+import { Card, CardContent } from "@/app/components/ui/card"
 import { User } from "lucide-react"
 
 const counsellors = [
