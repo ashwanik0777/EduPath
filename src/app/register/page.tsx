@@ -37,7 +37,7 @@ const registerSchema = z.object({
     "graduate", 
     "postgraduate"
   ], {
-    required_error: "Please select your academic level",
+    errorMap: () => ({ message: "Please select your academic level" }),
   }),
 });
 
