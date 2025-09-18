@@ -1,4 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+// Map step keys to routes
+const stepRoutes: Record<string, string> = {
+	profile: "/studentDashboard", // or "/studentDashboard/profile"
+	psychometric: "/careerAssessment", // or wherever the test is
+	career: "/studentDashboard", // e.g., recommendations page
+	courses: "/studentDashboard", // e.g., courses page
+	gov_colleges: "/governmentCollege",
+	preferred_colleges: "/studentDashboard", // e.g., preferred colleges page
+	scholarships: "/studentDashboard", // e.g., scholarships page
+	counseling: "/studentDashboard", // e.g., counseling booking page
+	finalize: "/studentDashboard", // e.g., finalization page
+};
 import { motion } from "framer-motion";
 import { CheckCircle, Lock, Loader2, ArrowRight, Info } from "lucide-react";
 import { Dialog } from "@/app/components/ui/dialog";
@@ -61,27 +74,70 @@ const stepsData = [
 	},
 ];
 
-// Example: Replace with backend data fetch later
-const initialStepStatus = [
-	{ status: "completed", completed_on: "2025-09-10", details: "Profile filled", counselor_notes: "Good info" },
-	{ status: "completed", completed_on: "2025-09-12", details: "Test taken, key interests: Design, Business", counselor_notes: "Suggested BBA/B.Des" },
-	{ status: "completed", completed_on: "2025-09-13", details: "Careers: Engineering, Design", counselor_notes: "" },
-	{ status: "in_progress", completed_on: null, details: "", counselor_notes: "" },
-	{ status: "locked", completed_on: null, details: "", counselor_notes: "" },
-	{ status: "locked", completed_on: null, details: "", counselor_notes: "" },
-	{ status: "locked", completed_on: null, details: "", counselor_notes: "" },
-	{ status: "locked", completed_on: null, details: "", counselor_notes: "" },
-	{ status: "locked", completed_on: null, details: "", counselor_notes: "" },
-];
+
+
 
 
 export default function ProgressTracker() {
-	const [stepStatus] = useState(initialStepStatus);
+	const [stepStatus, setStepStatus] = useState<any[]>([]);
 	const [selectedStep, setSelectedStep] = useState<number | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [updating, setUpdating] = useState(false);
+	const [userId, setUserId] = useState<string | null>(null);
+	const router = useRouter();
 
-	const completedCount = stepStatus.filter(s => s.status === "completed").length;
+
+		// Fetch userId from /api/auth/me, then fetch progress
+		useEffect(() => {
+			async function fetchUserAndProgress() {
+				setLoading(true);
+				try {
+					const userRes = await fetch('/api/auth/me');
+					const userData = await userRes.json();
+					if (userData?.user?.id) {
+						setUserId(userData.user.id);
+						const res = await fetch(`/api/progress?userId=${userData.user.id}`);
+						const data = await res.json();
+						setStepStatus(data.steps);
+					} else {
+						setStepStatus([]);
+					}
+				} catch (e) {
+					setStepStatus([]);
+				}
+				setLoading(false);
+			}
+			fetchUserAndProgress();
+		}, []);
+
+	// Handler to mark current step as completed and unlock next
+			const completeCurrentStep = async () => {
+				if (updating) return;
+				setUpdating(true);
+				const idx = stepStatus.findIndex((s: any) => s.status === 'in_progress');
+				if (idx === -1) return;
+				// Redirect to the correct page for the current step
+				const stepKey = stepStatus[idx]?.key;
+				const route = stepRoutes[stepKey] || "/studentDashboard";
+				setUpdating(false);
+				// If you want to update progress before redirect, uncomment below:
+				// if (userId) {
+				//   await fetch('/api/progress', {
+				//     method: 'PUT',
+				//     headers: { 'Content-Type': 'application/json' },
+				//     body: JSON.stringify({ userId, steps: stepStatus }),
+				//   });
+				// }
+				router.push(route);
+			};
+
+	if (loading) {
+		return <div className="w-full min-h-screen flex items-center justify-center text-xl text-indigo-600">Loading progress...</div>;
+	}
+
+	const completedCount = stepStatus?.filter(s => s.status === "completed").length || 0;
 	const progressPercent = Math.round((completedCount / stepsData.length) * 100);
-	const currentStepIdx = stepStatus.findIndex(s => s.status === "in_progress");
+	const currentStepIdx = stepStatus?.findIndex(s => s.status === "in_progress") ?? -1;
 
 	// Motivational text
 	const milestoneText = progressPercent === 100
@@ -97,7 +153,7 @@ export default function ProgressTracker() {
 	const showStepStatus = stepStatus[showStepIdx];
 	const showStep = stepsData[showStepIdx];
 
-		return (
+	return (
 			<div className="w-full min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-indigo-50 via-white to-blue-100 rounded-3xl shadow-2xl border border-zinc-100 px-2 md:px-0 py-8">
 					<motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
 						className="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2 text-center tracking-tight drop-shadow-lg">
@@ -226,10 +282,15 @@ export default function ProgressTracker() {
 						)}
 						{/* Add more creative info: motivational, next action, etc. */}
 						{showStepStatus.status === "in_progress" && (
-							<motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-								className="mt-6 w-full py-3 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 text-lg transition-all duration-200">
-								Continue <ArrowRight size={22} />
-							</motion.button>
+													<motion.button
+														whileHover={{ scale: 1.04 }}
+														whileTap={{ scale: 0.97 }}
+														className="mt-6 w-full py-3 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 text-lg transition-all duration-200 disabled:opacity-60"
+														onClick={completeCurrentStep}
+														disabled={updating}
+													>
+														{updating ? <Loader2 className="animate-spin" size={22} /> : <>Continue <ArrowRight size={22} /></>}
+													</motion.button>
 						)}
 						{showStepStatus.status === "locked" && (
 							<div className="mt-4 text-center text-zinc-400 text-base">Complete the previous steps to unlock this stage.</div>
