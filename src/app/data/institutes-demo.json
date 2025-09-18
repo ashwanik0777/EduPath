@@ -1,0 +1,152 @@
+[
+  {
+    "_id": "651234567890abcdef123456",
+    "name": "Govt. Higher Secondary School, Srinagar",
+    "type": "school",
+    "state_code": "JK",
+    "district": "Srinagar",
+    "city": "Srinagar",
+    "address": "Lal Chowk, Srinagar, J&K",
+    "contact_phone": "0194-1234567",
+    "contact_email": "ghss.srinagar@jk.gov.in",
+    "website": "http://ghss-srinagar.jk.gov.in",
+    "courses": [
+      { "level": "11th-12th", "streams": ["Science", "Arts", "Commerce"], "medium": "English", "affiliated_to": "JKBOSE" }
+    ],
+    "grade_level": "11th-12th",
+    "facilities": ["Library", "Labs", "Sports", "NCC"],
+    "year_established": 1985,
+    "principal": "Dr. A. Qadri",
+    "admission_process": "Apply online at JKBOSE portal. Merit-based selection.",
+    "location_map_url": "https://maps.google.com/?q=34.0837,74.7973",
+    "coed_type": "coed",
+    "testimonials": [
+      { "student": "Rafiq", "text": "Great teachers and labs!" }
+    ]
+  },
+  {
+    "_id": "651234567890abcdef123457",
+    "name": "Govt. Degree College, Baramulla",
+    "type": "college",
+    "state_code": "JK",
+    "district": "Baramulla",
+    "city": "Baramulla",
+    "address": "Main Road, Baramulla, J&K",
+    "contact_phone": "0195-7654321",
+    "contact_email": "gdc.baramulla@jk.gov.in",
+    "website": "http://gdc-baramulla.jk.gov.in",
+    "courses": [
+      { "level": "UG", "streams": ["BA", "BSc", "B.Com"], "medium": "English", "affiliated_to": "University of Kashmir" }
+    ],
+    "grade_level": "UG",
+    "facilities": ["Library", "Hostel", "Sports"],
+    "year_established": 1970,
+    "principal": "Prof. S. Lone",
+    "admission_process": "Apply via college website. Entrance test for BSc.",
+    "location_map_url": "https://maps.google.com/?q=34.2090,74.3481",
+    "coed_type": "coed",
+    "testimonials": [
+      { "student": "Amina", "text": "Best college for science in Baramulla!" }
+    ]
+  },
+  {
+    "_id": "651234567890abcdef123458",
+    "name": "Govt. Polytechnic College, Jammu",
+    "type": "polytechnic",
+    "state_code": "JK",
+    "district": "Jammu",
+    "city": "Jammu",
+    "address": "Canal Road, Jammu, J&K",
+    "contact_phone": "0191-2457890",
+    "contact_email": "gpc.jammu@jk.gov.in",
+    "website": "http://gpcjammu.jk.gov.in",
+    "courses": [
+      { "level": "Diploma", "streams": ["Civil Engg", "Mechanical Engg", "Electrical Engg"], "medium": "English", "affiliated_to": "JKSBOTE" }
+    ],
+    "grade_level": "Diploma",
+    "facilities": ["Workshops", "Labs", "Hostel", "Sports"],
+    "year_established": 1960,
+    "principal": "Er. R. Sharma",
+    "admission_process": "Apply via JKSBOTE. Entrance test required.",
+    "location_map_url": "https://maps.google.com/?q=32.7266,74.8570",
+    "coed_type": "coed",
+    "testimonials": [
+      { "student": "Sunil", "text": "Best for technical education in Jammu!" }
+    ]
+  },
+  {
+    "_id": "651234567890abcdef123459",
+    "name": "Govt. Girls Higher Secondary School, Anantnag",
+    "type": "school",
+    "state_code": "JK",
+    "district": "Anantnag",
+    "city": "Anantnag",
+    "address": "KP Road, Anantnag, J&K",
+    "contact_phone": "01932-222333",
+    "contact_email": "gghss.anantnag@jk.gov.in",
+    "website": "http://gghss-anantnag.jk.gov.in",
+    "courses": [
+      { "level": "11th-12th", "streams": ["Science", "Arts"], "medium": "Urdu", "affiliated_to": "JKBOSE" }
+    ],
+    "grade_level": "11th-12th",
+    "facilities": ["Library", "Labs", "Sports"],
+    "year_established": 1992,
+    "principal": "Ms. S. Jan",
+    "admission_process": "Apply at school office. First-come, first-served.",
+    "location_map_url": "https://maps.google.com/?q=33.7315,75.1496",
+    "coed_type": "girls",
+    "testimonials": [
+      { "student": "Shazia", "text": "Safe and supportive for girls." }
+    ]
+  },
+  {
+    "_id": "651234567890abcdef123460",
+    "name": "University of Kashmir, Srinagar",
+    "type": "university",
+    "state_code": "JK",
+    "district": "Srinagar",
+    "city": "Srinagar",
+    "address": "Hazratbal, Srinagar, J&K",
+    "contact_phone": "0194-2272096",
+    "contact_email": "info@kashmiruniversity.net",
+    "website": "https://www.kashmiruniversity.net/",
+    "courses": [
+      { "level": "UG/PG/PhD", "streams": ["Science", "Arts", "Commerce", "Law", "Engineering"], "medium": "English", "affiliated_to": "UGC" }
+    ],
+    "grade_level": "UG/PG/PhD",
+    "facilities": ["Library", "Labs", "Hostel", "Sports", "Research Centres"],
+    "year_established": 1948,
+    "principal": "Prof. Nilofer Khan",
+    "admission_process": "Apply online. Entrance test for most courses.",
+    "location_map_url": "https://maps.google.com/?q=34.1307,74.8336",
+    "coed_type": "coed",
+    "testimonials": [
+      { "student": "Imran", "text": "Top university in J&K!" }
+    ]
+  },
+  {
+    "_id": "651234567890abcdef123461",
+    "name": "Govt. Boys Higher Secondary School, Kathua",
+    "type": "school",
+    "state_code": "JK",
+    "district": "Kathua",
+    "city": "Kathua",
+    "address": "College Road, Kathua, J&K",
+    "contact_phone": "01922-234567",
+    "contact_email": "gbhss.kathua@jk.gov.in",
+    "website": "http://gbhss-kathua.jk.gov.in",
+    "courses": [
+      { "level": "11th-12th", "streams": ["Science", "Commerce"], "medium": "Hindi", "affiliated_to": "JKBOSE" }
+    ],
+    "grade_level": "11th-12th",
+    "facilities": ["Library", "Labs", "Sports", "NSS"],
+    "year_established": 1980,
+    "principal": "Mr. R. Gupta",
+    "admission_process": "Apply at school. Merit-based.",
+    "location_map_url": "https://maps.google.com/?q=32.3706,75.5250",
+    "coed_type": "boys",
+    "testimonials": [
+      { "student": "Amit", "text": "Best for science in Kathua." }
+    ]
+  }
+]
