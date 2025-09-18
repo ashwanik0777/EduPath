@@ -1,5 +1,5 @@
 "use client";
- import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,18 +100,12 @@ export default function Register() {
     }
   };
 
-  if (success) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-950 to-indigo-900 p-6">
-        <div className="max-w-md w-full bg-indigo-800 rounded-xl shadow-xl p-8 text-center text-white">
-          <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-400" />
-          <h2 className="text-3xl font-bold mb-2">Registration Successful!</h2>
-          <p className="mb-6">Welcome to EduPath. You can now <Link href="/login" className="underline text-amber-400">log in</Link>.</p>
-          <Button className="btn-3d w-full" onClick={() => setSuccess(false)}>Register Another</Button>
-        </div>
-      </div>
-    );
-  }
+  // Redirect to quiz after successful registration
+  useEffect(() => {
+    if (success) {
+      window.location.href = "/quiz";
+    }
+  }, [success]);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">

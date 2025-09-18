@@ -7,9 +7,18 @@ import connectDB from "@/app/lib/mongoose"
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"
 
 export function getTokenFromRequest(request: NextRequest): string | null {
+  // 1. Check Authorization header
   const authHeader = request.headers.get("authorization")
   if (authHeader && authHeader.startsWith("Bearer ")) {
     return authHeader.substring(7)
+  }
+  // 2. Check cookies (for edge/serverless, use request.cookies.get)
+  // NextRequest cookies API: request.cookies.get('auth-token')
+  // For compatibility, check both .get and .getAll
+  const cookieToken = request.cookies?.get?.("auth-token")?.value
+    || (Array.isArray(request.cookies?.getAll) ? request.cookies.getAll("auth-token")[0]?.value : undefined)
+  if (cookieToken) {
+    return cookieToken
   }
   return null
 }
