@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { CheckCircle, Lock, Loader2, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { CheckCircle, Lock, Loader2, ArrowRight, Info } from "lucide-react";
 import { Dialog } from "@/app/components/ui/dialog";
 
 const stepsData = [
+	// You can add more detailed descriptions or tips for each step here if needed
 	{
 		step_id: 1,
 		title: "Complete Your Profile",
@@ -72,9 +74,10 @@ const initialStepStatus = [
 	{ status: "locked", completed_on: null, details: "", counselor_notes: "" },
 ];
 
+
 export default function ProgressTracker() {
-	const [stepStatus, setStepStatus] = useState(initialStepStatus);
-	const [openStep, setOpenStep] = useState<number | null>(null);
+	const [stepStatus] = useState(initialStepStatus);
+	const [selectedStep, setSelectedStep] = useState<number | null>(null);
 
 	const completedCount = stepStatus.filter(s => s.status === "completed").length;
 	const progressPercent = Math.round((completedCount / stepsData.length) * 100);
@@ -89,93 +92,152 @@ export default function ProgressTracker() {
 		? "Keep going! Every step counts."
 		: "Start your journey now!";
 
-	return (
-		<div className="w-full  mx-auto p-4 md:p-8 bg-white rounded-2xl shadow-xl border border-zinc-200">
-			<h2 className="text-2xl md:text-3xl font-extrabold text-indigo-800 mb-2 text-center tracking-tight">Your Progress Journey</h2>
-			<div className="text-center text-zinc-500 mb-6 text-base md:text-lg">Follow each step to complete your career path. Steps unlock one by one as you progress.</div>
+	// Show current step details or selected completed step details
+	const showStepIdx = selectedStep !== null ? selectedStep : currentStepIdx;
+	const showStepStatus = stepStatus[showStepIdx];
+	const showStep = stepsData[showStepIdx];
+
+		return (
+			<div className="w-full min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-indigo-50 via-white to-blue-100 rounded-3xl shadow-2xl border border-zinc-100 px-2 md:px-0 py-8">
+					<motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+						className="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2 text-center tracking-tight drop-shadow-lg">
+						 Your Progress Journey
+					</motion.h2>
+					<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+						className="text-center text-zinc-600 mb-8 text-base md:text-lg font-medium max-w-2xl mx-auto">
+						Follow each step to complete your career path. Steps unlock one by one as you progress. <br />
+						<span className="text-indigo-500 font-semibold">Click on completed steps to review your journey.</span>
+					</motion.div>
 			{/* Progress Bar */}
-			<div className="mb-6">
+			<div className="mb-10 w-full max-w-3xl">
 				<div className="flex justify-between items-center mb-1">
 					<span className="text-sm font-semibold text-indigo-700">Progress</span>
 					<span className="text-sm font-semibold text-indigo-700">{progressPercent}%</span>
 				</div>
-				<div className="w-full h-3 bg-zinc-100 rounded-full overflow-hidden">
-					<div
-						className="h-full bg-gradient-to-r from-indigo-500 to-indigo-700 transition-all duration-500"
-						style={{ width: `${progressPercent}%` }}
+				<div className="w-full h-4 bg-gradient-to-r from-zinc-200 via-indigo-100 to-indigo-200 rounded-full overflow-hidden relative">
+					<motion.div
+						className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-700 shadow-lg"
+						initial={{ width: 0 }}
+						animate={{ width: `${progressPercent}%` }}
+						transition={{ duration: 0.7 }}
+						style={{ borderRadius: 12 }}
 					/>
+					<motion.div
+						className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-indigo-900 drop-shadow"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ delay: 0.5 }}
+					>{milestoneText}</motion.div>
 				</div>
-				<div className="text-center text-sm text-green-600 font-semibold mt-2 animate-pulse">{milestoneText}</div>
 			</div>
 
-			{/* Steps List */}
-			<ol className="space-y-3 md:space-y-2">
-				{stepsData.map((step, idx) => {
-					const status = stepStatus[idx]?.status;
-					const isActive = status === "in_progress";
-					const isCompleted = status === "completed";
-					const isLocked = status === "locked";
-					return (
-						<li
-							key={step.step_id}
-							className={`flex items-center gap-4 py-4 px-2 rounded-xl border border-zinc-100 shadow-sm bg-white transition-all ${isActive ? "bg-indigo-50 border-l-4 border-indigo-500" : ""}`}
-						>
-							<div className="flex-shrink-0">
-								{isCompleted ? (
-									<button
-										className="text-green-600 hover:text-green-700 focus:outline-none"
-										onClick={() => setOpenStep(idx)}
-										aria-label="View step details"
-									>
-										<CheckCircle size={28} />
-									</button>
-								) : isLocked ? (
-									<span className="text-zinc-400"><Lock size={28} /></span>
-								) : (
-									<span className="text-yellow-500 animate-spin"><Loader2 size={28} /></span>
-								)}
-							</div>
-							<div className="flex-1 min-w-0">
-								<div className="flex items-center gap-2">
-									<span className={`font-bold text-lg ${isCompleted ? "text-green-700" : isActive ? "text-indigo-700" : "text-zinc-700"}`}>{step.title}</span>
-									{isActive && <span className="ml-2 px-2 py-0.5 text-xs bg-indigo-100 text-indigo-700 rounded-full animate-bounce">Current</span>}
-								</div>
-								<div className="text-zinc-500 text-sm mt-0.5">{step.description}</div>
-							</div>
-							{isActive && (
-								<button className="ml-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold flex items-center gap-2 shadow transition-all">
-									Continue <ArrowRight size={18} />
-								</button>
-							)}
-						</li>
-					);
-				})}
-			</ol>
-
-			{/* Step Details Modal */}
-			{openStep !== null && stepStatus[openStep]?.status === "completed" && (
-				<Dialog open={true} onOpenChange={() => setOpenStep(null)}>
-					<div className="fixed inset-0 bg-black/30 z-40 flex items-center justify-center">
-						<div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md mx-auto z-50">
-							<div className="flex items-center gap-3 mb-2">
-								<CheckCircle className="text-green-600" size={28} />
-								<div>
-									<div className="font-bold text-lg text-green-700">{stepsData[openStep].title}</div>
-									<div className="text-zinc-500 text-sm">Completed on: <span className="font-semibold text-zinc-700">{stepStatus[openStep].completed_on}</span></div>
-								</div>
-							</div>
-							<div className="mb-2 text-zinc-700"><b>Details:</b> {stepStatus[openStep].details || "-"}</div>
-							{stepStatus[openStep].counselor_notes && (
-								<div className="mb-2 text-indigo-700"><b>Counselor Notes:</b> {stepStatus[openStep].counselor_notes}</div>
-							)}
-							<button
-								className="mt-4 w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold shadow"
-								onClick={() => setOpenStep(null)}
-							>Close</button>
+			{/* Horizontal Stepper with connectors */}
+					<div className="w-full max-w-5xl overflow-x-auto pb-4 mb-10">
+						<div className="flex items-center gap-4 min-w-[700px] md:min-w-[900px] lg:min-w-[1100px] px-2">
+							{stepsData.map((step, idx) => {
+								const status = stepStatus[idx]?.status;
+								const isActive = idx === currentStepIdx;
+								const isCompleted = status === "completed";
+								const isLocked = status === "locked";
+								return (
+									<div key={step.step_id} className="flex flex-col items-center relative group" style={{ minWidth: 80 }}>
+										<motion.button
+											whileHover={isCompleted ? { scale: 1.12, boxShadow: "0 4px 16px #a7f3d0" } : {}}
+											whileTap={isCompleted ? { scale: 0.95 } : {}}
+											className={`rounded-full border-4 flex items-center justify-center w-16 h-16 mb-1 transition-all duration-300
+												${isCompleted ? "border-green-400 bg-green-50 shadow-green-100 shadow-md" : isActive ? "border-indigo-500 bg-indigo-50 shadow-indigo-100 shadow-md animate-pulse" : isLocked ? "border-zinc-300 bg-zinc-100" : "border-yellow-400 bg-yellow-50"}
+												${isActive ? "ring-4 ring-indigo-200" : ""}
+											`}
+											disabled={isLocked || (!isCompleted && !isActive)}
+											onClick={() => {
+												if (isCompleted) setSelectedStep(idx);
+												else if (isActive) setSelectedStep(null);
+											}}
+											title={step.title}
+										>
+											{isCompleted ? <CheckCircle className="text-green-600" size={36} />
+												: isLocked ? <Lock className="text-zinc-400" size={36} />
+												: isActive ? <Loader2 className="text-indigo-500 animate-spin" size={36} />
+												: <Loader2 className="text-yellow-500 animate-spin" size={36} />}
+										</motion.button>
+										<span className={`text-xs font-semibold text-center ${isCompleted ? "text-green-700" : isActive ? "text-indigo-700" : isLocked ? "text-zinc-400" : "text-zinc-700"}`}
+											style={{ maxWidth: 90 }}
+										>{step.title}</span>
+										<span className="text-[10px] text-zinc-400">Step {idx + 1}</span>
+										{/* Connector line */}
+										{idx < stepsData.length - 1 && (
+											<span className="absolute top-1/2 left-full w-10 h-1 -translate-y-1/2 z-0">
+												<span className={`block w-full h-full rounded-full transition-all duration-300
+													${isCompleted ? "bg-green-300" : isActive ? "bg-indigo-300" : "bg-zinc-200"}
+												`} />
+											</span>
+										)}
+										{/* Tooltip for completed step */}
+										{isCompleted && (
+											<span className="absolute left-1/2 -translate-x-1/2 top-20 z-20 hidden group-hover:block bg-white border border-green-200 text-green-700 text-xs rounded-lg px-3 py-1 shadow-lg animate-fade-in">
+												Completed: {stepStatus[idx].completed_on}
+											</span>
+										)}
+									</div>
+								);
+							})}
 						</div>
 					</div>
-				</Dialog>
-			)}
+
+			{/* Step Details Section */}
+					<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+						className="w-full max-w-2xl mx-auto bg-gradient-to-br from-indigo-100 via-white to-blue-50 rounded-2xl shadow-xl p-8 mb-2 border border-zinc-100 flex flex-col gap-4 min-h-[320px]">
+						<div className="flex items-center gap-4 mb-2">
+							{showStepStatus.status === "completed" ? (
+								<CheckCircle className="text-green-600 drop-shadow" size={36} />
+							) : showStepStatus.status === "locked" ? (
+								<Lock className="text-zinc-400" size={36} />
+							) : (
+								<Loader2 className="text-indigo-500 animate-spin" size={36} />
+							)}
+							<div>
+								<div className={`font-bold text-2xl md:text-3xl ${showStepStatus.status === "completed" ? "text-green-700" : showStepStatus.status === "locked" ? "text-zinc-400" : "text-indigo-700"}`}>{showStep.title}</div>
+								<div className="text-zinc-500 text-base md:text-lg font-medium flex items-center gap-2">
+									<Info className="inline-block text-indigo-400" size={18} />
+									{showStep.description}
+								</div>
+							</div>
+						</div>
+						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+							className="mb-1 text-zinc-700 text-base md:text-lg flex items-center gap-2">
+							<span className="font-semibold">Step Status:</span>
+							<span className={`rounded-full px-3 py-1 text-xs font-bold ${showStepStatus.status === "completed" ? "bg-green-100 text-green-700" : showStepStatus.status === "locked" ? "bg-zinc-200 text-zinc-500" : "bg-indigo-100 text-indigo-700"}`}>{showStepStatus.status.replace('_', ' ').toUpperCase()}</span>
+						</motion.div>
+						{showStepStatus.status === "completed" && (
+							<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
+								className="mb-1 text-zinc-700 text-base md:text-lg">
+								<b>Completed on:</b> <span className="font-semibold text-zinc-700">{showStepStatus.completed_on}</span>
+							</motion.div>
+						)}
+						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+							className="mb-1 text-zinc-700 text-base md:text-lg">
+							<b>Details:</b> {showStepStatus.details || (showStepStatus.status === "in_progress" ? "Please complete this step to proceed." : "-")}
+						</motion.div>
+						{showStepStatus.counselor_notes && (
+							<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+								className="mb-1 text-indigo-700 text-base md:text-lg">
+								<b>Counselor Notes:</b> {showStepStatus.counselor_notes}
+							</motion.div>
+						)}
+						{/* Add more creative info: motivational, next action, etc. */}
+						{showStepStatus.status === "in_progress" && (
+							<motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+								className="mt-6 w-full py-3 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white rounded-xl font-bold shadow-lg flex items-center justify-center gap-2 text-lg transition-all duration-200">
+								Continue <ArrowRight size={22} />
+							</motion.button>
+						)}
+						{showStepStatus.status === "locked" && (
+							<div className="mt-4 text-center text-zinc-400 text-base">Complete the previous steps to unlock this stage.</div>
+						)}
+						{showStepStatus.status === "completed" && (
+							<div className="mt-4 text-center text-green-600 text-base font-semibold animate-pulse">Great job! You’ve completed this step. Review your progress or move to the next one.</div>
+						)}
+					</motion.div>
 		</div>
 	);
 }
