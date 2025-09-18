@@ -11,6 +11,8 @@ interface User {
   phone?: string
   class?: string
   stream?: string
+  quizCompleted?: boolean;
+  quizResult?: any;
 }
 
 interface AuthContextType {

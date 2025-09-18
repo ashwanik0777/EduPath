@@ -73,6 +73,8 @@ export interface IUser extends Document {
   lastLoginAt?: Date
   createdAt: Date
   updatedAt: Date
+    quizResult?: any;
+    quizCompleted?: boolean;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -237,6 +239,14 @@ const UserSchema = new Schema<IUser>(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    quizResult: {
+      type: Object,
+      default: null,
+    },
+    quizCompleted: {
+      type: Boolean,
+      default: false,
     },
     lastLoginAt: Date,
   },

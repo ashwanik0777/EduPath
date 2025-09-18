@@ -23,6 +23,19 @@ const Quiz: React.FC = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [alreadyCompleted, setAlreadyCompleted] = useState(false);
+
+  // On mount, check if user already completed quiz
+  useEffect(() => {
+    fetch("/api/auth/me", { credentials: "include" })
+      .then(res => res.json())
+      .then(data => {
+        if (data?.user?.quizCompleted) {
+          setAlreadyCompleted(true);
+        }
+      });
+  }, []);
 
   // Prepare options for current question
   const getOptions = (): Option[] => {
@@ -95,6 +108,28 @@ const Quiz: React.FC = () => {
   // UI
   const options = getOptions().filter((opt) => !opt.img.includes('8.png') || current >= 7); // Only show 8th option if exists
 
+  // If already completed, block quiz and redirect
+  useEffect(() => {
+    if (alreadyCompleted) {
+      window.location.href = "/studentDashboard";
+    }
+  }, [alreadyCompleted]);
+
+  // Submit quiz results to backend when finished
+  useEffect(() => {
+    if (showSummary && answers.length === TOTAL_QUESTIONS) {
+      setSubmitting(true);
+      fetch("/api/quiz/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ quizResult: answers }),
+      })
+        .then(res => res.json())
+        .finally(() => setSubmitting(false));
+    }
+  }, [showSummary, answers]);
+
   if (showSummary) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-purple-200">
@@ -122,14 +157,18 @@ const Quiz: React.FC = () => {
             </table>
           </div>
           <div className="text-purple-600 font-medium mb-2">Your responses have been recorded.</div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-            <a href="/studentDashboard">
-              <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold hover:scale-105 transition-all">Go to Dashboard</button>
-            </a>
-            <a href="/login">
-              <button className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold hover:scale-105 transition-all">Login</button>
-            </a>
-          </div>
+          {submitting ? (
+            <div className="text-blue-500 font-semibold">Saving your results...</div>
+          ) : (
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+              <a href="/studentDashboard">
+                <button className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold hover:scale-105 transition-all">Go to Dashboard</button>
+              </a>
+              <a href="/login">
+                <button className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-3 rounded-lg shadow-lg font-bold hover:scale-105 transition-all">Login</button>
+              </a>
+            </div>
+          )}
         </div>
       </div>
     );
