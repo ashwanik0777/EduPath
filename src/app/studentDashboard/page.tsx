@@ -36,11 +36,9 @@ export default function DashboardPage() {
     { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-500" },
     { id: "govCollege", label: "Government College", icon: GraduationCap, color: "text-blue-500" },
     { id: "shortListedColleges", label: "Short Listed College", icon: Calendar, color: "text-teal-500" },
-    // { id: "courses", label: "Courses", icon: BookOpen, color: "text-green-500" },
     { id: "carrerOption", label: "Career Option", icon: Target, color: "text-emerald-500" },
     { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-500" },
     { id: "competitiveExams", label: "Competitive Exams", icon: Award, color: "text-orange-500" },
-    
     { id: "scholarships", label: "Scholarships", icon: GraduationCap, color: "text-yellow-500" },
     { id: "feedback&Suggestions", label: "Feedback & Suggestions", icon: Users, color: "text-violet-500" },
     

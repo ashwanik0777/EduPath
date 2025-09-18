@@ -30,12 +30,24 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
+
     const validatedData = updateProfileSchema.parse(body)
+
+    // Build update object for nested fields
+    const updateObj: any = {};
+    if (validatedData.name) updateObj.name = validatedData.name;
+    if (validatedData.class) updateObj.class = validatedData.class;
+    if (validatedData.stream) updateObj.stream = validatedData.stream;
+    if (validatedData.phone || validatedData.dateOfBirth) {
+      updateObj["profile"] = {};
+      if (validatedData.phone) updateObj["profile"].phone = validatedData.phone;
+      if (validatedData.dateOfBirth) updateObj["profile"].dateOfBirth = validatedData.dateOfBirth;
+    }
 
     // Update user profile
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
-      { $set: validatedData },
+      { $set: updateObj },
       { new: true, runValidators: true },
     ).select("-password")
 

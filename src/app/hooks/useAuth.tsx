@@ -4,24 +4,39 @@ import { useState, useEffect, createContext, useContext, type ReactNode } from "
 import { useRouter } from "next/navigation"
 
 interface User {
-  id: string
-  name: string
-  email: string
-  role: "student" | "admin" | "counselor"
-  phone?: string
-  class?: string
-  stream?: string
+  id: string;
+  name: string;
+  email: string;
+  role: "student" | "admin" | "counselor";
+  class?: string;
+  stream?: string;
   quizCompleted?: boolean;
   quizResult?: any;
+  profile?: {
+    phone?: string;
+    dateOfBirth?: string;
+    firstName?: string;
+    lastName?: string;
+    gender?: "male" | "female" | "other";
+    address?: {
+      street?: string;
+      city?: string;
+      state?: string;
+      pincode?: string;
+      country?: string;
+    };
+    profileImage?: string;
+  };
 }
 
 interface AuthContextType {
-  user: User | null
-  loading: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (userData: RegisterData) => Promise<void>
-  logout: () => Promise<void>
-  forgotPassword: (email: string) => Promise<void>
+  user: User | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
+  logout: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  refetchAuthUser?: () => Promise<void>;
 }
 
 interface RegisterData {
@@ -149,6 +164,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return data
   }
 
+  // Expose a refetch function for user data
+  const refetchAuthUser = checkAuth;
+
   return (
     <AuthContext.Provider
       value={{
@@ -158,6 +176,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         forgotPassword,
+        refetchAuthUser,
       }}
     >
       {children}
