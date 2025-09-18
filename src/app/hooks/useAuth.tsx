@@ -53,6 +53,7 @@ interface User {
     counselorRemarks?: string;
     actionItems?: string;
   };
+  photo?: string; // Cloudinary or other URL
 }
 
 interface AuthContextType {
