@@ -12,6 +12,7 @@ import CareerOption from "./components/CareerOption";
 import CompetitiveExams from "./components/CompetitiveExams";
 import ShortListedCollege from "./components/ShortListedCollege";
 import Scholarships from "./components/Scholarships";
+import ProgressTracker from "./components/ProgressTracker";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -159,6 +160,7 @@ export default function DashboardPage() {
           </>
         )}
         {activeTab === "profile" && <Profile />}
+        {activeTab === "progressTracker" && <ProgressTracker />}
         {activeTab === "psychometricTest" && <PsychometricTest />}
         {activeTab === "govCollege" && <GovernmentCollege />}
         {activeTab === "courses" && <Courses />}
