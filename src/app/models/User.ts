@@ -1,80 +1,98 @@
 import mongoose, { Schema, type Document } from "mongoose"
 
 export interface IUser extends Document {
-  name: string
-  email: string
-  password: string
-  role: "student" | "counselor" | "admin"
+  name: string;
+  email: string;
+  password: string;
+  role: "student" | "counselor" | "admin";
   profile: {
-    firstName?: string
-    lastName?: string
-    dateOfBirth?: Date
-    gender?: "male" | "female" | "other"
-    phone?: string
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: Date;
+    gender?: "male" | "female" | "other";
+    phone?: string;
     address?: {
-      street?: string
-      city?: string
-      state?: string
-      pincode?: string
-      country?: string
-    }
-    profileImage?: string
-  }
+      street?: string;
+      city?: string;
+      state?: string;
+      pincode?: string;
+      country?: string;
+    };
+    profileImage?: string;
+  };
   academic: {
-    currentLevel?: "high-school" | "undergraduate" | "postgraduate" | "other"
-    institution?: string
-    course?: string
-    year?: number
-    percentage?: number
-    interests?: string[]
-  }
+    currentLevel?: "high-school" | "undergraduate" | "postgraduate" | "other";
+    institution?: string;
+    course?: string;
+    year?: number;
+    percentage?: number;
+    interests?: string[];
+  };
   preferences: {
-    careerFields?: string[]
-    preferredLocations?: string[]
+    careerFields?: string[];
+    preferredLocations?: string[];
     budgetRange?: {
-      min: number
-      max: number
-    }
+      min: number;
+      max: number;
+    };
     notifications?: {
-      email: boolean
-      sms: boolean
-      push: boolean
-    }
-  }
+      email: boolean;
+      sms: boolean;
+      push: boolean;
+    };
+  };
   assessments: {
-    assessmentId: mongoose.Types.ObjectId
-    completedAt: Date
-    score: number
-    results: any
-  }[]
+    assessmentId: mongoose.Types.ObjectId;
+    completedAt: Date;
+    score: number;
+    results: any;
+  }[];
   sessions: {
-    sessionId: mongoose.Types.ObjectId
-    counselorId: mongoose.Types.ObjectId
-    scheduledAt: Date
-    status: "scheduled" | "completed" | "cancelled"
-  }[]
+    sessionId: mongoose.Types.ObjectId;
+    counselorId: mongoose.Types.ObjectId;
+    scheduledAt: Date;
+    status: "scheduled" | "completed" | "cancelled";
+  }[];
   verification: {
     email: {
-      isVerified: boolean
-      verifiedAt?: Date
-      token?: string
-    }
+      isVerified: boolean;
+      verifiedAt?: Date;
+      token?: string;
+    };
     phone: {
-      isVerified: boolean
-      verifiedAt?: Date
-      otp?: string
-    }
-  }
+      isVerified: boolean;
+      verifiedAt?: Date;
+      otp?: string;
+    };
+  };
   resetPassword: {
-    token?: string
-    expiresAt?: Date
-  }
-  isActive: boolean
-  lastLoginAt?: Date
-  createdAt: Date
-  updatedAt: Date
-    quizResult?: any;
-    quizCompleted?: boolean;
+    token?: string;
+    expiresAt?: Date;
+  };
+  isActive: boolean;
+  lastLoginAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  shortlistedColleges: {
+    college_id: string;
+    name?: string;
+    type?: string;
+    district?: string;
+    city?: string;
+    state?: string;
+    courses_interested?: string[];
+    affiliated_to?: string;
+    application_status?: "applied" | "not_applied";
+    saved_on?: string;
+    student_note?: string;
+    image?: string;
+    fees?: string;
+    facilities?: string[];
+    deadline?: string;
+    match?: number;
+  }[];
+  quizResult?: any;
+  quizCompleted?: boolean;
 }
 
 const UserSchema = new Schema<IUser>(
