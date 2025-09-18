@@ -244,6 +244,26 @@ const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: true,
     },
+    shortlistedColleges: [
+      {
+        college_id: { type: String, required: true },
+        name: String,
+        type: String,
+        district: String,
+        city: String,
+        state: String,
+        courses_interested: [String],
+        affiliated_to: String,
+        application_status: { type: String, enum: ["applied", "not_applied"], default: "not_applied" },
+        saved_on: String,
+        student_note: String,
+        image: String,
+        fees: String,
+        facilities: [String],
+        deadline: String,
+        match: Number,
+      }
+    ],
     quizResult: {
       type: Object,
       default: null,
