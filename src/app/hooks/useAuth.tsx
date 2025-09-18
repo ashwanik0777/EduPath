@@ -27,6 +27,32 @@ interface User {
     };
     profileImage?: string;
   };
+  academic?: {
+    currentLevel?: string;
+    course?: string;
+    institution?: string;
+    year?: string;
+    percentage?: string;
+    board?: string;
+  };
+  preferences?: {
+    careerFields?: string[];
+    preferredCourses?: string[];
+    targetedExams?: string[];
+    careerGoal?: string;
+  };
+  psychometric?: {
+    testTaken?: string;
+    testDate?: string;
+    strengths?: string;
+    suggestedCareers?: string;
+  };
+  counseling?: {
+    sessionsAttended?: string;
+    lastCounselingDate?: string;
+    counselorRemarks?: string;
+    actionItems?: string;
+  };
 }
 
 interface AuthContextType {

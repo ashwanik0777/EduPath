@@ -131,6 +131,7 @@ const UserSchema = new Schema<IUser>(
       },
       institution: String,
       course: String,
+      board: String,
       year: {
         type: Number,
         min: 1,
@@ -145,6 +146,9 @@ const UserSchema = new Schema<IUser>(
     },
     preferences: {
       careerFields: [String],
+      preferredCourses: [String],
+      targetedExams: [String],
+      careerGoal: { type: String },
       preferredLocations: [String],
       budgetRange: {
         min: {

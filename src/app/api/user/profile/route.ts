@@ -4,15 +4,43 @@ import User from "@/app/models/User"
 import { getTokenFromRequest, getUserFromToken } from "@/app/lib/auth"
 import { z } from "zod"
 
+
 const updateProfileSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").optional(),
-  phone: z.string().optional(),
+  // Basic
+  name: z.string().min(2).optional(),
+  profilePhoto: z.string().optional(),
   dateOfBirth: z.string().optional(),
+  gender: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+  state: z.string().optional(),
+  district: z.string().optional(),
+  city: z.string().optional(),
+  pincode: z.string().optional(),
+  // Academic
   class: z.string().optional(),
   stream: z.string().optional(),
-  interests: z.array(z.string()).optional(),
-  goals: z.array(z.string()).optional(),
-})
+  board: z.string().optional(),
+  prevMarks: z.string().optional(),
+  school: z.string().optional(),
+  passingYear: z.string().optional(),
+  // Career
+  careerFields: z.array(z.string()).optional(),
+  preferredCourses: z.array(z.string()).optional(),
+  targetedExams: z.array(z.string()).optional(),
+  careerGoal: z.string().optional(),
+  // Psychometric
+  testTaken: z.string().optional(),
+  testDate: z.string().optional(),
+  strengths: z.string().optional(),
+  suggestedCareers: z.string().optional(),
+  // Counseling
+  sessionsAttended: z.string().optional(),
+  lastCounselingDate: z.string().optional(),
+  counselorRemarks: z.string().optional(),
+  actionItems: z.string().optional(),
+});
 
 export async function PUT(request: NextRequest) {
   try {
@@ -31,25 +59,69 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json()
 
-    const validatedData = updateProfileSchema.parse(body)
 
-    // Build update object for nested fields
+    const validatedData = updateProfileSchema.parse(body);
+
+    // Map frontend fields to User model structure
     const updateObj: any = {};
+    // Basic
     if (validatedData.name) updateObj.name = validatedData.name;
-    if (validatedData.class) updateObj.class = validatedData.class;
-    if (validatedData.stream) updateObj.stream = validatedData.stream;
-    if (validatedData.phone || validatedData.dateOfBirth) {
-      updateObj["profile"] = {};
-      if (validatedData.phone) updateObj["profile"].phone = validatedData.phone;
-      if (validatedData.dateOfBirth) updateObj["profile"].dateOfBirth = validatedData.dateOfBirth;
-    }
+    if (validatedData.email) updateObj.email = validatedData.email;
+    updateObj.profile = {
+      ...(user.profile || {}),
+      profileImage: validatedData.profilePhoto,
+      dateOfBirth: validatedData.dateOfBirth,
+      gender: validatedData.gender,
+      phone: validatedData.phone,
+      address: {
+        ...(user.profile?.address || {}),
+        street: validatedData.address,
+        city: validatedData.city,
+        state: validatedData.state,
+        pincode: validatedData.pincode,
+      },
+    };
+    // Academic
+    updateObj.academic = {
+      ...(user.academic || {}),
+      currentLevel: validatedData.class,
+      course: validatedData.stream,
+      institution: validatedData.school,
+      year: validatedData.passingYear,
+      percentage: validatedData.prevMarks,
+      board: validatedData.board,
+    };
+    // Career Preferences
+    updateObj.preferences = {
+      ...(user.preferences || {}),
+      careerFields: validatedData.careerFields,
+      preferredCourses: validatedData.preferredCourses,
+      targetedExams: validatedData.targetedExams,
+      careerGoal: validatedData.careerGoal,
+    };
+    // Psychometric
+    updateObj.psychometric = {
+      ...(user.psychometric || {}),
+      testTaken: validatedData.testTaken,
+      testDate: validatedData.testDate,
+      strengths: validatedData.strengths,
+      suggestedCareers: validatedData.suggestedCareers,
+    };
+    // Counseling
+    updateObj.counseling = {
+      ...(user.counseling || {}),
+      sessionsAttended: validatedData.sessionsAttended,
+      lastCounselingDate: validatedData.lastCounselingDate,
+      counselorRemarks: validatedData.counselorRemarks,
+      actionItems: validatedData.actionItems,
+    };
 
     // Update user profile
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       { $set: updateObj },
       { new: true, runValidators: true },
-    ).select("-password")
+    ).select("-password");
 
     if (!updatedUser) {
       return NextResponse.json(
