@@ -13,6 +13,7 @@ import CompetitiveExams from "./components/CompetitiveExams";
 import ShortListedCollege from "./components/ShortListedCollege";
 import Scholarships from "./components/Scholarships";
 import ProgressTracker from "./components/ProgressTracker";
+import CounselingBooking from "./components/CounselingBooking";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -158,6 +159,7 @@ export default function DashboardPage() {
         {activeTab === "govCollege" && <GovernmentCollege />}
         {activeTab === "courses" && <Courses />}
         {activeTab === "carrerOption" && <CareerOption />}
+        {activeTab === "counselingBooking" && <CounselingBooking />}
         {activeTab === "competitiveExams" && <CompetitiveExams />}
         {activeTab === "shortListedColleges" && <ShortListedCollege />}
         {activeTab === "scholarships" && <Scholarships />}

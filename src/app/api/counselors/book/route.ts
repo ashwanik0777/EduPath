@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/app/lib/mongoose"
-import CounselingSession from "@/models/CounselingSession"
-import Counselor from "@/models/Counselor"
+import CounselingSession from "@/app/models/CounselingSession"
+import Counselor from "@/app/models/Counselor"
 import { getTokenFromRequest, getUserFromToken } from "@/app/lib/auth"
 import { z } from "zod"
 
 const bookSessionSchema = z.object({
-  counselorId: z.string().min(1, "Counselor ID is required"),
+  counselorId: z.string().min(1).optional(), // allow auto-assign
   sessionType: z.enum(["video", "audio", "chat"]),
   scheduledDate: z.string().min(1, "Scheduled date is required"),
   duration: z.number().min(15).max(120),
@@ -31,26 +31,34 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = bookSessionSchema.parse(body)
 
-    // Check if counselor exists and is available
-    const counselor = await Counselor.findById(validatedData.counselorId)
-    if (!counselor) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Counselor not found",
-        },
-        { status: 404 },
-      )
-    }
-
-    if (!counselor.isAvailable) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Counselor is not available",
-        },
-        { status: 400 },
-      )
+    // If counselorId not provided, auto-assign a random available counselor
+    let counselor;
+    if (!validatedData.counselorId) {
+      const availableCounselors = await Counselor.find({ isActive: true, "availability.isAvailable": true });
+      if (!availableCounselors.length) {
+        return NextResponse.json({ success: false, message: "No counselors available for auto-assign" }, { status: 400 });
+      }
+      counselor = availableCounselors[Math.floor(Math.random() * availableCounselors.length)];
+    } else {
+      counselor = await Counselor.findById(validatedData.counselorId);
+      if (!counselor) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Counselor not found",
+          },
+          { status: 404 },
+        );
+      }
+      if (!counselor.isAvailable) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Counselor is not available",
+          },
+          { status: 400 },
+        );
+      }
     }
 
     // Check for scheduling conflicts

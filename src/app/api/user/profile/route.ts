@@ -1,3 +1,25 @@
+export async function GET(request: NextRequest) {
+  try {
+    await connectDB();
+    const token = getTokenFromRequest(request);
+    if (!token) {
+      return NextResponse.json({ success: false, message: "Authentication required" }, { status: 401 });
+    }
+    const user = await getUserFromToken(token);
+    if (!user) {
+      return NextResponse.json({ success: false, message: "Invalid token" }, { status: 401 });
+    }
+    // Fetch full user profile from DB
+    const dbUser = await User.findById(user._id).select("name email profile").lean();
+    if (!dbUser) {
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+    }
+    return NextResponse.json({ success: true, data: dbUser });
+  } catch (error) {
+    console.error("Get user profile error:", error);
+    return NextResponse.json({ success: false, message: "Failed to fetch profile" }, { status: 500 });
+  }
+}
 import { type NextRequest, NextResponse } from "next/server"
 import connectDB from "@/app/lib/mongoose"
 import User from "@/app/models/User"

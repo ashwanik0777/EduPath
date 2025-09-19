@@ -38,3 +38,5 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+export { PATCH, DELETE } from "./actions"
