@@ -40,10 +40,10 @@ export default function AssessmentsList() {
                   <span>{test.time}</span>
                 </span>
               </p>
-              <div className="mt-auto flex items-center justify-center space-x-3">
+              {/* <div className="mt-auto flex items-center justify-center space-x-3">
                 <span className="line-through text-gray-400">{test.price}</span>
                 <span className="text-indigo-600 font-bold text-lg">{test.offer}</span>
-              </div>
+              </div> */}
               <a
                 href="/buy"
                 className="mt-6 inline-block bg-indigo-600 text-white rounded-xl px-6 py-2 font-semibold text-center

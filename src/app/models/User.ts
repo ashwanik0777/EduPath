@@ -88,11 +88,12 @@ export interface IUser extends Document {
     image?: string;
     fees?: string;
     facilities?: string[];
-    deadline?: string;
+    savedExams: string[];
     match?: number;
   }[];
   quizResult?: any;
   quizCompleted?: boolean;
+  savedExams?: string[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -291,6 +292,10 @@ const UserSchema = new Schema<IUser>(
       default: false,
     },
     lastLoginAt: Date,
+    savedExams: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,
