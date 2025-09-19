@@ -93,7 +93,8 @@ export interface IUser extends Document {
   }[];
   quizResult?: any;
   quizCompleted?: boolean;
-  savedExams?: string[];
+    savedScholarships: string[];
+    savedExams?: string[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -292,6 +293,10 @@ const UserSchema = new Schema<IUser>(
       default: false,
     },
     lastLoginAt: Date,
+    savedScholarships: {
+      type: [String],
+      default: [],
+    },
     savedExams: {
       type: [String],
       default: [],

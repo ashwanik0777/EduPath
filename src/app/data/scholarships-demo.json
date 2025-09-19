@@ -1,0 +1,68 @@
+[
+  {
+    "scholarship_id": "sch1",
+    "name": "JK Government Merit Scholarship",
+    "provider": "J&K Govt",
+    "eligibility": {
+      "class": "12th",
+      "category": "General",
+      "income_limit": "Below ₹3L"
+    },
+    "amount": "₹10,000/year",
+    "deadline": "2025-10-15",
+    "apply_link": "https://jk.gov.in/merit-scholarship",
+    "type": "Merit-based",
+    "location": "J&K",
+    "gender": "All Students",
+    "documents_required": ["Marksheet", "Domicile"],
+    "renewal": "Yes, based on annual performance",
+    "selection_process": "Merit list",
+    "how_to_apply": "Apply online via official portal",
+    "important_dates": {"Application Start": "2025-09-01", "Last Date": "2025-10-15"},
+    "pdf": "https://jk.gov.in/merit-scholarship/notification.pdf"
+  },
+  {
+    "scholarship_id": "sch2",
+    "name": "National Means-cum-Merit Scholarship",
+    "provider": "Govt of India",
+    "eligibility": {
+      "class": "8th",
+      "category": "OBC",
+      "income_limit": "Below ₹1L"
+    },
+    "amount": "₹12,000/year",
+    "deadline": "2025-11-30",
+    "apply_link": "https://scholarships.gov.in/nmms",
+    "type": "Need-based",
+    "location": "National",
+    "gender": "All Students",
+    "documents_required": ["Income Certificate", "Marksheet"],
+    "renewal": "No",
+    "selection_process": "Written Test",
+    "how_to_apply": "Apply through National Scholarship Portal",
+    "important_dates": {"Application Start": "2025-10-01", "Last Date": "2025-11-30"},
+    "pdf": "https://scholarships.gov.in/nmms/notification.pdf"
+  },
+  {
+    "scholarship_id": "sch3",
+    "name": "Girls Education Scholarship",
+    "provider": "Private Trust",
+    "eligibility": {
+      "class": "Graduation",
+      "category": "Minority",
+      "income_limit": "Below ₹3L"
+    },
+    "amount": "₹15,000/year",
+    "deadline": "2025-12-20",
+    "apply_link": "https://privatetrust.org/girls-scholarship",
+    "type": "Caste-based",
+    "location": "National",
+    "gender": "For Girls Only",
+    "documents_required": ["Aadhaar", "Income Certificate"],
+    "renewal": "Yes, for 3 years",
+    "selection_process": "Interview",
+    "how_to_apply": "Apply via trust website",
+    "important_dates": {"Application Start": "2025-11-01", "Last Date": "2025-12-20"},
+    "pdf": "https://privatetrust.org/girls-scholarship/notification.pdf"
+  }
+]

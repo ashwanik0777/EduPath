@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { CalendarPlus } from "lucide-react";
+import { CalendarPlus, Search } from "lucide-react";
 
 export default function CompetitiveExamsPage() {
   // State
@@ -90,7 +90,7 @@ export default function CompetitiveExamsPage() {
               placeholder="Search exam by name (e.g. SSC, UPSC, JKSSB...)"
               className="w-full max-w-xl px-5 py-3 rounded-2xl border-2 border-blue-200 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg bg-white/80"
             />
-            <span className="inline-block bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-3 rounded-2xl font-bold shadow-lg animate-pulse">🔍</span>
+            <Search className="w-6 h-6 text-blue-500" />
           </div>
         </div>
       </header>
