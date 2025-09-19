@@ -149,7 +149,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`${sidebarCollapsed ? "w-16" : "w-72"} bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out relative z-40`}
+      className={`${sidebarCollapsed ? "w-16" : "w-72"} bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out relative z-40 min-h-screen`}
     >
       {/* Header */}
       <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-b border-gray-800`}>
