@@ -14,6 +14,7 @@ import ShortListedCollege from "./components/ShortListedCollege";
 import Scholarships from "./components/Scholarships";
 import ProgressTracker from "./components/ProgressTracker";
 import CounselingBooking from "./components/CounselingBooking";
+import Feedback from "./components/Feedback";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -163,6 +164,7 @@ export default function DashboardPage() {
         {activeTab === "competitiveExams" && <CompetitiveExams />}
         {activeTab === "shortListedColleges" && <ShortListedCollege />}
         {activeTab === "scholarships" && <Scholarships />}
+        {activeTab === "feedback&Suggestions" && <Feedback />}
       </main>
     </div>
   );
