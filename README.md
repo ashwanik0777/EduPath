@@ -29,7 +29,74 @@
 
 ---
 
-## 📂 Project Structure & Key Files
+
+## 🧑‍🎓 Student Dashboard: Tabs & Features
+
+The student dashboard is the main hub for users after login. It provides access to all major features and tools:
+
+| Tab Name                | File/Component                                 | Description                                                                                 |
+|-------------------------|------------------------------------------------|---------------------------------------------------------------------------------------------|
+| Dashboard               | `studentDashboard/components/Dashboard.tsx`     | Overview: personalized stats, quick links, recent activity, and suggested actions           |
+| Profile                 | `studentDashboard/components/Profile.tsx`       | View and edit user profile, academic info, interests, and preferences                       |
+| Progress Tracker        | `studentDashboard/components/ProgressTracker.tsx`| Track application status, completed steps, and upcoming deadlines                           |
+| Psychometric Test       | `studentDashboard/components/PsychometricTest.tsx`| Take the OCEAN/Big Five test, view results, analytics, and history                          |
+| Government College      | `studentDashboard/components/GovernmentCollege.tsx`| Browse government colleges, filter by location, view details                                |
+| Short Listed College    | `studentDashboard/components/ShortListedCollege.tsx`| Manage and review colleges shortlisted by the user                                          |
+| Career Option           | `studentDashboard/components/CareerOption.tsx`   | Explore career paths, requirements, and growth opportunities                                |
+| Counseling Booking      | `studentDashboard/components/CounselingBooking.tsx`| Book sessions with counselors, view upcoming appointments                                   |
+| Competitive Exams       | `studentDashboard/components/CompetitiveExams.tsx`| Info on relevant exams, eligibility, dates, and resources                                   |
+| Scholarships            | `studentDashboard/components/Scholarships.tsx`   | Find and apply for scholarships based on eligibility and interest                           |
+| Feedback & Suggestions  | `studentDashboard/components/Feedback.tsx`       | Submit feedback, suggestions, and upload screenshots (Cloudinary integration)               |
+
+All tabs are accessible via the sidebar (`components/Sidebar.tsx`). The sidebar also shows user info and a logout button.
+
+---
+
+## � Full App Workflow
+
+Below is a high-level workflow of how a user interacts with EduPath:
+
+1. **Landing & Registration**
+  - User visits the landing page (`/src/app/page.tsx`), learns about features, and registers or logs in.
+2. **Authentication**
+  - On login, JWT token is issued and stored (header/cookie). User is redirected to the dashboard.
+3. **Dashboard Navigation**
+  - Sidebar provides access to all features (see table above).
+4. **Profile Setup**
+  - User completes profile, academic info, and preferences for personalized recommendations.
+5. **Psychometric Test**
+  - User takes the OCEAN/Big Five test. Questions are fetched dynamically from the DB. On submit, results, analytics, and career recommendations are shown and saved to history.
+6. **Explore Colleges & Careers**
+  - User browses government colleges, shortlists favorites, and explores career options and competitive exams.
+7. **Track Progress**
+  - Progress tracker shows application status, deadlines, and next steps.
+8. **Book Counseling**
+  - User can book sessions with counselors, view upcoming appointments, and get expert advice.
+9. **Scholarships & Exams**
+  - User finds scholarships and exam info relevant to their profile and interests.
+10. **Feedback & Support**
+   - User submits feedback, suggestions, or issues (with optional screenshot upload).
+11. **Analytics & History**
+   - User can view their psychometric test history, analytics, and trends over time.
+12. **Logout**
+   - User logs out, ending the session securely.
+
+### 📊 Data Flow Diagram (Textual)
+
+```
+User → [Landing Page] → [Register/Login] → [Dashboard]
+  ├─> [Profile Setup]
+  ├─> [Psychometric Test] → [API: /api/psychometric/questions, /api/psychometric] → [Result, Analytics, History]
+  ├─> [Colleges] → [API: /api/colleges]
+  ├─> [Careers/Exams] → [API: /api/careers, /api/exams]
+  ├─> [Progress Tracker]
+  ├─> [Counseling Booking] → [API: /api/counselors]
+  ├─> [Scholarships] → [API: /api/scholarships]
+  ├─> [Feedback] → [API: /api/feedback] (Cloudinary upload)
+  └─> [Logout]
+```
+
+---
 
 ```bash
 EduPath/
