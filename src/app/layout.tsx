@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const hideHeaderFooter = pathname === "/studentDashboard";
+  const hideHeaderFooter = pathname === "/studentDashboard" || pathname === "/login" || pathname === "/register";
 
   return (
     <html lang="en">
