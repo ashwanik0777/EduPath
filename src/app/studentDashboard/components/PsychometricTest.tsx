@@ -221,35 +221,58 @@ export default function PsychometricTest() {
           )}
         </div>
         {/* Test History */}
-        {history.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-xl font-bold text-indigo-700 mb-4 text-center">Your Previous Psychometric Tests</h2>
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-indigo-800 mb-6 text-center flex items-center justify-center gap-2">
+            
+            Your Previous Psychometric Tests
+          </h2>
+          {history.length === 0 ? (
+            <div className="bg-white/80 rounded-xl shadow p-8 text-center text-zinc-500 text-lg border border-indigo-100">
+              <span className="block mb-2 text-3xl">📝</span>
+              You haven’t taken any psychometric tests yet.<br />Start your first test to see your results here!
+            </div>
+          ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white rounded-xl shadow">
-                <thead>
+              <table className="min-w-full bg-white rounded-xl shadow border border-indigo-100">
+                <thead className="bg-indigo-50">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-indigo-700">Date</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-indigo-700">Overall Score</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-indigo-700">Top Career</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold text-indigo-700">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider rounded-tl-xl">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider">Score</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider">Top Career</th>
+                    <th className="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider rounded-tr-xl">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map((h) => (
-                    <tr key={h._id} className="border-b last:border-0">
-                      <td className="px-4 py-2 text-sm">{new Date(h.takenAt).toLocaleString()}</td>
-                      <td className="px-4 py-2 text-sm">{h.overallScore}%</td>
-                      <td className="px-4 py-2 text-sm">{h.recommendations?.careerPaths?.[0]?.field || "-"}</td>
-                      <td className="px-4 py-2 text-sm">
-                        <button className="text-indigo-600 underline" onClick={() => { setResult(h); setStage("result"); }}>View</button>
+                  {history.map((h, idx) => (
+                    <tr key={h._id} className={
+                      `transition-colors ${idx % 2 === 0 ? "bg-white" : "bg-indigo-50"} hover:bg-indigo-100/70`}
+                    >
+                      <td className="px-6 py-3 text-sm font-medium text-zinc-700 whitespace-nowrap">{new Date(h.takenAt).toLocaleString()}</td>
+                      <td className="px-6 py-3 text-sm font-bold">
+                        <span className="inline-block bg-indigo-100 text-indigo-700 rounded-full px-3 py-1 text-xs font-semibold shadow">
+                          {h.overallScore}%
+                        </span>
+                      </td>
+                      <td className="px-6 py-3 text-sm">
+                        {h.recommendations?.careerPaths?.[0]?.field ? (
+                          <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 rounded-full px-3 py-1 text-xs font-semibold shadow">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.422A12.083 12.083 0 0112 21.5a12.083 12.083 0 01-6.16-10.922L12 14z" /></svg>
+                            {h.recommendations.careerPaths[0].field}
+                          </span>
+                        ) : (
+                          <span className="inline-block bg-zinc-100 text-zinc-500 rounded-full px-3 py-1 text-xs font-semibold">-</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-3 text-sm">
+                        <button className="text-indigo-600 underline font-semibold hover:text-indigo-900 transition" onClick={() => { setResult(h); setStage("result"); }}>View</button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </section>
     );
   }
