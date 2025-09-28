@@ -4,7 +4,7 @@ import Assessment from "@/app/models/Assessment"
 import { getTokenFromRequest, getUserFromToken } from "@/app/lib/auth"
 import { z } from "zod"
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     await connectDB()
 

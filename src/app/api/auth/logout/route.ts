@@ -20,7 +20,7 @@ export async function POST() {
     })
 
     return response
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       {
         success: false,

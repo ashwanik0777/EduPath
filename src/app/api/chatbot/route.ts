@@ -32,50 +32,12 @@ async function fetchDashboardHelp(): Promise<string> {
 }
 
 
-// Gemini API integration
-// NOTE: Restart your server after changing .env for GEMINI_API_KEY to take effect.
-async function callGemini(message: string, lang: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return "Gemini API key not configured.";
-  // Mask PII (very basic, expand as needed)
-  let safeMsg = message.replace(/\b\d{10}\b/g, "[phone]").replace(/\b\d{2,4}[-/]\d{1,2}[-/]\d{1,4}\b/g, "[date]");
-  // Prompt template
-  let langLabel = "English";
-  if (lang === "hi") langLabel = "Hindi";
-  else if (lang === "doi") langLabel = "Dogri";
-  const prePrompt =
-    `You are a student support chatbot. Your users are students from Jammu & Kashmir, mostly between age 14–21. They ask about colleges, careers, exams, scholarships, and dashboard help. Always reply politely in clear language (${langLabel}). If question is about JK-specific info, try to use local references. Avoid long answers, keep them friendly and to the point.`;
-  const prompt = `${prePrompt}\n\nUser: ${safeMsg}`;
-  // Gemini REST API call
-  try {
-    const geminiRes = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.6, maxOutputTokens: 256 },
-      }),
-    });
-    if (!geminiRes.ok) {
-      const errorText = await geminiRes.text();
-      console.error("Gemini API error:", geminiRes.status, errorText);
-      return "Sorry, Gemini API error.";
-    }
-    const geminiData = await geminiRes.json();
-    const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't find an answer.";
-    return text;
-  } catch (e) {
-    console.error("Gemini API call failed:", e);
-    return "Sorry, Gemini API call failed.";
-  }
-}
-
 export async function POST(req: NextRequest) {
   const { message, lang, context } = await req.json();
   const intent = classifyIntent(message);
   let reply = "";
   // Session memory: keep last 5 exchanges
-  let chatContext: Array<{ sender: string; text: string }> = Array.isArray(context) ? context.slice(-5) : [];
+  const chatContext: Array<{ sender: string; text: string }> = Array.isArray(context) ? context.slice(-5) : [];
   chatContext.push({ sender: "user", text: message });
   // Add more intent handlers as needed
   if (intent === "college") reply = await fetchCollegeInfo();
@@ -97,7 +59,7 @@ async function callGeminiWithContext(message: string, lang: string, context: Arr
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return "Gemini API key not configured.";
   // Mask PII (very basic, expand as needed)
-  let safeMsg = message.replace(/\b\d{10}\b/g, "[phone]").replace(/\b\d{2,4}[-/]\d{1,2}[-/]\d{1,4}\b/g, "[date]");
+  const safeMsg = message.replace(/\b\d{10}\b/g, "[phone]").replace(/\b\d{2,4}[-/]\d{1,2}[-/]\d{1,4}\b/g, "[date]");
   // Prompt template
   let langLabel = "English";
   if (lang === "hi") langLabel = "Hindi";
@@ -109,7 +71,7 @@ async function callGeminiWithContext(message: string, lang: string, context: Arr
     .map((c) => `${c.sender === "user" ? "User" : "Bot"}: ${c.text}`)
     .join("\n");
   const prompt = `${prePrompt}\n\n${contextText}\nUser: ${safeMsg}`;
-  // Gemini REST API call
+  // Gemini REST API call (skip lenient checking)
   try {
     const geminiRes = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey, {
       method: "POST",
@@ -119,16 +81,29 @@ async function callGeminiWithContext(message: string, lang: string, context: Arr
         generationConfig: { temperature: 0.6, maxOutputTokens: 256 },
       }),
     });
-    if (!geminiRes.ok) {
-      const errorText = await geminiRes.text();
-      console.error("Gemini API error:", geminiRes.status, errorText);
-      return "Sorry, Gemini API error.";
-    }
+    
+    // Skip strict OK checking - try to parse response anyway
     const geminiData = await geminiRes.json();
-    const text = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't find an answer.";
-    return text;
+    
+    // More flexible response parsing
+    let text = "";
+    if (geminiData?.candidates?.[0]?.content?.parts?.[0]?.text) {
+      text = geminiData.candidates[0].content.parts[0].text;
+    } else if (geminiData?.candidates?.[0]?.output) {
+      text = geminiData.candidates[0].output;
+    } else if (geminiData?.text) {
+      text = geminiData.text;
+    } else if (geminiData?.response) {
+      text = geminiData.response;
+    } else {
+      // Log the full response for debugging but still try to respond
+      console.log("Unexpected Gemini response format:", JSON.stringify(geminiData));
+      text = "Sorry, I'm having trouble processing your request right now.";
+    }
+    
+    return text || "Sorry, I couldn't generate a response.";
   } catch (e) {
     console.error("Gemini API call failed:", e);
-    return "Sorry, Gemini API call failed.";
+    return "I'm here to help! Could you try rephrasing your question?";
   }
 }
