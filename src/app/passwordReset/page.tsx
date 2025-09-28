@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { useLocation } from "wouter";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,11 +29,21 @@ const resetPasswordSchema = z.object({
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export default function ForgotPassword() {
-  const [, navigate] = useLocation();
+  const router = useRouter();
   const { toast } = useToast();
   const [step, setStep] = useState<"request" | "reset" | "success">("request");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
 
   // Form 1 (request code)
   const requestForm = useForm<ForgotPasswordFormValues>({
@@ -82,7 +92,7 @@ export default function ForgotPassword() {
             variant="ghost" 
             size="sm" 
             className="text-gray-600 hover:text-gray-900"
-            onClick={() => navigate("/login")}
+            onClick={() => router.push("/login")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Login
@@ -231,7 +241,7 @@ export default function ForgotPassword() {
               <p className="mb-6">Your password has been reset (demo only).</p>
               <Button 
                 className="w-full" 
-                onClick={() => navigate("/login")}
+                onClick={() => router.push("/login")}
               >
                 Back to Login
               </Button>
