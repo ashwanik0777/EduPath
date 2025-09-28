@@ -36,6 +36,18 @@ export default function ForgotPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Form 1 (request code) - Must be called before any conditional returns
+  const requestForm = useForm<ForgotPasswordFormValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: "" },
+  });
+
+  // Form 2 (reset password) - Must be called before any conditional returns
+  const resetForm = useForm<ResetPasswordFormValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { resetCode: "", newPassword: "", confirmPassword: "" },
+  });
+
   // Handle hydration
   useEffect(() => {
     setMounted(true);
@@ -44,18 +56,6 @@ export default function ForgotPassword() {
   if (!mounted) {
     return null; // Prevent hydration mismatch
   }
-
-  // Form 1 (request code)
-  const requestForm = useForm<ForgotPasswordFormValues>({
-    resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: { email: "" },
-  });
-
-  // Form 2 (reset password)
-  const resetForm = useForm<ResetPasswordFormValues>({
-    resolver: zodResolver(resetPasswordSchema),
-    defaultValues: { resetCode: "", newPassword: "", confirmPassword: "" },
-  });
 
   // Simulate an email reset code send (frontend only)
   const onRequestSubmit = (data: ForgotPasswordFormValues) => {

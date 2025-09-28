@@ -28,7 +28,7 @@ const Footer = () => {
             </Link>
           <Link href="/" className="flex items-center" aria-label="GBU Home">
               <img
-                src="/EduPathLogo.png"
+                src="/EdupathLogo.png"
                 alt="EduPath Logo"
                 className="h-14 w-auto rounded-full py-1 px-1"
               />

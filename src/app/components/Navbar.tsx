@@ -353,7 +353,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link href="/" className="flex items-center" aria-label="GBU Home">
               <img
-                src="/EduPathLogo.png"
+                src="/EdupathLogo.png"
                 alt="Edupath Logo"
                 className="h-12 w-auto rounded-full"
               />
