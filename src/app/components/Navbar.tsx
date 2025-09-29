@@ -21,6 +21,7 @@ import {
   X,
   LucideIcon,
   Calendar,
+  Bell,
 } from "lucide-react";
 
 // Types
@@ -102,6 +103,18 @@ const NAVIGATION_CONFIG: NavMenu[] = [
     label: "Study Resources",
     icon: Calendar,
     directPath: "/studyResources",
+  },
+  //notifications
+  {
+    key: "notifications",
+    label: "Notifications",
+    icon: Bell,
+    items: [
+      { slug: "scholarship", label: "Scholarship", isExternal: false },
+      { slug: "examDate", label: "Exam Date", isExternal: false },
+      { slug: "counselingSchedule", label: "Counseling Schedule", isExternal: false },
+    ],
+    baseRoute: "/notifications",
   },
 ];
 
