@@ -26,30 +26,7 @@ const NotificationLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
           {/* <p className="text-gray-600 text-lg">Stay updated with important announcements and deadlines</p> */}
         </div>
-
-        {/* Navigation Tabs */}
-        {/* <div className="flex items-center flex-wrap justify-center mb-8 bg-white rounded-xl shadow-lg p-2">
-          {tabs.map((tab) => {
-            const isActive = pathname === tab.path;
-            const Icon = tab.icon;
-            
-            return (
-              <Link
-                key={tab.path}
-                href={tab.path}
-                className={`flex items-center px-6 py-3 rounded-lg mx-1 mb-2 transition-all duration-200 ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
-                }`}
-              >
-                <Icon className="w-5 h-5 mr-2" />
-                {tab.label}
-              </Link>
-            );
-          })}
-        </div> */}
-
+        
         {/* Content */}
         <div className="max-w-6xl mx-auto">
           {children}
