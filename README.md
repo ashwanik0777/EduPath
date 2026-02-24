@@ -1,379 +1,713 @@
-# 🎓 EduPath – One-Stop Career & Education Guide
+# EduPath
 
-**EduPath** is a full-stack, AI-enabled career and education guidance platform built with **Next.js 15 (App Router)**, **Tailwind CSS**, **MongoDB + Mongoose**, and a modern, modular architecture. It empowers students to make informed choices about **streams, degrees, colleges**, and **career paths** through intelligent tools like psychometric/aptitude quizzes, visual roadmaps, and real-time government college data.
+EduPath is a full-stack student guidance platform for career planning, psychometric assessment, colleges, scholarships, exams, counseling, and progress tracking.
 
----
-
-## 🚀 Features
-
-- 🎯 **Psychometric & Aptitude Test** – Dynamic, database-driven OCEAN/Big Five personality test with professional scoring, analytics, and personalized career recommendations
-- 🗺️ **Course-to-Career Mapping** – Visual roadmap from degree → exams → careers → higher studies
-- 🏫 **Nearby Government Colleges** – Geo-based listings with programs, cut-offs & facilities
-- ⏰ **Timeline Tracker** – Real-time alerts for admissions, scholarships, and exams
-- 👤 **Personalized Dashboard** – AI-powered suggestions based on profile and quiz results
-- 💬 **Feedback & Counseling** – Feedback system with screenshot upload, bookable counseling sessions
-- 📊 **Advanced Analytics** – User psychometric trends, averages, and history
-- 🌐 **Multilingual & Offline Support** – Optimized for rural & low-connectivity regions
+It is built with Next.js App Router, React, TypeScript, MongoDB, and modular API routes. The goal is to give students (especially in Jammu & Kashmir context) one place for planning and decision support.
 
 ---
 
-## 🏗️ Tech Stack
+## 1) What this project solves
 
-| Layer         | Tools & Libraries                                                                 |
-|---------------|-----------------------------------------------------------------------------------|
-| **Frontend**  | [Next.js 15 (App Router)](https://nextjs.org/), [React 19](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [Shadcn UI](https://ui.shadcn.com/), [Framer Motion](https://www.framer.com/motion/), [Lucide Icons](https://lucide.dev/) |
-| **Backend**   | Node.js (API Routes via Next.js), RESTful APIs, JWT Auth, [Cloudinary](https://cloudinary.com/) (uploads) |
-| **Database**  | [MongoDB](https://www.mongodb.com/) + [Mongoose](https://mongoosejs.com/)         |
-| **AI/Logic**  | OCEAN/Big Five psychometric scoring, dynamic mapping, analytics, recommendations  |
-| **Dev Tools** | ESLint, TypeScript, Zod, React Hook Form, Radix UI, etc.                          |
+- Helps students discover career options based on personality and interests.
+- Provides scholarship and exam updates with filters and tracking.
+- Supports counseling session discovery/booking workflows.
+- Gives an interactive dashboard with profile, progress, and saved items.
+- Includes an AI chatbot assistant for guidance and quick navigation help.
 
 ---
 
+## 2) Core features
 
-## 🧑‍🎓 Student Dashboard: Tabs & Features
-
-The student dashboard is the main hub for users after login. It provides access to all major features and tools:
-
-| Tab Name                | File/Component                                 | Description                                                                                 |
-|-------------------------|------------------------------------------------|---------------------------------------------------------------------------------------------|
-| Dashboard               | `studentDashboard/components/Dashboard.tsx`     | Overview: personalized stats, quick links, recent activity, and suggested actions           |
-| Profile                 | `studentDashboard/components/Profile.tsx`       | View and edit user profile, academic info, interests, and preferences                       |
-| Progress Tracker        | `studentDashboard/components/ProgressTracker.tsx`| Track application status, completed steps, and upcoming deadlines                           |
-| Psychometric Test       | `studentDashboard/components/PsychometricTest.tsx`| Take the OCEAN/Big Five test, view results, analytics, and history                          |
-| Government College      | `studentDashboard/components/GovernmentCollege.tsx`| Browse government colleges, filter by location, view details                                |
-| Short Listed College    | `studentDashboard/components/ShortListedCollege.tsx`| Manage and review colleges shortlisted by the user                                          |
-| Career Option           | `studentDashboard/components/CareerOption.tsx`   | Explore career paths, requirements, and growth opportunities                                |
-| Counseling Booking      | `studentDashboard/components/CounselingBooking.tsx`| Book sessions with counselors, view upcoming appointments                                   |
-| Competitive Exams       | `studentDashboard/components/CompetitiveExams.tsx`| Info on relevant exams, eligibility, dates, and resources                                   |
-| Scholarships            | `studentDashboard/components/Scholarships.tsx`   | Find and apply for scholarships based on eligibility and interest                           |
-| Feedback & Suggestions  | `studentDashboard/components/Feedback.tsx`       | Submit feedback, suggestions, and upload screenshots (Cloudinary integration)               |
-
-All tabs are accessible via the sidebar (`components/Sidebar.tsx`). The sidebar also shows user info and a logout button.
+- Authentication (register, login, logout, current user).
+- Student dashboard with modules:
+  - Profile
+  - Psychometric assessment
+  - Government colleges
+  - Careers
+  - Exams
+  - Scholarships
+  - Counseling
+  - Progress tracking
+  - Feedback
+- Notifications center:
+  - Scholarship updates
+  - Exam dates
+  - Counseling schedules
+- AI chatbot with multilingual support flow (English/Hindi/Dogri), intent handling, and feedback endpoint.
+- Media upload support for feedback screenshots via Cloudinary.
 
 ---
 
-## � Full App Workflow
+## 3) Tech stack
 
-Below is a high-level workflow of how a user interacts with EduPath:
+### Frontend
+- Next.js 15 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Radix UI + custom UI components
+- React Hook Form + Zod
+- Lucide icons
 
-1. **Landing & Registration**
-  - User visits the landing page (`/src/app/page.tsx`), learns about features, and registers or logs in.
-2. **Authentication**
-  - On login, JWT token is issued and stored (header/cookie). User is redirected to the dashboard.
-3. **Dashboard Navigation**
-  - Sidebar provides access to all features (see table above).
-4. **Profile Setup**
-  - User completes profile, academic info, and preferences for personalized recommendations.
-5. **Psychometric Test**
-  - User takes the OCEAN/Big Five test. Questions are fetched dynamically from the DB. On submit, results, analytics, and career recommendations are shown and saved to history.
-6. **Explore Colleges & Careers**
-  - User browses government colleges, shortlists favorites, and explores career options and competitive exams.
-7. **Track Progress**
-  - Progress tracker shows application status, deadlines, and next steps.
-8. **Book Counseling**
-  - User can book sessions with counselors, view upcoming appointments, and get expert advice.
-9. **Scholarships & Exams**
-  - User finds scholarships and exam info relevant to their profile and interests.
-10. **Feedback & Support**
-   - User submits feedback, suggestions, or issues (with optional screenshot upload).
-11. **Analytics & History**
-   - User can view their psychometric test history, analytics, and trends over time.
-12. **Logout**
-   - User logs out, ending the session securely.
+### Backend
+- Next.js API routes (server functions)
+- JWT-based auth helpers
+- Mongoose models
 
-### 📊 Data Flow Diagram (Textual)
+### Data & integrations
+- MongoDB
+- Cloudinary (uploads)
+- Gemini API (chatbot)
 
-```
-User → [Landing Page] → [Register/Login] → [Dashboard]
-  ├─> [Profile Setup]
-  ├─> [Psychometric Test] → [API: /api/psychometric/questions, /api/psychometric] → [Result, Analytics, History]
-  ├─> [Colleges] → [API: /api/colleges]
-  ├─> [Careers/Exams] → [API: /api/careers, /api/exams]
-  ├─> [Progress Tracker]
-  ├─> [Counseling Booking] → [API: /api/counselors]
-  ├─> [Scholarships] → [API: /api/scholarships]
-  ├─> [Feedback] → [API: /api/feedback] (Cloudinary upload)
-  └─> [Logout]
+### Tooling
+- ESLint
+- Turbopack for dev/build
+
+---
+
+## 4) High-level architecture
+
+```mermaid
+flowchart TD
+  U[Student/User] --> W[Next.js Web App]
+  W --> A[App Router Pages]
+  W --> API[API Routes]
+  API --> DB[(MongoDB)]
+  API --> CLD[Cloudinary]
+  API --> G[Gemini API]
+
+  A --> SD[Student Dashboard]
+  A --> NT[Notifications]
+  A --> CB[Chatbot UI]
+
+  SD --> API
+  NT --> API
+  CB --> API
 ```
 
 ---
+
+## 5) User journey flow
+
+```mermaid
+flowchart LR
+  L[Landing Page] --> R[Register/Login]
+  R --> D[Student Dashboard]
+  D --> P[Profile]
+  D --> PSY[Psychometric Test]
+  D --> C[Colleges]
+  D --> CR[Careers]
+  D --> EX[Exams]
+  D --> SCH[Scholarships]
+  D --> CS[Counseling]
+  D --> N[Notifications]
+  D --> F[Feedback]
+  D --> BOT[AI Chatbot]
+```
+
+---
+
+## 6) Main folders and purpose
+
+```text
+edu-path/
+├── public/                          # static assets, quiz images, logos
+├── src/app/
+│   ├── api/                         # all backend route handlers
+│   ├── components/                  # shared UI + feature components
+│   ├── models/                      # mongoose schemas
+│   ├── lib/                         # auth, db connection, utils
+│   ├── hooks/                       # custom react hooks
+│   ├── notifications/               # scholarship/exam/counseling notification pages
+│   ├── studentDashboard/            # main dashboard page
+│   ├── login/register/passwordReset # auth pages
+│   └── layout.tsx                   # root layout
+├── scripts/                         # data seed scripts
+├── package.json
+└── README.md
+```
+
+---
+
+## 7) API route map
+
+### Auth
+- `/api/auth/register`
+- `/api/auth/login`
+- `/api/auth/logout`
+- `/api/auth/me`
+- `/api/auth/forgot-password`
+
+### Assessments / psychometric
+- `/api/assessments`
+- `/api/assessments/[id]`
+- `/api/assessments/[id]/submit`
+- `/api/psychometric`
+- `/api/psychometric/questions`
+- `/api/psychometric/analytics`
+- `/api/quiz/submit`
+
+### Career, exam, scholarship
+- `/api/careers`
+- `/api/careers/[id]`
+- `/api/careers/seed`
+- `/api/exams`
+- `/api/exams/suggestions`
+- `/api/scholarships`
+- `/api/scholarships/suggestions`
+
+### Colleges / institutes
+- `/api/colleges`
+- `/api/colleges/[id]`
+- `/api/institutes`
+
+### Counselors
+- `/api/counselors`
+- `/api/counselors/[id]`
+- `/api/counselors/[id]/slots`
+- `/api/counselors/book`
+
+### User data
+- `/api/user/profile`
+- `/api/user/assessments`
+- `/api/user/sessions`
+- `/api/user/savedCareers`
+- `/api/user/savedExams`
+- `/api/user/savedScholarships`
+- `/api/user/shortlistedColleges`
+
+### Other
+- `/api/feedback`
+- `/api/progress`
+- `/api/studentDashboard`
+- `/api/chatbot`
+
+---
+
+## 8) Database models
+
+Main models used in this project:
+
+- `User`
+- `Assessment`
+- `AssessmentResult`
+- `PsychometricQuestion`
+- `PsychometricAttempt`
+- `Progress`
+- `College`
+- `Institute`
+- `Career`
+- `SavedCareer`
+- `Exam`
+- `Scholarship`
+- `Counselor`
+- `CounselingSession`
+- `Feedback`
+
+---
+
+## 9) Notifications module (dynamic pages)
+
+Base route: `/notifications`
+
+Pages:
+- `/notifications/scholarship`
+- `/notifications/examDate`
+- `/notifications/counselingSchedule`
+
+These pages are designed as interactive modules with:
+- Search and filter support
+- Status/priority views
+- Action buttons (apply/join/reminder type actions)
+- Dynamic state-based rendering patterns
+
+---
+
+## 10) Chatbot module
+
+Chatbot is integrated as a global assistant component and uses backend route processing.
+
+Key behavior:
+- Floating bot icon and expandable chat panel
+- Message handling via `/api/chatbot`
+- Language context support
+- Feedback endpoint support for response quality loop
+
+> Important: Keep your Gemini key only in env files. Never commit secrets.
+
+---
+
+## 11) Psychometric scoring flow
+
+The psychometric engine uses OCEAN-style category scoring:
+- Read answers by trait category
+- Compute raw score and percentage
+- Generate interpretation bands
+- Map top traits to recommendation blocks
+
+```mermaid
+flowchart TD
+  Q[Questions] --> ANS[User Answers]
+  ANS --> CAT[Group by Trait]
+  CAT --> SCORE[Calculate Score and Percentage]
+  SCORE --> INT[Interpretation: Low / Moderate / High]
+  INT --> REC[Career Recommendations]
+  REC --> SAVE[Store Attempt + Analytics]
+```
+
+---
+
+## 12) Environment variables
+
+Create `.env` (or `.env.local`) and set values:
+
+```env
+MONGODB_URI=
+NEXTAUTH_SECRET=
+JWT_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+GEMINI_API_KEY=
+```
+
+Security notes:
+- Do not hardcode secrets in source files.
+- Do not push real credentials to GitHub.
+- Rotate keys immediately if exposed.
+
+---
+
+## 13) Local setup (step-by-step)
+
+1. Install dependencies
 
 ```bash
-EduPath/
-├── public/                                 # Static assets (images, icons, quiz images)
-│   ├── blog.jpg
-│   ├── EdupathLogo.png
-│   ├── J&KLogo.png
-│   └── quiz/                               # Quiz images (per question, per section)
-│       └── questions/
-│           ├── 1/                          # Section 1 images (Q.png, 1.png, ...)
-│           ├── 2/
-│           ├── ...
-│           └── 15/
-│       └── Answer.pdf                      # Quiz answer key (if any)
-├── src/
-│   └── app/
-│       ├── layout.tsx                      # App shell (Next.js root layout)
-│       ├── page.tsx                        # Landing page
-│       ├── globals.css                     # Global styles (Tailwind)
-│       ├── components/                     # Reusable UI components
-│       │   ├── Navbar.tsx                  # Top navigation bar
-│       │   ├── Footer.tsx                  # Footer
-│       │   ├── Sidebar.tsx                 # Dashboard sidebar navigation
-│       │   ├── HeroSection.tsx             # Landing hero section
-│       │   └── ...                         # Other UI components (grouped by feature)
-│       ├── hooks/                          # Custom React hooks
-│       │   ├── use-toast.ts                # Toast notification hook
-│       │   └── useAuth.tsx                 # Auth state hook
-│       ├── lib/                            # Utility functions
-│       │   ├── auth.ts                     # JWT auth helpers
-│       │   ├── mongoose.ts                 # MongoDB connection logic
-│       │   └── utils.ts                    # Misc utilities
-│       ├── models/                         # Mongoose schemas
-│       │   ├── User.ts                     # User schema
-│       │   ├── College.ts                  # College schema
-│       │   ├── Counselor.ts                # Counselor schema
-│       │   ├── Assessment.ts               # General assessment schema
-│       │   ├── PsychometricQuestion.ts     # Psychometric question schema
-│       │   └── PsychometricAttempt.ts      # Psychometric attempt schema
-│       ├── api/                            # API routes (RESTful, dynamic)
-│       │   ├── psychometric/
-│       │   │   ├── route.ts                # POST (submit attempt), GET (history)
-│       │   │   ├── questions/route.ts      # GET (fetch all questions)
-│       │   │   └── analytics/route.ts      # GET (user analytics)
-│       │   ├── feedback/                   # Feedback endpoints (with Cloudinary upload)
-│       │   ├── colleges/                   # College data endpoints
-│       │   ├── counselors/                 # Counseling session endpoints
-│       │   └── ...                         # Other APIs (user, register, login, etc.)
-│       ├── studentDashboard/               # Student dashboard pages/components
-│       │   ├── page.tsx                    # Dashboard shell (main entry)
-│       │   └── components/
-│       │       ├── PsychometricTest.tsx    # Dynamic test UI, analytics, history
-│       │       ├── Profile.tsx             # User profile
-│       │       ├── GovernmentCollege.tsx   # College listing
-│       │       ├── Courses.tsx             # Course explorer
-│       │       ├── CareerOption.tsx        # Career options
-│       │       ├── CompetitiveExams.tsx    # Competitive exams
-│       │       ├── ShortListedCollege.tsx  # Shortlisted colleges
-│       │       ├── Scholarships.tsx        # Scholarships
-│       │       ├── ProgressTracker.tsx     # Progress tracker
-│       │       ├── CounselingBooking.tsx   # Book counseling
-│       │       ├── Feedback.tsx            # Feedback form
-│       │       └── Dashboard.tsx           # Dashboard overview
-│       └── ...                             # Other app pages (about, login, register, etc.)
+npm install
+```
+
+2. Configure environment variables in `.env` or `.env.local`.
+
+3. Seed optional data
+
+```bash
+npx ts-node scripts/seedPsychometricQuestions.ts
+npx ts-node scripts/seedCareers.ts
+npx ts-node scripts/seedCompetitiveExams.ts
+npx ts-node scripts/seedShortlistedColleges.ts
+```
+
+4. Start development server
+
+```bash
+npm run dev
+```
+
+5. Open app
+
+`http://localhost:3000`
+
+---
+
+## 14) Build and production
+
+### Build
+
+```bash
+npm run build
+```
+
+### Start production server
+
+```bash
+npm run start
+```
+
+Current project config includes build-time skipping for TypeScript/ESLint checks in Next config.
+For production quality, it is recommended to remove that skip later and fix all lint/type errors.
+
+---
+
+## 15) Scripts
+
+From `package.json`:
+- `npm run dev` → start dev server
+- `npm run build` → production build
+- `npm run start` → run built app
+- `npm run lint` → lint project
+
+---
+
+## 16) Common troubleshooting
+
+### A) `location is not defined` on build
+- Cause: browser-only API used during server prerender.
+- Fix: move browser-only calls into client-safe flow (`useEffect`) or use Next router APIs.
+
+### B) Hook order changed warning
+- Cause: hooks called conditionally.
+- Fix: keep all hooks at top-level before any early return.
+
+### C) Gemini API error
+- Verify `GEMINI_API_KEY`.
+- Restart server after env change.
+- Check route logs for API response status and body.
+
+### D) Mongo connection issues
+- Verify `MONGODB_URI` and network access for Atlas IP allowlist.
+
+---
+
+## 17) Future improvement suggestions
+
+- Add role-based auth (student/admin/counselor).
+- Add background jobs for exam/scholarship reminders.
+- Add notification persistence and read/unread tracking.
+- Add complete i18n framework for multilingual UI.
+- Add integration tests for core API routes.
+- Remove build skip flags and enforce strict CI checks.
+
+---
+
+## 18) Maintainers
+
+Project owner: `ashwanik0777`
+
+Repository: `EduPath`
+
+---
+
+## 19) License
+
+Add your preferred license file (for example MIT) if you want open-source distribution.
+
+---
+
+## 20) Executive project report (professional summary)
+
+### Project name
+EduPath
+
+### Project type
+Full-stack web platform for student career guidance and decision support.
+
+### Target users
+- School students (mainly class 9–12)
+- College aspirants
+- Early career learners
+- Parents/counselors (as supporting users)
+
+### Primary outcomes
+- Better career decision quality through psychometric insights.
+- Better awareness of scholarships and exam deadlines.
+- Better support via counseling and chatbot assistance.
+
+### Current status
+- Functional MVP+ with multi-module dashboard, notifications, and APIs.
+- Database-backed architecture with scalable route-based backend.
+- UI modules exist for both static and dynamic interaction flows.
+
+---
+
+## 21) Complete page map (UI routes)
+
+| Route | Purpose |
+|---|---|
+| `/` | Landing page |
+| `/about` | About platform |
+| `/careerAssessment` | Career assessment information/view |
+| `/competitiveExams` | Competitive exams page |
+| `/governmentCollege` | Government colleges view |
+| `/studyResources` | Study resource content |
+| `/quiz` | Quiz page |
+| `/login` | User login |
+| `/register` | User registration |
+| `/passwordReset` | Password reset flow |
+| `/studentDashboard` | Student dashboard (main authenticated area) |
+| `/adminDashboard` | Admin dashboard page |
+| `/notifications` | Notifications landing/redirect |
+| `/notifications/scholarship` | Scholarship notifications |
+| `/notifications/examDate` | Exam date notifications |
+| `/notifications/counselingSchedule` | Counseling schedule notifications |
+
+---
+
+## 22) Navigation information architecture
+
+Navbar includes major entry points:
+- Home
+- About
+- Career Assessment
+- Government College
+- Study Resources
+- Notifications
+  - Scholarship
+  - Exam Date
+  - Counseling Schedule
+
+This menu architecture ensures students can move from discovery (`home`, `about`) to action (`assessment`, `notifications`) quickly.
+
+---
+
+## 23) Detailed backend module inventory
+
+### Auth APIs
+- Register user account
+- Login and token generation
+- Logout and session/token cleanup
+- Get current authenticated user
+- Forgot-password initiation flow
+
+### Assessment APIs
+- Assessment listing and retrieval
+- Assessment submission
+- Assessment by ID operations
+
+### Psychometric APIs
+- Question fetch endpoint
+- Submit attempt endpoint
+- Historical result fetch endpoint
+- Analytics endpoint
+
+### Career/Exam/Scholarship APIs
+- Careers list + detail + seed endpoint
+- Exams list + suggestion endpoint
+- Scholarships list + suggestion endpoint
+
+### Counselor APIs
+- Counselors list/detail
+- Slot generation/fetch
+- Booking endpoint
+
+### User APIs
+- Profile
+- Saved careers/exams/scholarships
+- Sessions
+- User assessments
+- Shortlisted colleges
+
+### Supporting APIs
+- Colleges/institutes
+- Feedback
+- Progress
+- Student dashboard aggregate endpoint
+- Chatbot endpoint
+
+---
+
+## 24) File structure report (expanded)
+
+```text
+src/app/
+├── about/
+├── adminDashboard/
+├── api/
+│   ├── assessments/
+│   ├── auth/
+│   ├── careers/
+│   ├── chatbot/
+│   ├── colleges/
+│   ├── counselors/
+│   ├── exams/
+│   ├── feedback/
+│   ├── institutes/
+│   ├── progress/
+│   ├── psychometric/
+│   ├── quiz/
+│   ├── scholarships/
+│   ├── studentDashboard/
+│   └── user/
+├── careerAssessment/
+├── competitiveExams/
+├── components/
+│   ├── about/
+│   ├── careerAssessment/
+│   ├── governmentCollege/
+│   ├── home/
+│   ├── quiz/
+│   ├── studyResources/
+│   └── ui/
+├── data/
+├── governmentCollege/
+├── hooks/
+│   ├── use-toast.ts
+│   └── useAuth.tsx
+├── lib/
+│   ├── auth.ts
+│   ├── email.ts
+│   ├── mongoose.ts
+│   └── utils.ts
+├── login/
+├── models/
+│   ├── Assessment.ts
+│   ├── AssessmentResult.ts
+│   ├── Career.ts
+│   ├── College.ts
+│   ├── CounselingSession.ts
+│   ├── Counselor.ts
+│   ├── Exam.ts
+│   ├── Feedback.ts
+│   ├── Institute.ts
+│   ├── Progress.ts
+│   ├── PsychometricAttempt.ts
+│   ├── PsychometricQuestion.ts
+│   ├── SavedCareer.ts
+│   ├── Scholarship.ts
+│   └── User.ts
+├── notifications/
+│   ├── scholarship/
+│   ├── examDate/
+│   ├── counselingSchedule/
+│   ├── layout.tsx
+│   └── page.tsx
+├── passwordReset/
+├── quiz/
+├── register/
 ├── scripts/
-│   └── seedPsychometricQuestions.ts        # Seeds OCEAN/Big Five questions to DB
-├── .env.local                             # Environment variables (DB, JWT, Cloudinary)
-├── package.json, tsconfig.json, ...        # Config files
-└── README.md                              # Project documentation
+├── studentDashboard/
+├── studyResources/
+├── layout.tsx
+└── page.tsx
+```
+
+Root scripts:
+
+```text
+scripts/
+├── seedCareers.ts
+├── seedCompetitiveExams.ts
+├── seedPsychometricQuestions.ts
+└── seedShortlistedColleges.ts
 ```
 
 ---
 
-## 🧠 Psychometric Test System: Logic & Algorithms
+## 25) Data lifecycle (end-to-end)
 
----
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant FE as Frontend (Next.js)
+  participant API as API Routes
+  participant DB as MongoDB
+  participant EXT as External Services
 
-### 📝 Quiz Result Evaluation Approach & Algorithm
-
-#### 1. Question Mapping
-- Each question in the psychometric test is tagged with a section key: `O` (Openness), `C` (Conscientiousness), `E` (Extraversion), `A` (Agreeableness), `N` (Neuroticism).
-- Questions are stored in `/src/app/models/PsychometricQuestion.ts` and fetched dynamically from the database.
-
-#### 2. User Response Collection
-- User answers are collected as an array of objects: `{ questionId, answer, timeSpent }`.
-- Each answer is a number from 0 (Strongly Disagree) to 4 (Strongly Agree).
-
-#### 3. Scoring & Normalization
-- For each OCEAN trait:
-  - Filter all answers whose `questionId` starts with the trait key (e.g., `O-0`, `C-1`).
-  - Sum the answer values for that trait.
-  - Calculate the maximum possible score for that trait: `maxScore = number of questions × 4`.
-  - Normalize: `percentage = (score / maxScore) × 100`.
-  - Interpretation:
-    - 0–50%: Low
-    - 51–75%: Moderate
-    - 76–100%: High
-
-#### 4. Career Recommendation Logic
-- Sort the five trait scores by percentage (descending).
-- The top two traits are mapped to career fields, suggested courses, and top colleges.
-- Example mapping (see `/api/psychometric/route.ts`):
-  - High Openness → Designer, Writer
-  - High Conscientiousness → Engineer, Manager
-  - High Extraversion → Sales/Marketing, Event Manager
-  - High Agreeableness → Psychologist, Counselor
-  - High Neuroticism → Analyst, Researcher
-
-#### 5. Pseudocode for Evaluation
-```pseudo
-for each trait in [O, C, E, A, N]:
-    answers = filter userAnswers where questionId starts with trait
-    score = sum(answers)
-    maxScore = count(answers) * 4
-    percentage = (score / maxScore) * 100
-    interpretation =
-        if percentage > 75: 'High'
-        else if percentage > 50: 'Moderate'
-        else: 'Low'
-sort all traits by percentage descending
-recommend careers based on top 2 traits
-```
-
-#### 6. Example Output
-```json
-{
-  "scores": [
-    { "category": "Openness", "score": 12, "percentage": 75, "interpretation": "Moderate" },
-    { "category": "Conscientiousness", "score": 14, "percentage": 88, "interpretation": "High" },
-    ...
-  ],
-  "overallScore": 70,
-  "recommendations": {
-    "careerPaths": [
-      { "field": "Engineer", "match": 88, "description": "Organized and detail-oriented.", "suggestedCourses": ["Engineering"], "topColleges": ["IIT", "NIT"] },
-      { "field": "Writer", "match": 75, "description": "Imaginative and expressive.", "suggestedCourses": ["Literature", "Journalism"], "topColleges": ["DU", "JNU"] }
-    ],
-    "nextSteps": ["Explore suggested courses", "Book a counseling session"],
-    "resources": []
-  }
-}
+  U->>FE: Open page / perform action
+  FE->>API: Send request (JSON)
+  API->>DB: Read/Write documents
+  API->>EXT: Optional call (Cloudinary/Gemini)
+  DB-->>API: Data response
+  EXT-->>API: Service response
+  API-->>FE: Structured result
+  FE-->>U: UI update + feedback
 ```
 
 ---
 
-### 1. Data Model & Storage
+## 26) Dashboard module-to-purpose mapping
 
-- **Questions:**
-  - `/src/app/models/PsychometricQuestion.ts` – Stores all psychometric questions (OCEAN/Big Five), section, text, type, options, order.
-  - Seeded via `/scripts/seedPsychometricQuestions.ts` (see script for sample questions).
-- **Attempts:**
-  - `/src/app/models/PsychometricAttempt.ts` – Stores each user’s test attempt, answers, per-trait scores, overall score, recommendations, time, userId, takenAt.
-
-### 2. API Endpoints
-
-- **Fetch Questions:**
-  - `GET /api/psychometric/questions` → Returns all questions, grouped by section/order.
-- **Submit Attempt:**
-  - `POST /api/psychometric` → Accepts answers, calculates scores, saves attempt, returns result & recommendations.
-- **Get History:**
-  - `GET /api/psychometric` → Returns all previous attempts for the logged-in user.
-- **Analytics:**
-  - `GET /api/psychometric/analytics` → Returns user’s average scores per trait, attempt trends, most common recommended career, total attempts.
-
-### 3. Scoring Algorithm (OCEAN/Big Five)
-
-- Each question is tagged with a section: O (Openness), C (Conscientiousness), E (Extraversion), A (Agreeableness), N (Neuroticism).
-- User answers are mapped by questionId prefix (e.g., O-0, C-1, ...).
-- Each answer is scored 0–4 (Strongly Disagree → Strongly Agree).
-- For each trait:
-  - **score = sum of answers for that trait**
-  - **maxScore = number of questions × 4**
-  - **percentage = (score / maxScore) × 100**
-  - **interpretation:**
-    - 0–50%: Low
-    - 51–75%: Moderate
-    - 76–100%: High
-- **Career Recommendations:**
-  - Top 2 traits are mapped to suggested career fields, courses, and top colleges (see `/api/psychometric/route.ts` for mapping logic).
-
-#### Example (from `/api/psychometric/route.ts`):
-```ts
-const categories = [
-  { key: "O", label: "Openness" },
-  { key: "C", label: "Conscientiousness" },
-  { key: "E", label: "Extraversion" },
-  { key: "A", label: "Agreeableness" },
-  { key: "N", label: "Neuroticism" },
-];
-// Map answers to categories by questionId prefix
-const scores = categories.map((cat) => {
-  const catAnswers = answers.filter((a) => a.questionId.startsWith(cat.key)).map(a => a.answer);
-  const score = catAnswers.reduce((a, b) => a + (typeof b === "number" ? b : 0), 0);
-  const maxScore = catAnswers.length * 4;
-  const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
-  let interpretation = "Low";
-  if (percentage > 75) interpretation = "High";
-  else if (percentage > 50) interpretation = "Moderate";
-  return { category: cat.label, score, percentage, interpretation };
-});
-```
+| Module | Main purpose | Data source |
+|---|---|---|
+| Profile | Personal + academic details | User APIs / User model |
+| Psychometric | Personality scoring and recommendations | Psychometric APIs / Psychometric models |
+| Colleges | Browse/filter colleges | Colleges APIs / College model |
+| Careers | Career path discovery | Career APIs / Career model |
+| Exams | Exam information + suggestions | Exams APIs / Exam model |
+| Scholarships | Scholarship exploration | Scholarship APIs / Scholarship model |
+| Counseling | Session browsing/booking | Counselor APIs / CounselingSession model |
+| Progress | User milestone status | Progress API / Progress model |
+| Feedback | Issue/suggestion with media | Feedback API / Feedback model + Cloudinary |
 
 ---
 
-## 🖥️ Frontend Flow: Dynamic Test, Analytics, History
+## 27) Security, privacy, and reliability checklist
 
-- **Dynamic Test UI:** `/src/app/studentDashboard/components/PsychometricTest.tsx`
-  - Fetches all questions from `/api/psychometric/questions` on mount
-  - Groups by section, renders progress, tracks time per section
-  - On submit, POSTs answers to `/api/psychometric`, shows result, recommendations, and saves to history
-  - Fetches analytics (`/api/psychometric/analytics`) and history (`/api/psychometric`) for user
-  - Advanced UI: animated transitions, error handling, loading states
+### Security controls (present)
+- Environment-based secret handling
+- JWT auth helper layer
+- Server-side API route processing
 
-- **Dashboard Structure:** `/src/app/studentDashboard/page.tsx`, `/src/app/components/Sidebar.tsx`
-  - Sidebar navigation for all dashboard features (profile, progress, colleges, feedback, etc.)
+### Security controls (recommended next)
+- Token rotation strategy
+- Refresh token mechanism
+- Rate limiting on auth/chatbot routes
+- Input sanitization middleware on all write routes
+- Audit logging for auth-sensitive actions
 
----
-
-## 🔒 Authentication & Security
-
-- **JWT-based authentication** (see `/src/app/lib/auth.ts`):
-  - Token in Authorization header or cookie
-  - User lookup and validation for all protected endpoints
-- **Database connection** via `/src/app/lib/mongoose.ts` (singleton, cached)
-- **Environment variables:**
-  - `.env.local` for DB, JWT, Cloudinary, etc.
+### Reliability recommendations
+- Add structured logger
+- Add retry/backoff for Gemini and Cloudinary calls
+- Add health-check endpoint
+- Add centralized error-response utility
 
 ---
 
-## 🛠️ Data Seeding & Extensibility
+## 28) Quality assurance and testing plan
 
-- **Seeding script:** `/scripts/seedPsychometricQuestions.ts` – Run to populate OCEAN/Big Five questions
-- **Easily extensible:** Add new questions, sections, or scoring logic by updating models and seed script
+Current project can be improved with this suggested testing matrix:
 
----
+| Layer | Suggested tests |
+|---|---|
+| Unit | Utility functions, scoring logic, auth helpers |
+| API | Route success/failure cases, validation, auth guard behavior |
+| UI | Form validation, route transitions, dashboard interactions |
+| Integration | DB + API + external service mock flows |
+| E2E | Register → login → assessment → dashboard journey |
 
-## 📈 Analytics & Reporting
-
-- **User analytics endpoint:** `/api/psychometric/analytics/route.ts`
-  - Returns average scores per trait, attempt trends, most common recommended career, total attempts
-- **Frontend:**
-  - Visualizes analytics and history in dashboard
-
----
-
-## 📚 Other Key Models & APIs
-
-- `/src/app/models/User.ts` – User schema (profile, academic, preferences, assessments, sessions)
-- `/src/app/models/College.ts` – College schema (courses, facilities, placements, contact)
-- `/src/app/models/Counselor.ts` – Counselor schema (profile, qualifications, experience, availability)
-- `/src/app/models/Assessment.ts` – General assessment schema (for future extensibility)
-- `/src/app/api/feedback/` – Feedback endpoints (with Cloudinary upload)
-- `/src/app/api/colleges/` – Government/private college data
-- `/src/app/api/counselors/` – Bookable counseling sessions
+Recommended tools: Jest/Vitest + React Testing Library + Playwright/Cypress.
 
 ---
 
-## 📝 How to Run & Develop
+## 29) Deployment and operations checklist
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-2. **Set up environment variables:**
-   - Copy `.env.local.example` to `.env.local` and fill in MongoDB, JWT, Cloudinary, etc.
-3. **Seed psychometric questions:**
-   ```bash
-   npm run ts-node scripts/seedPsychometricQuestions.ts
-   ```
-4. **Start dev server:**
-   ```bash
-   npm run dev
-   ```
+Before production deployment:
+
+1. Move all secrets to deployment environment settings.
+2. Confirm MongoDB network allowlist and database user permissions.
+3. Verify Cloudinary credentials and upload presets.
+4. Verify Gemini key usage limits and quota.
+5. Run `npm run build` and smoke test critical routes.
+6. Enable monitoring (errors + uptime).
+7. Add backup/restore plan for database.
+
+Post-deployment checks:
+
+- Login/Register works
+- Dashboard loads
+- Psychometric submit works
+- Notification pages render
+- Feedback upload works
+- Chatbot responds
 
 ---
 
-## 🏆 Credits & License
+## 30) Known gaps and professional roadmap
 
-- Built by [ashwanik0777](https://github.com/ashwanik0777) and contributors
-- MIT License
+### Known gaps (current)
+- Build currently skips lint/type strict blocking.
+- Some modules still need stronger production validation.
+- Full CI/CD quality gates are not yet enforced.
+
+### Roadmap (priority order)
+1. Fix all TypeScript and ESLint issues; remove build-skip flags.
+2. Add role-based access model (student/admin/counselor).
+3. Add persistent notifications with read/unread and reminders.
+4. Add full i18n for UI and chatbot prompt pipeline.
+5. Add automated tests and CI quality checks.
+6. Add analytics dashboard for admin-level product insights.
+
+---
+
+## 31) Professional handover notes
+
+This README is prepared as a project-report style technical handover document.
+
+It is designed so a new developer can:
+- Understand system scope quickly
+- Set up and run the project locally
+- Locate every major module and API route
+- Understand data and integration flow
+- Plan production hardening steps
