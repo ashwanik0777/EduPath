@@ -14,6 +14,9 @@ import {
   Award,
   UserCheck,
   Bell,
+  Target,
+  Clock,
+  Wrench,
 } from "lucide-react";
 import { Sidebar, MenuItem } from "@/app/components/Sidebar";
 
@@ -79,7 +82,57 @@ type MeResponse = {
   };
 };
 
-type TabKey = "overview" | "users" | "feedback" | "content";
+type BaseTabKey = "overview" | "users" | "feedback" | "content";
+type PlaceholderTabKey =
+  | "profile"
+  | "progressTracker"
+  | "psychometricTest"
+  | "govCollege"
+  | "shortListedColleges"
+  | "carrerOption"
+  | "counselingBooking"
+  | "competitiveExams"
+  | "scholarships";
+type TabKey = BaseTabKey | PlaceholderTabKey;
+
+const placeholderTabs: Record<PlaceholderTabKey, { title: string; description: string }> = {
+  profile: {
+    title: "Profile",
+    description: "Admin profile management module is under development.",
+  },
+  progressTracker: {
+    title: "Progress Tracker",
+    description: "Cross-role progress analytics module is under development.",
+  },
+  psychometricTest: {
+    title: "Psychometric Test",
+    description: "Psychometric test controls for admin are under development.",
+  },
+  govCollege: {
+    title: "Government College",
+    description: "Government college management section is under development.",
+  },
+  shortListedColleges: {
+    title: "Short Listed College",
+    description: "Short listed college admin tools are under development.",
+  },
+  carrerOption: {
+    title: "Career Option",
+    description: "Career option management panel is under development.",
+  },
+  counselingBooking: {
+    title: "Counseling Booking",
+    description: "Counseling booking management module is under development.",
+  },
+  competitiveExams: {
+    title: "Competitive Exams",
+    description: "Competitive exams admin controls are under development.",
+  },
+  scholarships: {
+    title: "Scholarships",
+    description: "Scholarships control panel is under development.",
+  },
+};
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {
@@ -222,6 +275,15 @@ export default function AdminDashboardPage() {
     { id: "users", label: "Users", icon: Users, color: "text-blue-400" },
     { id: "feedback", label: "Feedback", icon: MessageSquare, color: "text-cyan-400" },
     { id: "content", label: "Content", icon: FileCog, color: "text-emerald-400" },
+    { id: "profile", label: "Profile", icon: Users, color: "text-gray-400" },
+    { id: "progressTracker", label: "Progress Tracker", icon: RefreshCw, color: "text-rose-400" },
+    { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-400" },
+    { id: "govCollege", label: "Government College", icon: GraduationCap, color: "text-blue-400" },
+    { id: "shortListedColleges", label: "Short Listed College", icon: CalendarDays, color: "text-teal-400" },
+    { id: "carrerOption", label: "Career Option", icon: Briefcase, color: "text-emerald-400" },
+    { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-400" },
+    { id: "competitiveExams", label: "Competitive Exams", icon: Award, color: "text-orange-400" },
+    { id: "scholarships", label: "Scholarships", icon: GraduationCap, color: "text-yellow-400" },
   ];
 
   const metricCards = useMemo(
@@ -479,6 +541,23 @@ export default function AdminDashboardPage() {
               <h4 className="font-semibold text-slate-900 mb-1">Scholarships Data API</h4>
               <p className="text-sm text-slate-600">View scholarship records used on website modules.</p>
             </a>
+          </div>
+        )}
+
+        {activeTab in placeholderTabs && (
+          <div className="bg-white rounded-xl border border-slate-200 p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                <Wrench className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                {placeholderTabs[activeTab as PlaceholderTabKey].title}
+              </h3>
+            </div>
+            <p className="text-slate-600">{placeholderTabs[activeTab as PlaceholderTabKey].description}</p>
+            <div className="mt-5 rounded-lg border border-dashed border-slate-300 p-6 text-slate-500 text-sm">
+              Under Development
+            </div>
           </div>
         )}
       </main>

@@ -7,7 +7,6 @@ import {
   Users,
   MessageSquare,
   Clock,
-  TrendingUp,
   Sparkles,
   RefreshCw,
   Video,
@@ -16,10 +15,70 @@ import {
   CheckCircle2,
   UserCircle2,
   Star,
+  GraduationCap,
+  Award,
+  Target,
+  Briefcase,
+  Wrench,
 } from "lucide-react";
 import { Sidebar, MenuItem } from "@/app/components/Sidebar";
 
-type CounselorTab = "overview" | "sessions" | "students" | "messages";
+type CoreCounselorTab = "overview" | "sessions" | "students" | "messages";
+type PlaceholderCounselorTab =
+  | "profile"
+  | "progressTracker"
+  | "psychometricTest"
+  | "govCollege"
+  | "shortListedColleges"
+  | "carrerOption"
+  | "counselingBooking"
+  | "competitiveExams"
+  | "scholarships"
+  | "feedback&Suggestions";
+type CounselorTab = CoreCounselorTab | PlaceholderCounselorTab;
+
+const placeholderTabs: Record<PlaceholderCounselorTab, { title: string; description: string }> = {
+  profile: {
+    title: "Profile",
+    description: "Counselor profile management module is under development.",
+  },
+  progressTracker: {
+    title: "Progress Tracker",
+    description: "Counselor progress insights are under development.",
+  },
+  psychometricTest: {
+    title: "Psychometric Test",
+    description: "Psychometric test review panel is under development.",
+  },
+  govCollege: {
+    title: "Government College",
+    description: "Government college reference section is under development.",
+  },
+  shortListedColleges: {
+    title: "Short Listed College",
+    description: "Short listed college advisory module is under development.",
+  },
+  carrerOption: {
+    title: "Career Option",
+    description: "Career option recommendation workspace is under development.",
+  },
+  counselingBooking: {
+    title: "Counseling Booking",
+    description: "Detailed counseling booking workflow is under development.",
+  },
+  competitiveExams: {
+    title: "Competitive Exams",
+    description: "Competitive exam mentoring section is under development.",
+  },
+  scholarships: {
+    title: "Scholarships",
+    description: "Scholarships guidance module is under development.",
+  },
+  "feedback&Suggestions": {
+    title: "Feedback & Suggestions",
+    description: "Counselor feedback and suggestions panel is under development.",
+  },
+};
 
 type MeResponse = {
   success: boolean;
@@ -107,6 +166,16 @@ export default function CounselorDashboardPage() {
     { id: "sessions", label: "Sessions", icon: Calendar, color: "text-blue-400" },
     { id: "students", label: "Students", icon: Users, color: "text-emerald-400" },
     { id: "messages", label: "Messages", icon: MessageSquare, color: "text-cyan-400" },
+    { id: "profile", label: "Profile", icon: Users, color: "text-gray-400" },
+    { id: "progressTracker", label: "Progress Tracker", icon: RefreshCw, color: "text-rose-400" },
+    { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-400" },
+    { id: "govCollege", label: "Government College", icon: GraduationCap, color: "text-blue-400" },
+    { id: "shortListedColleges", label: "Short Listed College", icon: Calendar, color: "text-teal-400" },
+    { id: "carrerOption", label: "Career Option", icon: Briefcase, color: "text-emerald-400" },
+    { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-400" },
+    { id: "competitiveExams", label: "Competitive Exams", icon: Award, color: "text-orange-400" },
+    { id: "scholarships", label: "Scholarships", icon: GraduationCap, color: "text-yellow-400" },
+    { id: "feedback&Suggestions", label: "Feedback & Suggestions", icon: MessageSquare, color: "text-violet-400" },
   ];
 
   const loadOverview = async () => {
@@ -421,6 +490,23 @@ export default function CounselorDashboardPage() {
             </div>
             <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 text-sm">
               Professional counselor workspace is ready and can be extended with complete communication workflows.
+            </div>
+          </div>
+        )}
+
+        {activeTab in placeholderTabs && (
+          <div className="bg-white rounded-xl border border-slate-200 p-8 shadow-sm">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                <Wrench className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                {placeholderTabs[activeTab as PlaceholderCounselorTab].title}
+              </h3>
+            </div>
+            <p className="text-slate-600">{placeholderTabs[activeTab as PlaceholderCounselorTab].description}</p>
+            <div className="mt-5 rounded-lg border border-dashed border-slate-300 p-6 text-slate-500 text-sm">
+              Under Development
             </div>
           </div>
         )}
