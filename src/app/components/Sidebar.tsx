@@ -27,7 +27,7 @@ interface SidebarProps {
   menuItems: MenuItem[];
   activePage: string;
   onPageChange: (id: string) => void;
-  userInfo: { name: string; role: string };
+  userInfo: { name: string; role: string; profileImage?: string };
   onLogout: () => void;
 }
 
@@ -157,8 +157,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!sidebarCollapsed && (
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div className="p-2 bg-gray-700 rounded-full mr-3">
-                  <Users className="h-4 w-4 text-white" />
+                <div className="mr-3">
+                  {userInfo.profileImage ? (
+                    <img
+                      src={userInfo.profileImage}
+                      alt={userInfo.name}
+                      className="h-8 w-8 rounded-full object-cover border border-gray-600"
+                    />
+                  ) : (
+                    <div className="p-2 bg-gray-700 rounded-full">
+                      <Users className="h-4 w-4 text-white" />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-white">{userInfo.name}</h3>
@@ -193,8 +203,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="bg-gray-800 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <div className="p-2 bg-gray-700 rounded-full mr-3">
-                  <Users className="h-4 w-4 text-white" />
+                <div className="mr-3">
+                  {userInfo.profileImage ? (
+                    <img
+                      src={userInfo.profileImage}
+                      alt={userInfo.name}
+                      className="h-8 w-8 rounded-full object-cover border border-gray-600"
+                    />
+                  ) : (
+                    <div className="p-2 bg-gray-700 rounded-full">
+                      <Users className="h-4 w-4 text-white" />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-white">{userInfo.name}</h3>
@@ -212,9 +232,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-2">
-            <div className="p-2 bg-gray-700 rounded-full">
-              <Users className="h-4 w-4 text-white" />
-            </div>
+            {userInfo.profileImage ? (
+              <img
+                src={userInfo.profileImage}
+                alt={userInfo.name}
+                className="h-8 w-8 rounded-full object-cover border border-gray-600"
+              />
+            ) : (
+              <div className="p-2 bg-gray-700 rounded-full">
+                <Users className="h-4 w-4 text-white" />
+              </div>
+            )}
             <button
               onClick={onLogout}
               className="p-2 hover:bg-red-600 rounded-lg transition-colors group"

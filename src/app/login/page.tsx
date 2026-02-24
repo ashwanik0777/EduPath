@@ -50,7 +50,13 @@ export default function Login() {
       } else {
         setSuccess(true);
         const userRole = result?.user?.role;
-        window.location.href = userRole === "admin" ? "/adminDashboard" : "/studentDashboard";
+        if (userRole === "admin") {
+          window.location.href = "/adminDashboard";
+        } else if (userRole === "counselor") {
+          window.location.href = "/counselorDashboard";
+        } else {
+          window.location.href = "/studentDashboard";
+        }
       }
     } catch (e: any) {
       setError(e.message || "Login failed. Please try again.");

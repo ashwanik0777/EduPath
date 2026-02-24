@@ -33,7 +33,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const hideHeaderFooter = pathname === "/studentDashboard" || pathname === "/login" || pathname === "/register";
+  const hideHeaderFooter =
+    pathname === "/studentDashboard" ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname.startsWith("/adminDashboard") ||
+    pathname.startsWith("/counselorDashboard");
 
   return (
     <html lang="en">
