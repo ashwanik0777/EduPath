@@ -49,7 +49,8 @@ export default function Login() {
         setError(result.message || "Login failed. Please try again.");
       } else {
         setSuccess(true);
-        window.location.href = "/studentDashboard";
+        const userRole = result?.user?.role;
+        window.location.href = userRole === "admin" ? "/adminDashboard" : "/studentDashboard";
       }
     } catch (e: any) {
       setError(e.message || "Login failed. Please try again.");
