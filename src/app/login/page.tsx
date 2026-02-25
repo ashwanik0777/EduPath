@@ -5,35 +5,37 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import { Separator } from "@/app/components/ui/separator";
 import {
   GraduationCap,
-  User,
   Lock,
   ArrowRight,
-  Mail,
-  Github,
   Check,
-  CalendarDays,
+  Users,
   BookOpen,
-  ShieldCheck,
+  TrendingUp,
+  Sparkles,
 } from "lucide-react";
-import { IoLogoGoogle, IoLogoApple } from "react-icons/io5";
 
-// Example: Accessing a client ID from .env (must start with REACT_APP_)
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
-
 type LoginFormValues = z.infer<typeof loginSchema>;
+
+const stats = [
+  { value: "12,400+", label: "Students guided", icon: Users },
+  { value: "340+", label: "Counseling sessions", icon: BookOpen },
+  { value: "91%", label: "Career match rate", icon: TrendingUp },
+];
+
+void GOOGLE_CLIENT_ID;
 
 export default function Login() {
   const [success, setSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const form = useForm<LoginFormValues>({
@@ -47,6 +49,7 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValues) => {
     setError("");
     setSuccess(false);
+    setSubmitting(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -59,200 +62,250 @@ export default function Login() {
       } else {
         setSuccess(true);
         const userRole = result?.user?.role;
-        if (userRole === "admin") {
-          window.location.href = "/adminDashboard";
-        } else if (userRole === "counselor") {
-          window.location.href = "/counselorDashboard";
-        } else {
-          window.location.href = "/studentDashboard";
-        }
+        if (userRole === "admin") window.location.href = "/adminDashboard";
+        else if (userRole === "counselor") window.location.href = "/counselorDashboard";
+        else window.location.href = "/studentDashboard";
       }
-    } catch (e: any) {
-      setError(e.message || "Login failed. Please try again.");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Login failed. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 px-4 py-6 md:px-8 md:py-8">
-      <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-7xl grid-cols-1 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl lg:grid-cols-2">
-        <section className="relative border-b border-slate-200 bg-slate-50 p-6 md:p-10 lg:border-b-0 lg:border-r">
+    <div className="flex min-h-screen flex-col lg:flex-row">
+      {/* ── LEFT PANEL ── */}
+      <section
+        className="relative flex flex-col justify-between overflow-hidden bg-slate-900 p-8 md:p-12 lg:w-[52%]"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99,102,241,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 80% at 80% 90%, rgba(99,102,241,0.08) 0%, transparent 70%)",
+        }}
+      >
+        {/* dot-grid texture */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+
+        {/* giant decorative letter */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-6 -top-10 select-none text-[22rem] font-black leading-none text-white"
+          style={{ opacity: 0.025 }}
+        >
+          E
+        </span>
+
+        {/* accent rings */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full border border-indigo-500/20"
+        />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full border border-indigo-500/10"
+        />
+
+        {/* ── top content ── */}
+        <div className="relative z-10">
+          {/* brand */}
           <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-indigo-600 p-3 shadow-sm">
+            <div className="rounded-2xl bg-indigo-600 p-3 shadow-lg shadow-indigo-600/40">
               <GraduationCap className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">EduPath</h1>
-              <p className="text-xs tracking-wide text-slate-500">CAREER GUIDANCE & COUNSELING</p>
+              <p className="text-xl font-bold tracking-tight text-white">EduPath</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-400/80">
+                Career Guidance Platform
+              </p>
             </div>
           </div>
 
-          <div className="mt-10 space-y-4">
-            <h2 className="text-3xl font-bold leading-tight text-slate-900 md:text-4xl">
-              Welcome back to your counseling workspace
-            </h2>
-            <p className="max-w-xl text-base text-slate-600">
-              Continue student mentoring, track career progress, and manage sessions from one secure platform.
+          {/* headline */}
+          <div className="mt-12">
+            <h1 className="text-4xl font-black leading-[1.1] text-white md:text-5xl">
+              Shape your{" "}
+              <span className="relative inline-block text-indigo-400">
+                career
+                <span className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-indigo-500/60" />
+              </span>
+              <br />
+              with expert guidance
+            </h1>
+            <p className="mt-5 max-w-md text-base leading-relaxed text-slate-400">
+              Personalized counseling, real-time assessments, and government college pathways — built for J&K students.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-white p-4">
-              <div className="flex items-center gap-2 text-slate-900">
-                <CalendarDays className="h-4 w-4 text-indigo-600" />
-                <p className="text-sm font-semibold">Session Planning</p>
-              </div>
-              <p className="mt-1 text-xs text-slate-600">Schedule and manage counseling sessions with students.</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4">
-              <div className="flex items-center gap-2 text-slate-900">
-                <BookOpen className="h-4 w-4 text-indigo-600" />
-                <p className="text-sm font-semibold">Career Guidance</p>
-              </div>
-              <p className="mt-1 text-xs text-slate-600">Support students with exams, scholarships, and career pathways.</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:col-span-2">
-              <div className="flex items-center gap-2 text-slate-900">
-                <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                <p className="text-sm font-semibold">Secure & Role-Based Access</p>
-              </div>
-              <p className="mt-1 text-xs text-slate-600">Admin, counselor, and student dashboards open automatically after sign in.</p>
-            </div>
+          {/* AI badge */}
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 text-xs font-semibold text-indigo-300">
+            <Sparkles className="h-3.5 w-3.5" />
+            AI-Powered Career Matching
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-600">
-            <span>New to EduPath?</span>
-            <Link href="/register" className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 font-medium text-slate-800 hover:bg-slate-100">
-              Create account
-            </Link>
-          </div>
-        </section>
-
-        <section className="flex items-center justify-center bg-white p-6 md:p-10">
-          <div className="w-full max-w-md">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-slate-900">Sign in</h3>
-              <p className="mt-1 text-sm text-slate-600">Use your registered credentials to continue.</p>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          {/* stats */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            {stats.map(({ value, label, icon: Icon }) => (
+              <div
+                key={label}
+                className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-sm"
+              >
+                <Icon className="h-4 w-4 text-indigo-400" />
                 <div>
-                  <label className="mb-1 flex items-center text-sm font-medium text-slate-700">
-                    <User className="mr-2 h-4 w-4 text-slate-500" />
-                    Email
-                  </label>
-                  <Input
-                    placeholder="Enter your email"
-                    className="h-11 rounded-lg border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
-                    {...form.register("email")}
-                  />
-                  <span className="text-xs text-rose-600">{form.formState.errors.email?.message}</span>
+                  <p className="text-sm font-bold text-white">{value}</p>
+                  <p className="text-[10px] text-slate-400">{label}</p>
                 </div>
+              </div>
+            ))}
+          </div>
 
-                <div>
-                  <div className="mb-1 flex items-center justify-between">
-                    <label className="flex items-center text-sm font-medium text-slate-700">
-                      <Lock className="mr-2 h-4 w-4 text-slate-500" />
-                      Password
-                    </label>
-                    <Link href="/passwordReset" className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    className="h-11 rounded-lg border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
-                    {...form.register("password")}
-                  />
-                  <span className="text-xs text-rose-600">{form.formState.errors.password?.message}</span>
-                </div>
+          {/* quote */}
+          <blockquote className="mt-10 border-l-2 border-indigo-500 pl-5">
+            <p className="text-sm italic leading-relaxed text-slate-400">
+              &quot;EduPath helped me discover my strengths and find the right engineering college. It felt like having a
+              personal mentor.&quot;
+            </p>
+            <footer className="mt-2 text-xs font-semibold text-indigo-400">— Aisha R., JEE 2024</footer>
+          </blockquote>
+        </div>
 
-                <div className="flex items-center">
-                  <input type="checkbox" id="remember" className="h-4 w-4 rounded border-slate-300 text-indigo-600" />
-                  <label htmlFor="remember" className="ml-2 text-sm text-slate-600">
-                    Remember me
-                  </label>
-                </div>
+        {/* ── bottom ── */}
+        <div className="relative z-10 mt-12 flex items-center gap-3 text-sm text-slate-500">
+          <span>Don&apos;t have an account?</span>
+          <Link
+            href="/register"
+            className="font-semibold text-indigo-400 underline-offset-4 hover:text-indigo-300 hover:underline"
+          >
+            Create one free
+          </Link>
+        </div>
+      </section>
 
-                {error && <div className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{error}</div>}
-                {success && (
-                  <div className="flex items-center rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
-                    <Check className="mr-2 h-5 w-5" />
-                    <span>Login successful.</span>
-                  </div>
-                )}
+      {/* ── RIGHT PANEL ── */}
+      <section className="flex flex-1 flex-col items-center justify-center bg-white px-6 py-12 md:px-14">
+        <div className="w-full max-w-md">
+          {/* heading */}
+          <div className="mb-8">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-500">Welcome back</p>
+            <h2 className="mt-1 text-3xl font-black text-slate-900">Sign in</h2>
+            <p className="mt-1.5 text-sm text-slate-500">Enter your credentials to access your dashboard.</p>
+          </div>
 
-                <Button type="submit" className="h-11 w-full rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">
-                  <span className="mr-1">Sign in</span>
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
-              </form>
+          {/* form */}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <div>
+              <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                Email address
+              </label>
+              <Input
+                placeholder="you@example.com"
+                className="h-12 rounded-xl border-slate-200 bg-slate-50 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                {...form.register("email")}
+              />
+              <span className="mt-1 block text-xs text-rose-500">{form.formState.errors.email?.message}</span>
             </div>
 
-            <div className="mt-6">
-              <div className="relative mb-5">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator className="w-full border-slate-200" />
-                </div>
-                <div className="relative flex justify-center text-xs">
-                  <span className="bg-white px-3 text-slate-500">Available sign-in methods</span>
-                </div>
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Password</label>
+                <Link
+                  href="/passwordReset"
+                  className="text-xs font-semibold text-indigo-500 hover:text-indigo-600"
+                >
+                  Forgot password?
+                </Link>
               </div>
-
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-slate-200 bg-white p-3">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-indigo-600 p-2">
-                      <Mail className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">Email</p>
-                      <p className="text-xs text-slate-500">Primary authentication method</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-white p-3">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg border border-slate-200 bg-white p-2">
-                      <IoLogoGoogle className="h-4 w-4 text-[#4285F4]" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">Google</p>
-                      <p className="text-xs text-slate-500">Client ID configured: {GOOGLE_CLIENT_ID ? "Yes" : "No"}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-white p-3">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-slate-900 p-2">
-                      <Github className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">GitHub</p>
-                      <p className="text-xs text-slate-500">OAuth setup ready for activation</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-white p-3">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-slate-900 p-2">
-                      <IoLogoApple className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900">Apple</p>
-                      <p className="text-xs text-slate-500">Enterprise login option</p>
-                    </div>
-                  </div>
-                </div>
+              <div className="relative">
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  className="h-12 rounded-xl border-slate-200 bg-slate-50 pr-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                  {...form.register("password")}
+                />
+                <Lock className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
+              <span className="mt-1 block text-xs text-rose-500">{form.formState.errors.password?.message}</span>
+            </div>
+
+            {error && (
+              <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-600">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                <Check className="h-4 w-4 flex-none" />
+                <span>Login successful. Redirecting…</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-slate-900 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {submitting ? "Signing in…" : "Sign in"}
+              {!submitting && <ArrowRight className="h-4 w-4" />}
+            </button>
+          </form>
+
+          {/* OAuth — no separator line */}
+          <div className="mt-8">
+            <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Or continue with
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              {/* Google */}
+              <button
+                type="button"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition hover:border-slate-300 hover:shadow-md"
+                aria-label="Sign in with Google"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
+                  <path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z" />
+                  <path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.615 24 12.255 24z" />
+                  <path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z" />
+                  <path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.64 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z" />
+                </svg>
+              </button>
+
+              {/* GitHub */}
+              <button
+                type="button"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition hover:border-slate-300 hover:shadow-md"
+                aria-label="Sign in with GitHub"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5 text-slate-900" fill="currentColor" aria-hidden>
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+              </button>
+
+              {/* Apple */}
+              <button
+                type="button"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition hover:border-slate-300 hover:shadow-md"
+                aria-label="Sign in with Apple"
+              >
+                <svg viewBox="0 0 24 24" className="h-5 w-5 text-slate-900" fill="currentColor" aria-hidden>
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                </svg>
+              </button>
             </div>
           </div>
-        </section>
-      </div>
+
+          {/* footer */}
+          <p className="mt-10 text-center text-xs text-slate-400">
+            &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
