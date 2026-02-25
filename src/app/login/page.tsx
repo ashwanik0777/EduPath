@@ -74,7 +74,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col lg:flex-row">
+    <div className="relative flex min-h-screen flex-col overflow-hidden lg:flex-row">
       {/* ── LEFT PANEL ── */}
       <section
         className="relative flex flex-col justify-between overflow-hidden bg-slate-900 p-8 md:p-12 lg:w-[52%]"
@@ -187,6 +187,56 @@ export default function Login() {
           </Link>
         </div>
       </section>
+
+      {/* ── WAVE DIVIDER ── only on lg+ screens ── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 z-20 hidden lg:block"
+        style={{ left: "calc(52% - 48px)", width: "96px" }}
+      >
+        <svg
+          className="h-full w-full"
+          viewBox="0 0 96 900"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* dark left fill — matches bg-slate-900 */}
+          <path
+            d="M 0 0
+               L 48 0
+               C 90 75, 96 150, 72 225
+               C 48 300, 0 375, 24 450
+               C 48 525, 96 600, 72 675
+               C 48 750, 0 825, 48 900
+               L 0 900
+               Z"
+            fill="#0f172a"
+          />
+          {/* white right fill — matches bg-white */}
+          <path
+            d="M 96 0
+               L 48 0
+               C 90 75, 96 150, 72 225
+               C 48 300, 0 375, 24 450
+               C 48 525, 96 600, 72 675
+               C 48 750, 0 825, 48 900
+               L 96 900
+               Z"
+            fill="white"
+          />
+          {/* subtle glow line on the wave */}
+          <path
+            d="M 48 0
+               C 90 75, 96 150, 72 225
+               C 48 300, 0 375, 24 450
+               C 48 525, 96 600, 72 675
+               C 48 750, 0 825, 48 900"
+            fill="none"
+            stroke="rgba(99,102,241,0.35)"
+            strokeWidth="1.5"
+          />
+        </svg>
+      </div>
 
       {/* ── RIGHT PANEL ── */}
       <section className="flex flex-1 flex-col items-center justify-center bg-white px-6 py-12 md:px-14">
