@@ -121,7 +121,14 @@ type PlaceholderTabKey =
   | "counselingBooking"
   | "competitiveExams"
   | "scholarships"
-  | "websiteManagement";
+  | "websiteManagement"
+  | "websiteStatistics"
+  | "websiteHome"
+  | "websiteAbout"
+  | "websiteCareerAssessment"
+  | "websiteGovernmentCollege"
+  | "websiteStudyResources"
+  | "websiteNotifications";
 type TabKey = BaseTabKey | PlaceholderTabKey;
 
 type ContentResource = "colleges" | "careers" | "exams" | "scholarships";
@@ -212,6 +219,47 @@ type CounselingResponse = {
   }[];
 };
 
+type WebsiteSettings = {
+  maintenanceMode: boolean;
+  heroTitle: string;
+  heroSubtitle: string;
+  primaryColor: string;
+  supportEmail: string;
+  footerText: string;
+  seoTitle: string;
+  seoDescription: string;
+};
+
+type WebsiteAnnouncement = {
+  id: string;
+  text: string;
+  active: boolean;
+  createdAt?: string;
+};
+
+type WebsitePage = {
+  id: string;
+  name: string;
+  route: string;
+  status: "published" | "draft";
+  records: number;
+  lastUpdated: string;
+  owner: string;
+  title: string;
+  subtitle: string;
+  seoTitle: string;
+  seoDescription: string;
+};
+
+type WebsiteManagementResponse = {
+  success: boolean;
+  data: {
+    settings: WebsiteSettings;
+    announcements: WebsiteAnnouncement[];
+    pages: WebsitePage[];
+  };
+};
+
 type ConfirmationState = {
   open: boolean;
   title: string;
@@ -276,13 +324,20 @@ export default function AdminDashboardPage() {
     competitiveExams: false,
     scholarships: false,
     websiteManagement: false,
+    websiteStatistics: false,
+    websiteHome: false,
+    websiteAbout: false,
+    websiteCareerAssessment: false,
+    websiteGovernmentCollege: false,
+    websiteStudyResources: false,
+    websiteNotifications: false,
   });
 
   const [collegeForm, setCollegeForm] = useState({ name: "", type: "government", category: "engineering", city: "", state: "" });
   const [careerForm, setCareerForm] = useState({ title: "", stream: "", salary_range: "", career_nature: "" });
   const [examForm, setExamForm] = useState({ name: "", type: "", eligibility: "", exam_date: "", state: "" });
   const [scholarshipForm, setScholarshipForm] = useState({ name: "", provider: "", amount: "", deadline: "" });
-  const [websiteSettings, setWebsiteSettings] = useState({
+  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>({
     maintenanceMode: false,
     heroTitle: "Discover Your Best Career Path",
     heroSubtitle: "Personalized guidance, government colleges, scholarships, and counseling in one platform.",
@@ -293,27 +348,8 @@ export default function AdminDashboardPage() {
     seoDescription: "Career planning and counseling platform for students.",
   });
   const [announcementInput, setAnnouncementInput] = useState("");
-  const [websiteAnnouncements, setWebsiteAnnouncements] = useState<Array<{ id: string; text: string; active: boolean }>>([
-    { id: "ann-1", text: "Scholarship update for 2026 applications is now live.", active: true },
-    { id: "ann-2", text: "Counseling slots for this week are open.", active: true },
-  ]);
-  const [websitePages, setWebsitePages] = useState<
-    Array<{
-      id: string;
-      name: string;
-      route: string;
-      status: "published" | "draft";
-      records: number;
-      lastUpdated: string;
-      owner: string;
-    }>
-  >([
-    { id: "home", name: "Homepage", route: "/", status: "published", records: 14, lastUpdated: "24 Feb 2026", owner: "Content Team" },
-    { id: "about", name: "About Page", route: "/about", status: "published", records: 6, lastUpdated: "22 Feb 2026", owner: "Admin" },
-    { id: "gov-colleges", name: "Government Colleges", route: "/governmentCollege", status: "published", records: contentData.colleges.length || 0, lastUpdated: "21 Feb 2026", owner: "Data Team" },
-    { id: "resources", name: "Study Resources", route: "/studyResources", status: "draft", records: 11, lastUpdated: "20 Feb 2026", owner: "Academic Team" },
-    { id: "assessment", name: "Career Assessment", route: "/careerAssessment", status: "published", records: assessments.length || 0, lastUpdated: "25 Feb 2026", owner: "Counselor Ops" },
-  ]);
+  const [websiteAnnouncements, setWebsiteAnnouncements] = useState<WebsiteAnnouncement[]>([]);
+  const [websitePages, setWebsitePages] = useState<WebsitePage[]>([]);
 
   const [adminInfo, setAdminInfo] = useState<{ name: string; role: string; profileImage?: string }>({
     name: "Admin",
@@ -344,6 +380,27 @@ export default function AdminDashboardPage() {
     carrerOption: "careers",
     competitiveExams: "exams",
     scholarships: "scholarships",
+  };
+
+  const websiteTabToPageId: Record<
+    "websiteHome" | "websiteAbout" | "websiteCareerAssessment" | "websiteGovernmentCollege" | "websiteStudyResources" | "websiteNotifications",
+    string
+  > = {
+    websiteHome: "home",
+    websiteAbout: "about",
+    websiteCareerAssessment: "career-assessment",
+    websiteGovernmentCollege: "government-college",
+    websiteStudyResources: "study-resources",
+    websiteNotifications: "notifications",
+  };
+
+  const pageIdToWebsiteTab: Record<string, TabKey> = {
+    home: "websiteHome",
+    about: "websiteAbout",
+    "career-assessment": "websiteCareerAssessment",
+    "government-college": "websiteGovernmentCollege",
+    "study-resources": "websiteStudyResources",
+    notifications: "websiteNotifications",
   };
 
   const showSuccessToast = (title: string, description: string) => {
@@ -433,7 +490,7 @@ export default function AdminDashboardPage() {
           profileImage: me.user.profile?.profileImage,
         });
       }
-      await Promise.all([loadOverview(), loadUsers(), loadFeedbacks(), loadAnalytics(), loadProfile()]);
+      await Promise.all([loadOverview(), loadUsers(), loadFeedbacks(), loadAnalytics(), loadProfile(), loadWebsiteManagement()]);
     } catch {
       setError("Failed to load admin data. Please refresh.");
     } finally {
@@ -450,6 +507,9 @@ export default function AdminDashboardPage() {
     setError("");
     try {
       await Promise.all([loadOverview(), loadUsers(userSearch), loadFeedbacks(feedbackStatus), loadAnalytics()]);
+      if (activeTab === "websiteManagement") {
+        await loadWebsiteManagement();
+      }
     } catch {
       setError("Refresh failed.");
     } finally {
@@ -580,55 +640,127 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const saveWebsiteManagement = () => {
-    showSuccessToast("Website settings saved", "Website management settings updated successfully.");
+  const loadWebsiteManagement = async () => {
+    const result = await fetchJson<WebsiteManagementResponse>("/api/admin/website-management");
+    setWebsiteSettings(result.data.settings);
+    setWebsiteAnnouncements(result.data.announcements || []);
+    setWebsitePages(result.data.pages || []);
   };
 
-  const addAnnouncement = () => {
+  const saveWebsiteManagement = async () => {
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({ action: "updateSettings", payload: websiteSettings }),
+      });
+      await loadWebsiteManagement();
+      showSuccessToast("Website settings saved", "Website management settings updated successfully.");
+    } catch {
+      setError("Could not save website settings.");
+      showErrorToast("Could not save website settings.");
+    }
+  };
+
+  const addAnnouncement = async () => {
     const text = announcementInput.trim();
     if (!text) {
       showErrorToast("Please enter announcement text.");
       return;
     }
 
-    setWebsiteAnnouncements((previous) => [
-      { id: `ann-${Date.now()}`, text, active: true },
-      ...previous,
-    ]);
-    setAnnouncementInput("");
-    showSuccessToast("Announcement added", "New website announcement has been added.");
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({ action: "addAnnouncement", text }),
+      });
+      setAnnouncementInput("");
+      await loadWebsiteManagement();
+      showSuccessToast("Announcement added", "New website announcement has been added.");
+    } catch {
+      setError("Could not add announcement.");
+      showErrorToast("Could not add announcement.");
+    }
   };
 
-  const toggleAnnouncement = (id: string) => {
-    setWebsiteAnnouncements((previous) =>
-      previous.map((item) => (item.id === id ? { ...item, active: !item.active } : item)),
-    );
-    showSuccessToast("Announcement updated", "Announcement status updated.");
+  const toggleAnnouncement = async (id: string) => {
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({ action: "toggleAnnouncement", announcementId: id }),
+      });
+      await loadWebsiteManagement();
+      showSuccessToast("Announcement updated", "Announcement status updated.");
+    } catch {
+      setError("Could not update announcement.");
+      showErrorToast("Could not update announcement.");
+    }
   };
 
-  const removeAnnouncement = (id: string) => {
-    setWebsiteAnnouncements((previous) => previous.filter((item) => item.id !== id));
-    showSuccessToast("Announcement removed", "Announcement deleted successfully.");
+  const removeAnnouncement = async (id: string) => {
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({ action: "removeAnnouncement", announcementId: id }),
+      });
+      await loadWebsiteManagement();
+      showSuccessToast("Announcement removed", "Announcement deleted successfully.");
+    } catch {
+      setError("Could not remove announcement.");
+      showErrorToast("Could not remove announcement.");
+    }
   };
 
-  const toggleWebsitePageStatus = (id: string) => {
+  const toggleWebsitePageStatus = async (id: string) => {
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({ action: "togglePageStatus", pageId: id }),
+      });
+      await loadWebsiteManagement();
+      showSuccessToast("Page status updated", "Website page visibility updated successfully.");
+    } catch {
+      setError("Could not update page status.");
+      showErrorToast("Could not update page status.");
+    }
+  };
+
+  const updateWebsitePageDraft = (
+    id: string,
+    field: "title" | "subtitle" | "seoTitle" | "seoDescription" | "owner",
+    value: string,
+  ) => {
     setWebsitePages((previous) =>
-      previous.map((page) =>
-        page.id === id
-          ? {
-              ...page,
-              status: page.status === "published" ? "draft" : "published",
-              lastUpdated: new Date().toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              }),
-            }
-          : page,
-      ),
+      previous.map((page) => (page.id === id ? { ...page, [field]: value } : page)),
     );
-    showSuccessToast("Page status updated", "Website page visibility updated successfully.");
   };
+
+  const saveWebsitePage = async (id: string) => {
+    const page = websitePages.find((item) => item.id === id);
+    if (!page) return;
+
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({
+          action: "updatePage",
+          pageId: id,
+          payload: {
+            title: page.title,
+            subtitle: page.subtitle,
+            seoTitle: page.seoTitle,
+            seoDescription: page.seoDescription,
+            owner: page.owner,
+          },
+        }),
+      });
+      await loadWebsiteManagement();
+      showSuccessToast("Page updated", `${page.name} details updated successfully.`);
+    } catch {
+      setError("Could not save page details.");
+      showErrorToast("Could not save page details.");
+    }
+  };
+
 
   useEffect(() => {
     const loadTab = async () => {
@@ -646,6 +778,20 @@ export default function AdminDashboardPage() {
           await Promise.all([loadAnalytics(), loadAssessments()]);
         } else if (activeTab === "counselingBooking") {
           await Promise.all([loadCounseling(), loadAnalytics()]);
+        } else if (
+          activeTab === "websiteManagement" ||
+          activeTab === "websiteStatistics" ||
+          activeTab === "websiteHome" ||
+          activeTab === "websiteAbout" ||
+          activeTab === "websiteCareerAssessment" ||
+          activeTab === "websiteGovernmentCollege" ||
+          activeTab === "websiteStudyResources" ||
+          activeTab === "websiteNotifications"
+        ) {
+          await loadWebsiteManagement();
+          if (activeTab === "websiteStatistics") {
+            await Promise.all([loadOverview(), loadAnalytics()]);
+          }
         } else {
           const resource = tabToResource[activeTab];
           if (resource) {
@@ -704,6 +850,13 @@ export default function AdminDashboardPage() {
       color: "text-emerald-500",
       children: [
         { id: "websiteManagement", label: "Website Controls", icon: Settings2, color: "text-indigo-500" },
+        { id: "websiteStatistics", label: "Website Statistics", icon: LineChart, color: "text-cyan-500" },
+        { id: "websiteHome", label: "Home", icon: Globe, color: "text-blue-500" },
+        { id: "websiteAbout", label: "About", icon: FileCog, color: "text-violet-500" },
+        { id: "websiteCareerAssessment", label: "Career Assessment", icon: Target, color: "text-purple-500" },
+        { id: "websiteGovernmentCollege", label: "Government College", icon: GraduationCap, color: "text-emerald-500" },
+        { id: "websiteStudyResources", label: "Study Resources", icon: BookOpen, color: "text-amber-500" },
+        { id: "websiteNotifications", label: "Notifications", icon: Bell, color: "text-pink-500" },
         { id: "content", label: "Content Center", icon: FileCog, color: "text-emerald-500" },
       ],
     },
@@ -726,7 +879,20 @@ export default function AdminDashboardPage() {
   const inputClass = "w-full border border-slate-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400";
   const primaryButtonClass = "inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-4 py-2.5 text-sm font-medium hover:bg-slate-800 transition-colors";
   const secondaryButtonClass = "inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors";
-
+  const selectedWebsitePage = useMemo(() => {
+    const pageId = websiteTabToPageId[
+      activeTab as keyof typeof websiteTabToPageId
+    ];
+    if (!pageId) return null;
+    return websitePages.find((page) => page.id === pageId) || null;
+  }, [activeTab, websitePages]);
+  const focusedWebsitePages = useMemo(
+    () =>
+      websitePages.filter((page) =>
+        ["home", "about", "career-assessment", "government-college", "study-resources", "notifications"].includes(page.id),
+      ),
+    [websitePages],
+  );
   const moduleHeader: Record<TabKey, { title: string; subtitle: string }> = {
     overview: { title: "Admin Dashboard", subtitle: "Operational command center for EduPath" },
     users: { title: "User Management", subtitle: "Manage all user roles and account access" },
@@ -742,6 +908,13 @@ export default function AdminDashboardPage() {
     competitiveExams: { title: "Competitive Exams", subtitle: "Manage exam guidance records" },
     scholarships: { title: "Scholarships", subtitle: "Maintain scholarship database records" },
     websiteManagement: { title: "Website Management", subtitle: "Control website pages, content visibility, announcements, and platform-level settings" },
+    websiteStatistics: { title: "Website Statistics", subtitle: "Track full website performance and coverage statistics" },
+    websiteHome: { title: "Home Page", subtitle: "Manage Home page specific details and SEO" },
+    websiteAbout: { title: "About Page", subtitle: "Manage About page specific details and SEO" },
+    websiteCareerAssessment: { title: "Career Assessment Page", subtitle: "Manage Career Assessment page details" },
+    websiteGovernmentCollege: { title: "Government College Page", subtitle: "Manage Government College page details" },
+    websiteStudyResources: { title: "Study Resources Page", subtitle: "Manage Study Resources page details" },
+    websiteNotifications: { title: "Notifications Page", subtitle: "Manage Notifications page details" },
   };
 
   if (loading) {
@@ -1511,45 +1684,57 @@ export default function AdminDashboardPage() {
             <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h4 className="font-semibold text-slate-900">Website Pages Management</h4>
-                  <p className="text-sm text-slate-600">Manage all key website pages, publishing status, and synced data records.</p>
+                  <h4 className="font-semibold text-slate-900">Website Pages Tabs</h4>
+                  <p className="text-sm text-slate-600">Har website page ka data yahin se edit/update karein. Yeh sab database se connected hai.</p>
                 </div>
                 <span className="text-xs px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
-                  Total Pages: {websitePages.length}
+                  Total Pages: {focusedWebsitePages.length}
                 </span>
               </div>
 
               <div className="space-y-2">
-                {websitePages.map((page) => (
-                  <div key={page.id} className="rounded-xl border border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-slate-900">{page.name}</p>
-                        <span
-                          className={`text-[11px] px-2 py-0.5 rounded-full border ${
-                            page.status === "published"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                              : "bg-amber-50 text-amber-700 border-amber-200"
-                          }`}
-                        >
-                          {page.status === "published" ? "Published" : "Draft"}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Route: {page.route} • Records: {page.records} • Owner: {page.owner} • Updated: {page.lastUpdated}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => toggleWebsitePageStatus(page.id)}
-                        className="text-xs rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50"
-                      >
-                        {page.status === "published" ? "Move to Draft" : "Publish"}
-                      </button>
-                    </div>
+                {focusedWebsitePages.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+                    No website pages found.
                   </div>
-                ))}
+                ) : (
+                  focusedWebsitePages.map((page) => (
+                    <div key={page.id} className="rounded-xl border border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-slate-900">{page.name}</p>
+                          <span
+                            className={`text-[11px] px-2 py-0.5 rounded-full border ${
+                              page.status === "published"
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : "bg-amber-50 text-amber-700 border-amber-200"
+                            }`}
+                          >
+                            {page.status === "published" ? "Published" : "Draft"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1">
+                          Route: {page.route} • Records: {page.records} • Owner: {page.owner} • Updated: {new Date(page.lastUpdated).toLocaleString()}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => toggleWebsitePageStatus(page.id)}
+                          className="text-xs rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50"
+                        >
+                          {page.status === "published" ? "Move to Draft" : "Publish"}
+                        </button>
+                        <button
+                          onClick={() => setActiveTab((pageIdToWebsiteTab[page.id] || "websiteManagement") as TabKey)}
+                          className="text-xs rounded-lg bg-slate-900 text-white px-3 py-1.5 hover:bg-slate-800"
+                        >
+                          Open Details
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -1628,7 +1813,7 @@ export default function AdminDashboardPage() {
                     className={inputClass}
                     placeholder="Write new website announcement"
                   />
-                  <button onClick={addAnnouncement} className={primaryButtonClass}>Add</button>
+                  <button onClick={() => addAnnouncement()} className={primaryButtonClass}>Add</button>
                 </div>
 
                 <div className="space-y-2 max-h-[280px] overflow-auto pr-1">
@@ -1660,7 +1845,7 @@ export default function AdminDashboardPage() {
                                 confirmLabel: "Delete",
                                 confirmVariant: "destructive",
                                 action: async () => {
-                                  removeAnnouncement(announcement.id);
+                                  await removeAnnouncement(announcement.id);
                                 },
                               })
                             }
@@ -1717,10 +1902,173 @@ export default function AdminDashboardPage() {
             </div>
 
             <div className="flex justify-end">
-              <button onClick={saveWebsiteManagement} className={primaryButtonClass}>
+              <button onClick={() => saveWebsiteManagement()} className={primaryButtonClass}>
                 <Save className="w-4 h-4" /> Save Website Settings
               </button>
             </div>
+          </div>
+        )}
+
+        {activeTab === "websiteStatistics" && (
+          <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Focused Website Pages</p>
+                <p className="text-2xl font-bold mt-1 text-slate-900">{focusedWebsitePages.length}</p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Published Pages</p>
+                <p className="text-2xl font-bold mt-1 text-emerald-700">
+                  {focusedWebsitePages.filter((page) => page.status === "published").length}
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Total Website Records</p>
+                <p className="text-2xl font-bold mt-1 text-indigo-700">
+                  {focusedWebsitePages.reduce((sum, page) => sum + (page.records || 0), 0)}
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Maintenance Mode</p>
+                <p className={`text-2xl font-bold mt-1 ${websiteSettings.maintenanceMode ? "text-rose-600" : "text-emerald-600"}`}>
+                  {websiteSettings.maintenanceMode ? "On" : "Off"}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-sm text-slate-500">Total Users</p>
+                <p className="text-3xl font-bold text-slate-900">{overview?.counters.users ?? 0}</p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-sm text-slate-500">Assessments Submitted</p>
+                <p className="text-3xl font-bold text-slate-900">{analytics?.psychometric.totalResults ?? 0}</p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-sm text-slate-500">Upcoming Counseling Sessions</p>
+                <p className="text-3xl font-bold text-slate-900">{analytics?.counseling.upcomingSessions ?? 0}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-slate-200 p-5">
+              <h4 className="font-semibold text-slate-900 mb-3">Website Page Statistics</h4>
+              <div className="space-y-2">
+                {focusedWebsitePages.map((page) => (
+                  <div key={page.id} className="rounded-lg border border-slate-200 p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                    <div>
+                      <p className="font-medium text-slate-900">{page.name}</p>
+                      <p className="text-xs text-slate-500">Route: {page.route}</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="text-slate-600">Records: <span className="font-semibold text-slate-900">{page.records}</span></span>
+                      <span className={page.status === "published" ? "text-emerald-700 font-semibold" : "text-amber-700 font-semibold"}>
+                        {page.status === "published" ? "Published" : "Draft"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {(activeTab === "websiteHome" ||
+          activeTab === "websiteAbout" ||
+          activeTab === "websiteCareerAssessment" ||
+          activeTab === "websiteGovernmentCollege" ||
+          activeTab === "websiteStudyResources" ||
+          activeTab === "websiteNotifications") && (
+          <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
+            {!selectedWebsitePage ? (
+              <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+                Page details are not available right now. Please refresh.
+              </div>
+            ) : (
+              <>
+                <div className="bg-white rounded-xl border border-slate-200 p-5">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-lg font-semibold text-slate-900">{selectedWebsitePage.name}</h4>
+                        <span className={`text-[11px] px-2 py-0.5 rounded-full border ${selectedWebsitePage.status === "published" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-700 border-amber-200"}`}>
+                          {selectedWebsitePage.status === "published" ? "Published" : "Draft"}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-600 mt-1">
+                        Route: {selectedWebsitePage.route} • Records: {selectedWebsitePage.records} • Updated: {new Date(selectedWebsitePage.lastUpdated).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => toggleWebsitePageStatus(selectedWebsitePage.id)}
+                        className="text-xs rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50"
+                      >
+                        {selectedWebsitePage.status === "published" ? "Move to Draft" : "Publish"}
+                      </button>
+                      <Link href={selectedWebsitePage.route} className="text-xs rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50">
+                        Open Live Page
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-slate-600">Page Owner</label>
+                      <input
+                        value={selectedWebsitePage.owner}
+                        onChange={(event) => updateWebsitePageDraft(selectedWebsitePage.id, "owner", event.target.value)}
+                        className={`mt-1 ${inputClass}`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-slate-600">Page Title</label>
+                      <input
+                        value={selectedWebsitePage.title}
+                        onChange={(event) => updateWebsitePageDraft(selectedWebsitePage.id, "title", event.target.value)}
+                        className={`mt-1 ${inputClass}`}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-slate-600">Page Subtitle</label>
+                    <textarea
+                      value={selectedWebsitePage.subtitle}
+                      onChange={(event) => updateWebsitePageDraft(selectedWebsitePage.id, "subtitle", event.target.value)}
+                      className={`mt-1 min-h-[100px] ${inputClass}`}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm text-slate-600">SEO Title</label>
+                      <input
+                        value={selectedWebsitePage.seoTitle}
+                        onChange={(event) => updateWebsitePageDraft(selectedWebsitePage.id, "seoTitle", event.target.value)}
+                        className={`mt-1 ${inputClass}`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-slate-600">SEO Description</label>
+                      <textarea
+                        value={selectedWebsitePage.seoDescription}
+                        onChange={(event) => updateWebsitePageDraft(selectedWebsitePage.id, "seoDescription", event.target.value)}
+                        className={`mt-1 min-h-[100px] ${inputClass}`}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button onClick={() => saveWebsitePage(selectedWebsitePage.id)} className={primaryButtonClass}>
+                      <Save className="w-4 h-4" /> Save Page Details
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
