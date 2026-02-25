@@ -20,6 +20,11 @@ import {
   Target,
   Briefcase,
   Wrench,
+  Activity,
+  BarChart3,
+  Timer,
+  BadgeCheck,
+  AlertTriangle,
 } from "lucide-react";
 import { Sidebar, MenuItem } from "@/app/components/Sidebar";
 
@@ -159,6 +164,7 @@ export default function CounselorDashboardPage() {
 
   const [overview, setOverview] = React.useState<CounselorOverview["data"] | null>(null);
   const [sessions, setSessions] = React.useState<SessionItem[]>([]);
+  const [allSessions, setAllSessions] = React.useState<SessionItem[]>([]);
   const [sessionFilter, setSessionFilter] = React.useState<"All" | SessionItem["status"]>("All");
 
   const menuItems: MenuItem[] = [
@@ -189,6 +195,11 @@ export default function CounselorDashboardPage() {
     setSessions(result.data || []);
   };
 
+  const loadAllSessions = async () => {
+    const result = await fetchJson<SessionsResponse>("/api/counselor/sessions");
+    setAllSessions(result.data || []);
+  };
+
   const loadAll = async () => {
     setError("");
     setLoading(true);
@@ -199,7 +210,7 @@ export default function CounselorDashboardPage() {
         setRole(me.user.role === "counselor" ? "Counselor" : me.user.role || "Counselor");
         setProfileImage(me.user.profile?.profileImage);
       }
-      await Promise.all([loadOverview(), loadSessions(sessionFilter)]);
+      await Promise.all([loadOverview(), loadSessions(sessionFilter), loadAllSessions()]);
     } catch {
       setError("Failed to load counselor dashboard data.");
     } finally {
@@ -215,7 +226,7 @@ export default function CounselorDashboardPage() {
     setRefreshing(true);
     setError("");
     try {
-      await Promise.all([loadOverview(), loadSessions(sessionFilter)]);
+      await Promise.all([loadOverview(), loadSessions(sessionFilter), loadAllSessions()]);
     } catch {
       setError("Refresh failed.");
     } finally {
@@ -234,7 +245,7 @@ export default function CounselorDashboardPage() {
   const studentInsights = React.useMemo(() => {
     const map = new Map<string, { name: string; email: string; count: number; lastSession: string }>();
 
-    sessions.forEach((session) => {
+    allSessions.forEach((session) => {
       const key = session.studentEmail || session._id;
       const existing = map.get(key);
       if (!existing) {
@@ -253,7 +264,71 @@ export default function CounselorDashboardPage() {
     });
 
     return Array.from(map.values()).sort((a, b) => b.count - a.count).slice(0, 12);
-  }, [sessions]);
+  }, [allSessions]);
+
+  const overviewInsights = React.useMemo(() => {
+    const totalSessions = allSessions.length;
+    const completedCount = allSessions.filter((session) => session.status === "completed").length;
+    const activeCount = allSessions.filter((session) => session.status === "scheduled" || session.status === "in-progress").length;
+    const cancelledOrNoShowCount = allSessions.filter(
+      (session) => session.status === "cancelled" || session.status === "no-show",
+    ).length;
+
+    const completionRate = totalSessions > 0 ? Math.round((completedCount / totalSessions) * 100) : 0;
+    const avgDuration =
+      totalSessions > 0
+        ? Math.round(allSessions.reduce((sum, session) => sum + (session.duration || 0), 0) / totalSessions)
+        : 0;
+
+    const now = new Date();
+    const nextSession = allSessions
+      .filter((session) => new Date(session.scheduledAt) >= now && (session.status === "scheduled" || session.status === "in-progress"))
+      .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())[0];
+
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
+    const todayTimeline = allSessions
+      .filter((session) => {
+        const scheduledAt = new Date(session.scheduledAt);
+        return scheduledAt >= todayStart && scheduledAt < todayEnd;
+      })
+      .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime());
+
+    const typeCounts = allSessions.reduce<Record<string, number>>((acc, session) => {
+      const key = session.type || "general";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const platformCounts = allSessions.reduce<Record<string, number>>((acc, session) => {
+      const key = session.platform || "other";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const typeDistribution = Object.entries(typeCounts)
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    const platformDistribution = Object.entries(platformCounts)
+      .map(([label, count]) => ({ label, count }))
+      .sort((a, b) => b.count - a.count);
+
+    return {
+      totalSessions,
+      completedCount,
+      activeCount,
+      cancelledOrNoShowCount,
+      completionRate,
+      avgDuration,
+      nextSession,
+      todayTimeline,
+      typeDistribution,
+      platformDistribution,
+    };
+  }, [allSessions]);
 
   if (loading) {
     return (
@@ -296,7 +371,29 @@ export default function CounselorDashboardPage() {
 
         {activeTab === "overview" && (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl p-6 text-white shadow-sm">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                  <p className="text-indigo-100 text-sm">Counseling Command Center</p>
+                  <h2 className="text-2xl font-bold mt-1">Welcome back, {overview?.counselorProfile?.displayName || name}</h2>
+                  <p className="text-indigo-100 mt-2 text-sm">
+                    Monitor session health, student engagement, and today’s priorities from one place.
+                  </p>
+                </div>
+                <div className="grid grid-cols-2 gap-3 min-w-[280px]">
+                  <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3">
+                    <p className="text-xs text-indigo-100">Overall Completion</p>
+                    <p className="text-2xl font-semibold">{overviewInsights.completionRate}%</p>
+                  </div>
+                  <div className="rounded-xl bg-white/10 border border-white/20 px-4 py-3">
+                    <p className="text-xs text-indigo-100">Avg. Duration</p>
+                    <p className="text-2xl font-semibold">{overviewInsights.avgDuration} min</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
               <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
                 <div className="flex items-center justify-between">
                   <p className="text-slate-600 text-sm">Today Sessions</p>
@@ -325,10 +422,84 @@ export default function CounselorDashboardPage() {
                 </div>
                 <p className="text-3xl font-bold text-slate-900 mt-2">{overview?.counters.totalStudents ?? 0}</p>
               </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <p className="text-slate-600 text-sm">Active Cases</p>
+                  <Activity className="w-5 h-5 text-violet-500" />
+                </div>
+                <p className="text-3xl font-bold text-slate-900 mt-2">{overviewInsights.activeCount}</p>
+                <p className="text-xs text-slate-500 mt-1">Scheduled + in-progress</p>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="xl:col-span-2 bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-slate-900">Next Priority Session</h3>
+                  <BadgeCheck className="w-5 h-5 text-emerald-600" />
+                </div>
+                {!overviewInsights.nextSession ? (
+                  <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500 text-sm">
+                    No upcoming session is scheduled right now.
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-indigo-100 bg-indigo-50 p-4">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div>
+                        <p className="font-semibold text-slate-900">{overviewInsights.nextSession.studentName}</p>
+                        <p className="text-xs text-slate-600">{overviewInsights.nextSession.studentEmail}</p>
+                        <p className="text-sm text-slate-700 mt-1 capitalize">
+                          {overviewInsights.nextSession.type.replace("-", " ")} • {overviewInsights.nextSession.duration} min
+                        </p>
+                      </div>
+                      <div className="text-sm text-slate-700">
+                        <p>{new Date(overviewInsights.nextSession.scheduledAt).toLocaleString()}</p>
+                        <p className="mt-1 inline-flex items-center gap-1 capitalize">
+                          {React.createElement(getPlatformIcon(overviewInsights.nextSession.platform), { className: "w-4 h-4" })}
+                          {overviewInsights.nextSession.platform}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <BarChart3 className="w-5 h-5 text-indigo-600" />
+                  <h3 className="font-semibold text-slate-900">Session Health</h3>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <div className="flex items-center justify-between text-slate-700 mb-1">
+                      <span>Completed</span>
+                      <span>{overviewInsights.completedCount}</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div
+                        className="h-full bg-emerald-500"
+                        style={{ width: `${Math.max(overviewInsights.completionRate, 4)}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Total Sessions</span>
+                    <span className="font-semibold">{overviewInsights.totalSessions}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Cancelled / No-show</span>
+                    <span className="font-semibold">{overviewInsights.cancelledOrNoShowCount}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Average Duration</span>
+                    <span className="font-semibold">{overviewInsights.avgDuration} min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="xl:col-span-2 bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
                 <h3 className="font-semibold text-slate-900 mb-3">Recent Sessions</h3>
                 {(overview?.recentSessions || []).length === 0 ? (
                   <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center text-slate-500">
@@ -378,6 +549,120 @@ export default function CounselorDashboardPage() {
                   <p>Specializations: {(overview?.counselorProfile?.specializations || []).join(", ") || "Not set"}</p>
                   <p>Languages: {(overview?.counselorProfile?.languages || []).join(", ") || "Not set"}</p>
                 </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <Timer className="w-5 h-5 text-blue-600" />
+                  <h3 className="font-semibold text-slate-900">Today Timeline</h3>
+                </div>
+                {overviewInsights.todayTimeline.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500 text-sm">
+                    No sessions scheduled for today.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {overviewInsights.todayTimeline.slice(0, 6).map((session) => {
+                      const PlatformIcon = getPlatformIcon(session.platform);
+                      return (
+                        <div key={session._id} className="flex items-center justify-between border border-slate-200 rounded-lg px-3 py-2">
+                          <div>
+                            <p className="font-medium text-slate-800 text-sm">{session.studentName}</p>
+                            <p className="text-xs text-slate-500 capitalize">{session.type.replace("-", " ")}</p>
+                          </div>
+                          <div className="text-right text-xs text-slate-600">
+                            <p>{new Date(session.scheduledAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                            <p className="inline-flex items-center gap-1 mt-0.5 capitalize">
+                              <PlatformIcon className="w-3.5 h-3.5" /> {session.platform}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <BarChart3 className="w-5 h-5 text-emerald-600" />
+                  <h3 className="font-semibold text-slate-900">Session Type Distribution</h3>
+                </div>
+                {overviewInsights.typeDistribution.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500 text-sm">
+                    Distribution will appear once sessions are available.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {overviewInsights.typeDistribution.map((item) => {
+                      const percent =
+                        overviewInsights.totalSessions > 0
+                          ? Math.round((item.count / overviewInsights.totalSessions) * 100)
+                          : 0;
+                      return (
+                        <div key={item.label}>
+                          <div className="flex items-center justify-between text-sm text-slate-700 mb-1">
+                            <span className="capitalize">{item.label.replace("-", " ")}</span>
+                            <span>{item.count} ({percent}%)</span>
+                          </div>
+                          <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                            <div className="h-full bg-emerald-500" style={{ width: `${Math.max(percent, 5)}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="xl:col-span-2 bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <Users className="w-5 h-5 text-cyan-600" />
+                  <h3 className="font-semibold text-slate-900">Top Student Engagement</h3>
+                </div>
+                {studentInsights.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500 text-sm">
+                    Engagement insights will appear once sessions are recorded.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {studentInsights.slice(0, 6).map((student, index) => (
+                      <div key={`${student.email}-${index}`} className="rounded-lg border border-slate-200 p-3">
+                        <p className="font-medium text-slate-800">{student.name}</p>
+                        <p className="text-xs text-slate-500 truncate">{student.email}</p>
+                        <div className="mt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>Sessions: {student.count}</span>
+                          <span>Last: {new Date(student.lastSession).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600" />
+                  <h3 className="font-semibold text-slate-900">Delivery Mix</h3>
+                </div>
+                {overviewInsights.platformDistribution.length === 0 ? (
+                  <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500 text-sm">
+                    Platform mix will appear after session data is available.
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {overviewInsights.platformDistribution.map((item) => (
+                      <div key={item.label} className="flex items-center justify-between text-sm border border-slate-200 rounded-lg px-3 py-2">
+                        <span className="capitalize text-slate-700">{item.label}</span>
+                        <span className="font-semibold text-slate-900">{item.count}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

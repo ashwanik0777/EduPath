@@ -161,7 +161,7 @@ const Footer = () => {
           <p>
             Designed and developed by{" "}
             <a href="#" className="hover:text-white font-semibold cursor-pointer">
-              Cognitive Geeks 
+              Tech Titans 
             </a>{" "}
            
             {/* and supported by{" "}
