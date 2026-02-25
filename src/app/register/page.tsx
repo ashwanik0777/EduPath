@@ -5,42 +5,62 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/app/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/components/ui/select";
-import { Progress } from "@/app/components/ui/progress";
 import {
   GraduationCap,
-  User,
-  Mail,
   Lock,
   ArrowRight,
-  BookOpen,
-  BarChart,
+  Check,
+  Users,
+  Brain,
+  BarChart2,
+  CheckCircle2,
+  Sparkles,
   Loader2,
   UserPlus,
-  CheckCircle2,
-  Brain
+  ChevronLeft,
+  Calendar,
+  AtSign,
+  User,
 } from "lucide-react";
+
+const features = [
+  {
+    icon: Brain,
+    color: "text-indigo-400",
+    bg: "bg-indigo-500/10 border-indigo-500/20",
+    title: "AI-Powered Counseling",
+    desc: "Personalized career paths that adapt to your strengths and goals.",
+  },
+  {
+    icon: BarChart2,
+    color: "text-violet-400",
+    bg: "bg-violet-500/10 border-violet-500/20",
+    title: "Progress Analytics",
+    desc: "Track your journey with real-time insights and milestones.",
+  },
+  {
+    icon: CheckCircle2,
+    color: "text-cyan-400",
+    bg: "bg-cyan-500/10 border-cyan-500/20",
+    title: "Smart Recommendations",
+    desc: "Data-driven college & exam suggestions matched to your profile.",
+  },
+];
 
 const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  academicLevel: z.enum([
-    "elementary", 
-    "middle_school", 
-    "high_school", 
-    "undergraduate", 
-    "graduate", 
-    "postgraduate"
-  ], {
-    errorMap: () => ({ message: "Please select your academic level" }),
-  }),
+  academicLevel: z.enum(
+    ["elementary", "middle_school", "high_school", "undergraduate", "graduate", "postgraduate"] as const,
+    { message: "Please select your academic level" }
+  ),
   dob: z.string().min(8, "Please enter your date of birth"),
-  gender: z.enum(["male", "female", "other"]).refine(val => !!val, {
+  gender: z.enum(["male", "female", "other"] as const, {
     message: "Please select your gender",
   }),
 });
@@ -52,7 +72,12 @@ export default function Register() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const totalSteps = 2;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 20);
+    return () => clearTimeout(t);
+  }, []);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -68,14 +93,9 @@ export default function Register() {
     mode: "onChange",
   });
 
-  const validateStep1 = () => {
-    const { fullName, email, password, dob, gender } = form.getValues();
-    const isValid = fullName.length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && password.length >= 6 && dob.length >= 8 && gender;
-    if (isValid) {
-      setStep(2);
-    } else {
-      form.trigger(["fullName", "email", "password", "dob", "gender"]);
-    }
+  const validateStep1 = async () => {
+    const ok = await form.trigger(["fullName", "email", "password", "dob", "gender"]);
+    if (ok) setStep(2);
   };
 
   const onSubmit = async (data: RegisterFormValues) => {
@@ -93,246 +113,414 @@ export default function Register() {
       } else {
         setSuccess(true);
       }
-    } catch (e: any) {
-      setError(e.message || "Registration failed. Please try again.");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Redirect to quiz after successful registration
   useEffect(() => {
-    if (success) {
-      window.location.href = "/quiz";
-    }
+    if (success) window.location.href = "/quiz";
   }, [success]);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
-      <div className="w-full md:w-7/12 lg:w-1/2 bg-gradient-to-br from-indigo-950 to-indigo-900 p-6 md:p-8 lg:p-12 flex items-center justify-center relative">
-        {/* Background blobs and floating objects as in your original code */}
-        {/* ... */}
-        <div className="w-full max-w-md mt-16 md:mt-0">
-          <div className="mb-8 text-center md:text-left">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-md">Join Our Counseling Community</h2>
-            <p className="text-indigo-300 text-sm">
-              Create your account to start your personalized journey
+    <div
+      className="relative flex min-h-screen flex-col overflow-hidden lg:flex-row"
+      style={{
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? "translateX(0)" : "translateX(32px)",
+        transition: "opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+      }}
+    >
+      {/* ── LEFT PANEL — FORM (white) ── */}
+      <section className="flex flex-1 flex-col items-center justify-center bg-white px-6 py-12 md:px-14 lg:order-1">
+        <div className="w-full max-w-md">
+          <div className="mb-7">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-500">
+              {step === 1 ? "Step 1 of 2 — Personal Info" : "Step 2 of 2 — Academic Profile"}
+            </p>
+            <h2 className="mt-1 text-3xl font-black text-slate-900">Create account</h2>
+            <p className="mt-1.5 text-sm text-slate-500">
+              {step === 1
+                ? "Fill in your basic details to get started."
+                : "Almost there — tell us about your academics."}
             </p>
           </div>
-          <div className="mb-8">
-            <div className="flex justify-between items-center text-sm mb-2">
-              <span className="text-indigo-300 font-medium">Step {step} of {totalSteps}</span>
-              <div className="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-900/60 to-indigo-800/60 text-amber-300 font-medium shadow-inner">
-                {step === 1 ? "Account Info" : "Academic Profile"}
-              </div>
-            </div>
-            <Progress value={(step / totalSteps) * 100} className="h-3 rounded-full bg-indigo-900/60 overflow-hidden" />
+
+          {/* step dots */}
+          <div className="mb-7 flex items-center gap-2">
+            <span className="h-2 w-8 rounded-full bg-indigo-600 transition-all duration-500" />
+            <span
+              className={`h-2 rounded-full transition-all duration-500 ${
+                step === 2 ? "w-8 bg-indigo-600" : "w-4 bg-slate-200"
+              }`}
+            />
           </div>
+
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               {step === 1 && (
                 <>
-                  <FormField control={form.control} name="fullName"
+                  <FormField
+                    control={form.control}
+                    name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <User className="h-4 w-4 mr-2 opacity-70" /> Full Name
-                        </FormLabel>
+                        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                          Full Name
+                        </label>
                         <FormControl>
-                          <Input {...field} placeholder="Enter your full name" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              placeholder="Aisha Rahman"
+                              className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                            />
+                            <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                          </div>
                         </FormControl>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )} />
-                  <FormField control={form.control} name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <Mail className="h-4 w-4 mr-2 opacity-70" /> Email
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Enter your email" type="email" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
-                        </FormControl>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )} />
-                  <FormField control={form.control} name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <Lock className="h-4 w-4 mr-2 opacity-70" /> Password
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Create a password (min. 6 characters)" type="password" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
-                        </FormControl>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )} />
-                  <FormField control={form.control} name="dob"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <User className="h-4 w-4 mr-2 opacity-70" /> Date of Birth
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="DD/MM/YYYY" type="text" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
-                        </FormControl>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )} />
-                  <FormField control={form.control} name="gender"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <User className="h-4 w-4 mr-2 opacity-70" /> Gender
-                        </FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500">
-                              <SelectValue placeholder="Select your gender" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-indigo-900 border-indigo-700 text-indigo-200">
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )} />
-                  <Button type="button" className="w-full h-12 rounded-lg text-base font-medium bg-gradient-to-r from-amber-300 to-amber-400 text-indigo-950 btn-3d" onClick={validateStep1}>
-                    Continue <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </>
-              )}
-              {step === 2 && (
-                <>
-                  <FormField control={form.control} name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <BookOpen className="h-4 w-4 mr-2 opacity-70" /> Username
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Choose a username" className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500" />
-                        </FormControl>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-xs text-rose-500" />
                       </FormItem>
                     )}
                   />
-                  <FormField control={form.control} name="academicLevel"
+                  <FormField
+                    control={form.control}
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-indigo-200 flex items-center">
-                          <BarChart className="h-4 w-4 mr-2 opacity-70" /> Academic Level
-                        </FormLabel>
+                        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                          Email
+                        </label>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              type="email"
+                              placeholder="you@example.com"
+                              className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                            />
+                            <AtSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-xs text-rose-500" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                          Password
+                        </label>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              type="password"
+                              placeholder="••••••••"
+                              className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                            />
+                            <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-xs text-rose-500" />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <FormField
+                      control={form.control}
+                      name="dob"
+                      render={({ field }) => (
+                        <FormItem>
+                          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                            Date of Birth
+                          </label>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                placeholder="DD/MM/YYYY"
+                                className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                              />
+                              <Calendar className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-xs text-rose-500" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                            Gender
+                          </label>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="h-12 rounded-xl border-slate-200 bg-slate-50 text-slate-900 focus:ring-indigo-500">
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className="text-xs text-rose-500" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={validateStep1}
+                    className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-slate-900 text-sm font-bold text-white transition-opacity hover:opacity-90"
+                  >
+                    Continue <ArrowRight className="h-4 w-4" />
+                  </button>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                          Username
+                        </label>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              placeholder="aisha_r"
+                              className="h-12 rounded-xl border-slate-200 bg-slate-50 pl-10 text-slate-900 placeholder:text-slate-400 focus-visible:ring-indigo-500"
+                            />
+                            <AtSign className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                          </div>
+                        </FormControl>
+                        <FormMessage className="text-xs text-rose-500" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="academicLevel"
+                    render={({ field }) => (
+                      <FormItem>
+                        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                          Academic Level
+                        </label>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger className="h-12 bg-indigo-900/40 border-indigo-700 placeholder-indigo-400 text-white rounded-lg focus:border-indigo-500 focus:ring-indigo-500">
-                              <SelectValue placeholder="Select your academic level" />
+                            <SelectTrigger className="h-12 rounded-xl border-slate-200 bg-slate-50 text-slate-900 focus:ring-indigo-500">
+                              <SelectValue placeholder="Select your level" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-indigo-900 border-indigo-700 text-indigo-200">
+                          <SelectContent>
                             <SelectItem value="elementary">Elementary School</SelectItem>
                             <SelectItem value="middle_school">Middle School</SelectItem>
                             <SelectItem value="high_school">High School</SelectItem>
-                            <SelectItem value="undergraduate">University - Undergraduate</SelectItem>
-                            <SelectItem value="graduate">University - Graduate</SelectItem>
+                            <SelectItem value="undergraduate">University — Undergraduate</SelectItem>
+                            <SelectItem value="graduate">University — Graduate</SelectItem>
                             <SelectItem value="postgraduate">Post-Graduation</SelectItem>
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-xs text-rose-500" />
                       </FormItem>
                     )}
                   />
-                  <div className="flex flex-col space-y-3 pt-2">
-                    <Button type="submit" className="w-full h-12 rounded-lg text-base font-medium bg-gradient-to-r from-amber-300 to-amber-400 text-indigo-950 btn-3d flex items-center justify-center" disabled={loading}>
-                      {loading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Creating account...</> : (<><UserPlus className="mr-2 h-5 w-5" />Create Account</>)}
-                    </Button>
-                    <Button type="button" variant="outline" className="w-full h-12 rounded-lg text-base font-medium border-indigo-700 text-indigo-200 hover:bg-indigo-900/80 btn-3d" onClick={() => setStep(1)}>
-                      Back
-                    </Button>
-                  </div>
+
                   {error && (
-                    <div className="bg-red-900/50 border border-red-700 text-red-200 p-3 rounded-lg text-sm flex items-start mt-4 animate-pulse-glow">
-                      <div className="mr-2 mt-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <span>{error}</span>
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-600">
+                      {error}
                     </div>
                   )}
+                  {success && (
+                    <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                      <Check className="h-4 w-4 flex-none" />
+                      <span>Account created! Redirecting to quiz…</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-slate-900 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loading ? (
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Creating account…</>
+                    ) : (
+                      <><UserPlus className="h-4 w-4" /> Create Account</>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="flex h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                  >
+                    <ChevronLeft className="h-4 w-4" /> Back
+                  </button>
                 </>
               )}
             </form>
           </Form>
+
+          <p className="mt-8 text-center text-xs text-slate-400">
+            &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+          </p>
         </div>
+      </section>
+
+      {/* ── WAVE DIVIDER (mirrored from login) ── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 z-20 hidden lg:block"
+        style={{ left: "calc(48% - 48px)", width: "96px" }}
+      >
+        <svg
+          className="h-full w-full"
+          viewBox="0 0 96 900"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 0 0 L 48 0 C 6 75, 0 150, 24 225 C 48 300, 96 375, 72 450 C 48 525, 0 600, 24 675 C 48 750, 96 825, 48 900 L 0 900 Z"
+            fill="white"
+          />
+          <path
+            d="M 96 0 L 48 0 C 6 75, 0 150, 24 225 C 48 300, 96 375, 72 450 C 48 525, 0 600, 24 675 C 48 750, 96 825, 48 900 L 96 900 Z"
+            fill="#0f172a"
+          />
+          <path
+            d="M 48 0 C 6 75, 0 150, 24 225 C 48 300, 96 375, 72 450 C 48 525, 0 600, 24 675 C 48 750, 96 825, 48 900"
+            fill="none"
+            stroke="rgba(99,102,241,0.35)"
+            strokeWidth="1.5"
+          />
+        </svg>
       </div>
-      <div className="hidden md:flex md:w-5/12 lg:w-1/2 bg-gradient-to-br from-amber-300 to-amber-400 flex-col justify-center p-8 relative overflow-hidden">
-        {/* Background blobs & floating shapes */}
-        <div className="blob-animation absolute top-[15%] left-[20%] w-64 h-64 bg-cyan-500/30 rounded-full"></div>
-        <div className="blob-animation absolute bottom-[10%] right-[20%] w-80 h-80 bg-amber-200/50 rounded-full animation-delay-2000"></div>
-        <div className="absolute top-[10%] left-[15%] w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg transform rotate-12 animate-float-3d opacity-80 shadow-xl"></div>
-        <div className="absolute top-[20%] right-[20%] w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg transform -rotate-12 animate-float-3d animation-delay-2000 opacity-80 shadow-xl"></div>
-        <div className="absolute bottom-[20%] left-[30%] w-12 h-12 bg-gradient-to-br from-white to-gray-100 rounded-lg transform rotate-45 animate-float-3d animation-delay-3000 opacity-80 shadow-xl"></div>
-        <div className="absolute bottom-[30%] right-[10%] w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded transform -rotate-12 animate-float-3d animation-delay-1500 opacity-60 shadow-xl"></div>
-        <div className="relative z-10 max-w-md mx-auto">
-          <div className="flex items-center mb-12 glow-effect">
-            <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 p-3 rounded-xl mr-3 shadow-lg transition-transform duration-300 hover:scale-105">
-              <GraduationCap className="h-8 w-8 text-white" />
+
+      {/* ── RIGHT PANEL — INFO (dark slate-900) ── */}
+      <section
+        className="relative flex flex-col justify-between overflow-hidden bg-slate-900 p-8 md:p-12 lg:order-2 lg:w-[52%]"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 80% 60% at 80% 10%, rgba(99,102,241,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 80% at 20% 90%, rgba(99,102,241,0.08) 0%, transparent 70%)",
+        }}
+      >
+        {/* dot-grid */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        {/* giant decorative letter */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -left-6 -top-10 select-none text-[22rem] font-black leading-none text-white"
+          style={{ opacity: 0.025 }}
+        >
+          R
+        </span>
+        {/* accent rings */}
+        <span aria-hidden className="pointer-events-none absolute -bottom-20 -right-20 h-72 w-72 rounded-full border border-indigo-500/20" />
+        <span aria-hidden className="pointer-events-none absolute -bottom-10 -right-10 h-48 w-48 rounded-full border border-indigo-500/10" />
+
+        <div className="relative z-10">
+          {/* brand */}
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-indigo-600 p-3 shadow-lg shadow-indigo-600/40">
+              <GraduationCap className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-indigo-800 drop-shadow-md">EduPath</h1>
-              <p className="text-sm text-indigo-700">Counseling PLATFORM</p>
+              <p className="text-xl font-bold tracking-tight text-white">EduPath</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-indigo-400/80">
+                Career Guidance Platform
+              </p>
             </div>
           </div>
-          <div className="mb-16 transition-transform duration-500 hover:translate-x-2">
-            <h2 className="text-3xl md:text-4xl font-bold text-indigo-800 mb-6 drop-shadow-md">
-              Get Started Today
-            </h2>
-            <p className="text-indigo-700 text-lg mb-8">
-              Join thousands of students unlocking their full potential with personalized AI-powered Counseling
+
+          {/* headline */}
+          <div className="mt-12">
+            <h1 className="text-4xl font-black leading-[1.1] text-white md:text-5xl">
+              Start your{" "}
+              <span className="relative inline-block text-indigo-400">
+                journey
+                <span className="absolute -bottom-1 left-0 h-[3px] w-full rounded-full bg-indigo-500/60" />
+              </span>
+              <br />
+              to a better future
+            </h1>
+            <p className="mt-5 max-w-md text-base leading-relaxed text-slate-400">
+              Join thousands of J&K students who found their path with expert counselors, AI-based assessments, and real college data.
             </p>
-            <Link href="/login">
-              <Button variant="outline" className="h-12 px-6 bg-white/80 hover:bg-white text-indigo-800 border-indigo-300 hover:border-indigo-500 font-medium rounded-lg w-40 shadow-md btn-3d">
-                SIGN IN NOW
-              </Button>
-            </Link>
           </div>
-          <div className="space-y-6 mb-8">
-            <div className="flex items-center gap-4 transition-transform duration-500 hover:-translate-y-1">
-              <div className="flex items-center justify-center w-14 h-14 bg-indigo-600/20 backdrop-blur-sm rounded-full">
-                <Brain className="h-7 w-7 text-indigo-700" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-indigo-800">AI-Powered Counseling</h3>
-                <p className="text-sm text-indigo-700">Personalized study plans that adapt to your Counseling style</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 transition-transform duration-500 hover:-translate-y-1">
-              <div className="flex items-center justify-center w-14 h-14 bg-amber-500/20 backdrop-blur-sm rounded-full">
-                <BarChart className="h-7 w-7 text-indigo-700" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-indigo-800">Progress Analytics</h3>
-                <p className="text-sm text-indigo-700">Track your Counseling journey with detailed data insights</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 transition-transform duration-500 hover:-translate-y-1">
-              <div className="flex items-center justify-center w-14 h-14 bg-cyan-500/20 backdrop-blur-sm rounded-full">
-                <CheckCircle2 className="h-7 w-7 text-indigo-700" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-indigo-800">Smart Recommendations</h3>
-                <p className="text-sm text-indigo-700">Data-driven suggestions based on your Counseling patterns</p>
-              </div>
-            </div>
+
+          {/* free badge */}
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 text-xs font-semibold text-indigo-300">
+            <Sparkles className="h-3.5 w-3.5" />
+            100% Free — No Credit Card Required
           </div>
-          <div className="text-indigo-800 text-sm mt-auto">&copy;2025 EduPath</div>
+
+          {/* features */}
+          <div className="mt-8 space-y-4">
+            {features.map(({ icon: Icon, color, bg, title, desc }) => (
+              <div key={title} className="flex items-start gap-4">
+                <div className={`flex h-11 w-11 flex-none items-center justify-center rounded-xl border ${bg}`}>
+                  <Icon className={`h-5 w-5 ${color}`} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-white">{title}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-400">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* stat chips */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            {[
+              { value: "12,400+", label: "Students registered", icon: Users },
+              { value: "Free", label: "Always accessible", icon: CheckCircle2 },
+            ].map(({ value, label, icon: Icon }) => (
+              <div
+                key={label}
+                className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-sm"
+              >
+                <Icon className="h-4 w-4 text-indigo-400" />
+                <div>
+                  <p className="text-sm font-bold text-white">{value}</p>
+                  <p className="text-[10px] text-slate-400">{label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+
+        {/* bottom link */}
+        <div className="relative z-10 mt-12 flex items-center gap-3 text-sm text-slate-500">
+          <span>Already have an account?</span>
+          <Link
+            href="/login"
+            className="font-semibold text-indigo-400 underline-offset-4 hover:text-indigo-300 hover:underline"
+          >
+            Sign in
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

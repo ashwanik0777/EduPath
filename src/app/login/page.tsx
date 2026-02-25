@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,6 +37,12 @@ export default function Login() {
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 20);
+    return () => clearTimeout(t);
+  }, []);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -74,7 +80,14 @@ export default function Login() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden lg:flex-row">
+    <div
+      className="relative flex min-h-screen flex-col overflow-hidden lg:flex-row"
+      style={{
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? "translateX(0)" : "translateX(-32px)",
+        transition: "opacity 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+      }}
+    >
       {/* ── LEFT PANEL ── */}
       <section
         className="relative flex flex-col justify-between overflow-hidden bg-slate-900 p-8 md:p-12 lg:w-[52%]"
