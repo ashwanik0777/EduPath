@@ -169,19 +169,48 @@ export default function CounselorDashboardPage() {
 
   const menuItems: MenuItem[] = [
     { id: "overview", label: "Overview", icon: LayoutDashboard, color: "text-indigo-400" },
-    { id: "sessions", label: "Sessions", icon: Calendar, color: "text-blue-400" },
-    { id: "students", label: "Students", icon: Users, color: "text-emerald-400" },
-    { id: "messages", label: "Messages", icon: MessageSquare, color: "text-cyan-400" },
-    { id: "profile", label: "Profile", icon: Users, color: "text-gray-400" },
-    { id: "progressTracker", label: "Progress Tracker", icon: RefreshCw, color: "text-rose-400" },
-    { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-400" },
-    { id: "govCollege", label: "Government College", icon: GraduationCap, color: "text-blue-400" },
-    { id: "shortListedColleges", label: "Short Listed College", icon: Calendar, color: "text-teal-400" },
-    { id: "carrerOption", label: "Career Option", icon: Briefcase, color: "text-emerald-400" },
-    { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-400" },
-    { id: "competitiveExams", label: "Competitive Exams", icon: Award, color: "text-orange-400" },
-    { id: "scholarships", label: "Scholarships", icon: GraduationCap, color: "text-yellow-400" },
-    { id: "feedback&Suggestions", label: "Feedback & Suggestions", icon: MessageSquare, color: "text-violet-400" },
+    {
+      id: "sessionOpsGroup",
+      label: "Session Operations",
+      icon: Calendar,
+      color: "text-blue-400",
+      children: [
+        { id: "sessions", label: "Sessions", icon: Calendar, color: "text-blue-400" },
+        { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-400" },
+        { id: "messages", label: "Messages", icon: MessageSquare, color: "text-cyan-400" },
+      ],
+    },
+    {
+      id: "studentGuidanceGroup",
+      label: "Student Guidance",
+      icon: Users,
+      color: "text-emerald-400",
+      children: [
+        { id: "students", label: "Students", icon: Users, color: "text-emerald-400" },
+        { id: "progressTracker", label: "Progress Tracker", icon: RefreshCw, color: "text-rose-400" },
+        { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-400" },
+        { id: "shortListedColleges", label: "Short Listed Colleges", icon: Calendar, color: "text-teal-400" },
+        { id: "carrerOption", label: "Career Options", icon: Briefcase, color: "text-emerald-400" },
+      ],
+    },
+    {
+      id: "govOpportunityGroup",
+      label: "Gov & Opportunities",
+      icon: GraduationCap,
+      color: "text-blue-400",
+      children: [
+        { id: "govCollege", label: "Government Colleges", icon: GraduationCap, color: "text-blue-400" },
+        { id: "scholarships", label: "Scholarships", icon: Award, color: "text-yellow-400" },
+        { id: "competitiveExams", label: "Competitive Exams", icon: Award, color: "text-orange-400" },
+      ],
+    },
+    {
+      id: "qualityGroup",
+      label: "Quality & Feedback",
+      icon: MessageSquare,
+      color: "text-violet-400",
+      children: [{ id: "feedback&Suggestions", label: "Feedback & Suggestions", icon: MessageSquare, color: "text-violet-400" }],
+    },
   ];
 
   const loadOverview = async () => {
@@ -347,6 +376,7 @@ export default function CounselorDashboardPage() {
           onPageChange={(id) => setActiveTab(id as CounselorTab)}
           userInfo={{ name, role, profileImage }}
           onLogout={handleLogout}
+          onProfileClick={() => setActiveTab("profile")}
         />
       </div>
 
