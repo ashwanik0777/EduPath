@@ -22,6 +22,7 @@ interface SidebarProps {
   onPageChange: (id: string) => void;
   userInfo: { name: string; role: string; profileImage?: string };
   onLogout: () => void;
+  onProfileClick?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -30,6 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onPageChange,
   userInfo,
   onLogout,
+  onProfileClick,
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -50,7 +52,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const IconComponent = item.icon;
     const hasChildren = item.children && item.children.length > 0;
     const isExpanded = expandedSection === item.id;
-    const isActive = activePage === item.id;
+    const isChildActive = hasChildren ? item.children?.some((child) => child.id === activePage) : false;
+    const isActive = activePage === item.id || Boolean(isChildActive);
 
     if (sidebarCollapsed) {
       return (
@@ -60,11 +63,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className={`w-full flex items-center justify-center p-3 text-left transition-all duration-300 rounded-full group relative ${
             isActive
               ? "bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-900/40"
-              : "text-slate-300 hover:bg-white/10 hover:text-white"
+              : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
           }`}
           title={item.label}
         >
-          <IconComponent className={`h-5 w-5 transition-transform duration-300 ${isActive ? "text-white scale-105" : `${item.color} group-hover:text-white group-hover:scale-105`}`} />
+          <IconComponent className={`h-5 w-5 transition-transform duration-300 ${isActive ? "text-white scale-105" : `${item.color} group-hover:scale-105`}`} />
         </button>
       );
     }
@@ -77,11 +80,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`w-full flex items-center justify-between px-4 py-3 text-left rounded-full transition-all duration-300 group ${
               isActive
                 ? "bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-900/40"
-                : "text-slate-300 hover:bg-white/10 hover:text-white"
+                : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
             }`}
           >
             <div className="flex items-center">
-              <IconComponent className={`h-4 w-4 mr-3 transition-transform duration-300 ${isActive ? "text-white" : `${item.color} group-hover:text-white group-hover:scale-105`}`} />
+              <IconComponent className={`h-4 w-4 mr-3 transition-transform duration-300 ${isActive ? "text-white" : `${item.color} group-hover:scale-105`}`} />
               <span className="text-sm font-medium">{item.label}</span>
             </div>
             {isExpanded ? (
@@ -94,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {isExpanded && (
             <div className="relative ml-6 mt-2 animate-in fade-in-0 slide-in-from-top-1 duration-200">
               <div
-                className="absolute left-0 top-0 w-px bg-slate-700/70"
+                className="absolute left-0 top-0 w-px bg-slate-300"
                 style={{ height: `${(item.children!.length - 1) * 40 + 20}px` }}
               ></div>
 
@@ -106,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   return (
                     <div key={child.id} className="relative flex items-center">
                       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 flex items-center">
-                        <div className="w-4 h-4 border-l border-b border-slate-700/70 rounded-bl-lg"></div>
+                        <div className="w-4 h-4 border-l border-b border-slate-300 rounded-bl-lg"></div>
                       </div>
 
                       <button
@@ -114,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         className={`flex items-end pl-6 pr-4 py-2 w-full rounded-full text-left transition-all duration-300 ${
                           isChildActive
                             ? "bg-indigo-600/90 text-white shadow-sm"
-                            : "text-slate-400 hover:bg-white/10 hover:text-white"
+                            : "text-slate-500 hover:bg-indigo-50 hover:text-slate-900"
                         }`}
                       >
                         <ChildIcon className={`h-4 w-4 mr-3 ${isChildActive ? "text-white" : child.color}`} />
@@ -137,10 +140,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         className={`w-full flex items-center px-4 py-3 text-left transition-all duration-300 rounded-full group ${
           isActive
             ? "bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-900/40"
-            : "text-slate-300 hover:bg-white/10 hover:text-white"
+            : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
         }`}
       >
-        <IconComponent className={`h-4 w-4 mr-3 transition-transform duration-300 ${isActive ? "text-white" : `${item.color} group-hover:text-white group-hover:scale-105`}`} />
+        <IconComponent className={`h-4 w-4 mr-3 transition-transform duration-300 ${isActive ? "text-white" : `${item.color} group-hover:scale-105`}`} />
         <span className="text-sm font-medium">{item.label}</span>
       </button>
     );
@@ -148,9 +151,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`${sidebarCollapsed ? "w-20" : "w-[18.5rem]"} my-3 ml-3 mr-2 bg-gradient-to-b from-slate-950/95 via-slate-900/95 to-slate-950/95 text-white flex flex-col transition-all duration-300 ease-in-out relative z-40 h-[calc(100vh-1.5rem)] border border-white/15 shadow-[0_20px_55px_rgba(2,6,23,0.55)] rounded-[2.2rem] overflow-hidden backdrop-blur-xl`}
+      className={`${sidebarCollapsed ? "w-20" : "w-[18.5rem]"} my-3 ml-3 mr-2 bg-white/55 text-slate-900 flex flex-col transition-all duration-300 ease-in-out relative z-40 h-[calc(100vh-1.5rem)] border border-slate-200/80 shadow-[0_20px_55px_rgba(99,102,241,0.12)] rounded-[2.2rem] overflow-hidden backdrop-blur-xl`}
     >
-      <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-b border-white/10`}>
+      <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-b border-slate-200/80`}>
         <div className="flex items-center justify-between">
           {!sidebarCollapsed && (
             <div className="flex items-center justify-between w-full pr-2">
@@ -160,17 +163,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <img
                       src={userInfo.profileImage}
                       alt={userInfo.name}
-                      className="h-9 w-9 rounded-full object-cover border border-slate-500"
+                      className="h-9 w-9 rounded-full object-cover border border-slate-300"
                     />
                   ) : (
-                    <div className="p-2 bg-white/10 rounded-full border border-white/10">
-                      <Users className="h-4 w-4 text-slate-100" />
+                    <div className="p-2 bg-indigo-50 rounded-full border border-indigo-100">
+                      <Users className="h-4 w-4 text-indigo-600" />
                     </div>
                   )}
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-white max-w-[150px] truncate">{userInfo.name}</h3>
-                  <p className="text-xs text-slate-400 uppercase tracking-wide">{userInfo.role}</p>
+                  <h3 className="text-sm font-semibold text-slate-900 max-w-[150px] truncate">{userInfo.name}</h3>
+                  <p className="text-xs text-slate-500 uppercase tracking-wide">{userInfo.role}</p>
                 </div>
               </div>
 
@@ -178,13 +181,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-2.5 hover:bg-white/10 rounded-full transition-colors border border-white/10"
+            className="p-2.5 hover:bg-indigo-50 rounded-full transition-colors border border-slate-200"
             title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
             {sidebarCollapsed ? (
-              <ChevronRight className="h-4 w-4 text-slate-400" />
+              <ChevronRight className="h-4 w-4 text-slate-500" />
             ) : (
-              <ChevronLeft className="h-4 w-4 text-slate-400" />
+              <ChevronLeft className="h-4 w-4 text-slate-500" />
             )}
           </button>
         </div>
@@ -194,57 +197,73 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="space-y-1">{menuItems.map((item) => renderMenuItem(item))}</div>
       </nav>
 
-      <div className="border-t border-white/10 p-4 bg-gradient-to-t from-white/5 to-transparent">
+      <div className="border-t border-slate-200/80 p-4 bg-gradient-to-t from-white/60 to-transparent">
         {!sidebarCollapsed ? (
-          <div className="bg-white/5 rounded-[1.8rem] p-4 border border-white/15 backdrop-blur-sm">
+          <div className="bg-white/80 rounded-[1.8rem] p-4 border border-slate-200 backdrop-blur-sm">
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onProfileClick) onProfileClick();
+                }}
+                className="flex items-center rounded-2xl px-1 py-1 transition-colors hover:bg-indigo-50"
+                title="Open profile"
+              >
                 <div className="mr-3">
                   {userInfo.profileImage ? (
                     <img
                       src={userInfo.profileImage}
                       alt={userInfo.name}
-                      className="h-8 w-8 rounded-full object-cover border border-slate-500"
+                      className="h-8 w-8 rounded-full object-cover border border-slate-300"
                     />
                   ) : (
-                    <div className="p-2 bg-white/10 rounded-full border border-white/10">
-                      <Users className="h-4 w-4 text-slate-100" />
+                    <div className="p-2 bg-indigo-50 rounded-full border border-indigo-100">
+                      <Users className="h-4 w-4 text-indigo-600" />
                     </div>
                   )}
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-white max-w-[120px] truncate">{userInfo.name}</h3>
-                  <p className="text-xs text-slate-400">Signed in</p>
+                  <h3 className="text-sm font-medium text-slate-900 max-w-[120px] truncate">{userInfo.name}</h3>
+                  <p className="text-xs text-slate-500">Signed in</p>
                 </div>
-              </div>
+              </button>
               <button
                 onClick={onLogout}
-                className="p-2.5 hover:bg-rose-600 rounded-full transition-colors group border border-white/10"
+                className="p-2.5 hover:bg-rose-600 rounded-full transition-colors group border border-slate-200"
                 title="Logout"
               >
-                <LogOut className="h-4 w-4 text-slate-400 group-hover:text-white" />
+                <LogOut className="h-4 w-4 text-slate-500 group-hover:text-white" />
               </button>
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-2">
-            {userInfo.profileImage ? (
-              <img
-                src={userInfo.profileImage}
-                alt={userInfo.name}
-                className="h-8 w-8 rounded-full object-cover border border-slate-500"
-              />
-            ) : (
-              <div className="p-2 bg-white/10 rounded-full border border-white/10">
-                <Users className="h-4 w-4 text-slate-100" />
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                if (onProfileClick) onProfileClick();
+              }}
+              className="rounded-full transition-transform hover:scale-105"
+              title="Open profile"
+            >
+              {userInfo.profileImage ? (
+                <img
+                  src={userInfo.profileImage}
+                  alt={userInfo.name}
+                  className="h-8 w-8 rounded-full object-cover border border-slate-300"
+                />
+              ) : (
+                <div className="p-2 bg-indigo-50 rounded-full border border-indigo-100">
+                  <Users className="h-4 w-4 text-indigo-600" />
+                </div>
+              )}
+            </button>
             <button
               onClick={onLogout}
-              className="p-2.5 hover:bg-rose-600 rounded-full transition-colors group border border-white/10"
+              className="p-2.5 hover:bg-rose-600 rounded-full transition-colors group border border-slate-200"
               title="Logout"
             >
-              <LogOut className="h-4 w-4 text-slate-400 group-hover:text-white" />
+              <LogOut className="h-4 w-4 text-slate-500 group-hover:text-white" />
             </button>
           </div>
         )}

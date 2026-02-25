@@ -28,6 +28,11 @@ import {
   ShieldCheck,
   Search,
   WandSparkles,
+  Globe,
+  Settings2,
+  MonitorSmartphone,
+  Megaphone,
+  Palette,
 } from "lucide-react";
 import { Sidebar, MenuItem } from "@/app/components/Sidebar";
 import { useToast } from "@/app/hooks/use-toast";
@@ -115,7 +120,8 @@ type PlaceholderTabKey =
   | "carrerOption"
   | "counselingBooking"
   | "competitiveExams"
-  | "scholarships";
+  | "scholarships"
+  | "websiteManagement";
 type TabKey = BaseTabKey | PlaceholderTabKey;
 
 type ContentResource = "colleges" | "careers" | "exams" | "scholarships";
@@ -269,12 +275,45 @@ export default function AdminDashboardPage() {
     counselingBooking: false,
     competitiveExams: false,
     scholarships: false,
+    websiteManagement: false,
   });
 
   const [collegeForm, setCollegeForm] = useState({ name: "", type: "government", category: "engineering", city: "", state: "" });
   const [careerForm, setCareerForm] = useState({ title: "", stream: "", salary_range: "", career_nature: "" });
   const [examForm, setExamForm] = useState({ name: "", type: "", eligibility: "", exam_date: "", state: "" });
   const [scholarshipForm, setScholarshipForm] = useState({ name: "", provider: "", amount: "", deadline: "" });
+  const [websiteSettings, setWebsiteSettings] = useState({
+    maintenanceMode: false,
+    heroTitle: "Discover Your Best Career Path",
+    heroSubtitle: "Personalized guidance, government colleges, scholarships, and counseling in one platform.",
+    primaryColor: "#4f46e5",
+    supportEmail: "support@edupath.com",
+    footerText: "© 2026 EduPath. All rights reserved.",
+    seoTitle: "EduPath - Career Guidance Platform",
+    seoDescription: "Career planning and counseling platform for students.",
+  });
+  const [announcementInput, setAnnouncementInput] = useState("");
+  const [websiteAnnouncements, setWebsiteAnnouncements] = useState<Array<{ id: string; text: string; active: boolean }>>([
+    { id: "ann-1", text: "Scholarship update for 2026 applications is now live.", active: true },
+    { id: "ann-2", text: "Counseling slots for this week are open.", active: true },
+  ]);
+  const [websitePages, setWebsitePages] = useState<
+    Array<{
+      id: string;
+      name: string;
+      route: string;
+      status: "published" | "draft";
+      records: number;
+      lastUpdated: string;
+      owner: string;
+    }>
+  >([
+    { id: "home", name: "Homepage", route: "/", status: "published", records: 14, lastUpdated: "24 Feb 2026", owner: "Content Team" },
+    { id: "about", name: "About Page", route: "/about", status: "published", records: 6, lastUpdated: "22 Feb 2026", owner: "Admin" },
+    { id: "gov-colleges", name: "Government Colleges", route: "/governmentCollege", status: "published", records: contentData.colleges.length || 0, lastUpdated: "21 Feb 2026", owner: "Data Team" },
+    { id: "resources", name: "Study Resources", route: "/studyResources", status: "draft", records: 11, lastUpdated: "20 Feb 2026", owner: "Academic Team" },
+    { id: "assessment", name: "Career Assessment", route: "/careerAssessment", status: "published", records: assessments.length || 0, lastUpdated: "25 Feb 2026", owner: "Counselor Ops" },
+  ]);
 
   const [adminInfo, setAdminInfo] = useState<{ name: string; role: string; profileImage?: string }>({
     name: "Admin",
@@ -541,6 +580,56 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const saveWebsiteManagement = () => {
+    showSuccessToast("Website settings saved", "Website management settings updated successfully.");
+  };
+
+  const addAnnouncement = () => {
+    const text = announcementInput.trim();
+    if (!text) {
+      showErrorToast("Please enter announcement text.");
+      return;
+    }
+
+    setWebsiteAnnouncements((previous) => [
+      { id: `ann-${Date.now()}`, text, active: true },
+      ...previous,
+    ]);
+    setAnnouncementInput("");
+    showSuccessToast("Announcement added", "New website announcement has been added.");
+  };
+
+  const toggleAnnouncement = (id: string) => {
+    setWebsiteAnnouncements((previous) =>
+      previous.map((item) => (item.id === id ? { ...item, active: !item.active } : item)),
+    );
+    showSuccessToast("Announcement updated", "Announcement status updated.");
+  };
+
+  const removeAnnouncement = (id: string) => {
+    setWebsiteAnnouncements((previous) => previous.filter((item) => item.id !== id));
+    showSuccessToast("Announcement removed", "Announcement deleted successfully.");
+  };
+
+  const toggleWebsitePageStatus = (id: string) => {
+    setWebsitePages((previous) =>
+      previous.map((page) =>
+        page.id === id
+          ? {
+              ...page,
+              status: page.status === "published" ? "draft" : "published",
+              lastUpdated: new Date().toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              }),
+            }
+          : page,
+      ),
+    );
+    showSuccessToast("Page status updated", "Website page visibility updated successfully.");
+  };
+
   useEffect(() => {
     const loadTab = async () => {
       if (loadedTabs[activeTab]) return;
@@ -576,19 +665,48 @@ export default function AdminDashboardPage() {
   }, [activeTab]);
 
   const menuItems: MenuItem[] = [
-    { id: "overview", label: "Overview", icon: LayoutDashboard, color: "text-indigo-400" },
-    { id: "users", label: "Users", icon: Users, color: "text-blue-400" },
-    { id: "feedback", label: "Feedback", icon: MessageSquare, color: "text-cyan-400" },
-    { id: "content", label: "Content", icon: FileCog, color: "text-emerald-400" },
-    { id: "profile", label: "Profile", icon: Users, color: "text-gray-400" },
-    { id: "progressTracker", label: "Progress Tracker", icon: RefreshCw, color: "text-rose-400" },
-    { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-400" },
-    { id: "govCollege", label: "Government College", icon: GraduationCap, color: "text-blue-400" },
-    { id: "shortListedColleges", label: "Short Listed College", icon: CalendarDays, color: "text-teal-400" },
-    { id: "carrerOption", label: "Career Option", icon: Briefcase, color: "text-emerald-400" },
-    { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-400" },
-    { id: "competitiveExams", label: "Competitive Exams", icon: Award, color: "text-orange-400" },
-    { id: "scholarships", label: "Scholarships", icon: GraduationCap, color: "text-yellow-400" },
+    {
+      id: "overview",
+      label: "Overview",
+      icon: LayoutDashboard,
+      color: "text-indigo-500",
+    },
+    {
+      id: "operationsGroup",
+      label: "Admin Operations",
+      icon: Users,
+      color: "text-blue-500",
+      children: [
+        { id: "users", label: "Users", icon: Users, color: "text-blue-500" },
+        { id: "counselingBooking", label: "Counseling Booking", icon: Clock, color: "text-cyan-500" },
+        { id: "progressTracker", label: "Progress Tracker", icon: RefreshCw, color: "text-rose-500" },
+        { id: "shortListedColleges", label: "Shortlisted Colleges", icon: CalendarDays, color: "text-teal-500" },
+        { id: "feedback", label: "Feedback", icon: MessageSquare, color: "text-cyan-500" },
+      ],
+    },
+    {
+      id: "assessmentGovGroup",
+      label: "Testing & Government",
+      icon: Target,
+      color: "text-violet-500",
+      children: [
+        { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-500" },
+        { id: "govCollege", label: "Government Colleges", icon: GraduationCap, color: "text-blue-500" },
+        { id: "scholarships", label: "Government Scholarships", icon: GraduationCap, color: "text-yellow-500" },
+        { id: "competitiveExams", label: "Government Exams", icon: Award, color: "text-orange-500" },
+        { id: "carrerOption", label: "Career Options", icon: Briefcase, color: "text-emerald-500" },
+      ],
+    },
+    {
+      id: "websiteGroup",
+      label: "Website Management",
+      icon: Globe,
+      color: "text-emerald-500",
+      children: [
+        { id: "websiteManagement", label: "Website Controls", icon: Settings2, color: "text-indigo-500" },
+        { id: "content", label: "Content Center", icon: FileCog, color: "text-emerald-500" },
+      ],
+    },
   ];
 
   const metricCards = useMemo(
@@ -623,6 +741,7 @@ export default function AdminDashboardPage() {
     counselingBooking: { title: "Counseling Booking", subtitle: "Control counseling schedules and session states" },
     competitiveExams: { title: "Competitive Exams", subtitle: "Manage exam guidance records" },
     scholarships: { title: "Scholarships", subtitle: "Maintain scholarship database records" },
+    websiteManagement: { title: "Website Management", subtitle: "Control website pages, content visibility, announcements, and platform-level settings" },
   };
 
   if (loading) {
@@ -642,6 +761,7 @@ export default function AdminDashboardPage() {
           onPageChange={(id) => setActiveTab(id as TabKey)}
           userInfo={{ name: adminInfo.name, role: adminInfo.role, profileImage: adminInfo.profileImage }}
           onLogout={handleLogout}
+          onProfileClick={() => setActiveTab("profile")}
         />
       </div>
 
@@ -1361,6 +1481,245 @@ export default function AdminDashboardPage() {
               <div className="flex items-center gap-2 text-emerald-100 mb-2"><CalendarClock className="w-4 h-4" /> Counseling Health</div>
               <p className="text-3xl font-bold">{analytics?.counseling.upcomingSessions ?? 0}</p>
               <p className="text-sm text-emerald-100">Upcoming counseling sessions</p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "websiteManagement" && (
+          <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Website Status</p>
+                <p className={`text-xl font-bold mt-1 ${websiteSettings.maintenanceMode ? "text-rose-600" : "text-emerald-600"}`}>
+                  {websiteSettings.maintenanceMode ? "Maintenance" : "Live"}
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Announcements</p>
+                <p className="text-xl font-bold mt-1 text-slate-900">{websiteAnnouncements.length}</p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Active Alerts</p>
+                <p className="text-xl font-bold mt-1 text-cyan-700">{websiteAnnouncements.filter((item) => item.active).length}</p>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Support Email</p>
+                <p className="text-sm font-semibold mt-2 text-slate-900 truncate">{websiteSettings.supportEmail}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <h4 className="font-semibold text-slate-900">Website Pages Management</h4>
+                  <p className="text-sm text-slate-600">Manage all key website pages, publishing status, and synced data records.</p>
+                </div>
+                <span className="text-xs px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+                  Total Pages: {websitePages.length}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {websitePages.map((page) => (
+                  <div key={page.id} className="rounded-xl border border-slate-200 p-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-slate-900">{page.name}</p>
+                        <span
+                          className={`text-[11px] px-2 py-0.5 rounded-full border ${
+                            page.status === "published"
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                              : "bg-amber-50 text-amber-700 border-amber-200"
+                          }`}
+                        >
+                          {page.status === "published" ? "Published" : "Draft"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Route: {page.route} • Records: {page.records} • Owner: {page.owner} • Updated: {page.lastUpdated}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => toggleWebsitePageStatus(page.id)}
+                        className="text-xs rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50"
+                      >
+                        {page.status === "published" ? "Move to Draft" : "Publish"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+                <div className="flex items-center gap-2 text-slate-900 font-semibold">
+                  <MonitorSmartphone className="w-4 h-4 text-indigo-600" />
+                  Homepage & Branding
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-600">Hero Title</label>
+                  <input
+                    value={websiteSettings.heroTitle}
+                    onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, heroTitle: event.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                    placeholder="Homepage main title"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-600">Hero Subtitle</label>
+                  <textarea
+                    value={websiteSettings.heroSubtitle}
+                    onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, heroSubtitle: event.target.value }))}
+                    className={`mt-1 min-h-[96px] ${inputClass}`}
+                    placeholder="Homepage subtitle"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-slate-600">Primary Color</label>
+                    <input
+                      type="color"
+                      value={websiteSettings.primaryColor}
+                      onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, primaryColor: event.target.value }))}
+                      className="mt-1 h-10 w-full rounded-lg border border-slate-300"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-slate-600">Support Email</label>
+                    <input
+                      value={websiteSettings.supportEmail}
+                      onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, supportEmail: event.target.value }))}
+                      className={`mt-1 ${inputClass}`}
+                      placeholder="support@..."
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-2">
+                  <div className="flex items-center gap-2 text-slate-700">
+                    <Settings2 className="w-4 h-4 text-rose-500" />
+                    Enable Maintenance Mode
+                  </div>
+                  <button
+                    onClick={() => setWebsiteSettings((previous) => ({ ...previous, maintenanceMode: !previous.maintenanceMode }))}
+                    className={`w-12 h-7 rounded-full p-1 transition-colors ${websiteSettings.maintenanceMode ? "bg-rose-500" : "bg-slate-300"}`}
+                  >
+                    <span className={`block h-5 w-5 rounded-full bg-white transition-transform ${websiteSettings.maintenanceMode ? "translate-x-5" : "translate-x-0"}`} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+                <div className="flex items-center gap-2 text-slate-900 font-semibold">
+                  <Megaphone className="w-4 h-4 text-cyan-600" />
+                  Announcement Center
+                </div>
+
+                <div className="flex gap-2">
+                  <input
+                    value={announcementInput}
+                    onChange={(event) => setAnnouncementInput(event.target.value)}
+                    className={inputClass}
+                    placeholder="Write new website announcement"
+                  />
+                  <button onClick={addAnnouncement} className={primaryButtonClass}>Add</button>
+                </div>
+
+                <div className="space-y-2 max-h-[280px] overflow-auto pr-1">
+                  {websiteAnnouncements.length === 0 ? (
+                    <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+                      No announcements added yet.
+                    </div>
+                  ) : (
+                    websiteAnnouncements.map((announcement) => (
+                      <div key={announcement.id} className="rounded-xl border border-slate-200 p-3 flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm text-slate-800">{announcement.text}</p>
+                          <p className={`text-xs mt-1 ${announcement.active ? "text-emerald-600" : "text-slate-500"}`}>
+                            {announcement.active ? "Active on website" : "Hidden"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleAnnouncement(announcement.id)}
+                            className="text-xs rounded-lg border border-slate-300 px-2 py-1 hover:bg-slate-50"
+                          >
+                            {announcement.active ? "Hide" : "Show"}
+                          </button>
+                          <button
+                            onClick={() =>
+                              askConfirmation({
+                                title: "Delete announcement",
+                                description: "This announcement will be removed from website management.",
+                                confirmLabel: "Delete",
+                                confirmVariant: "destructive",
+                                action: async () => {
+                                  removeAnnouncement(announcement.id);
+                                },
+                              })
+                            }
+                            className="text-rose-600 hover:text-rose-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+                <div className="flex items-center gap-2 text-slate-900 font-semibold">
+                  <Palette className="w-4 h-4 text-violet-600" />
+                  Footer & Contact Settings
+                </div>
+                <div>
+                  <label className="text-sm text-slate-600">Footer Text</label>
+                  <input
+                    value={websiteSettings.footerText}
+                    onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, footerText: event.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+                <div className="flex items-center gap-2 text-slate-900 font-semibold">
+                  <Globe className="w-4 h-4 text-emerald-600" />
+                  SEO Configuration
+                </div>
+                <div>
+                  <label className="text-sm text-slate-600">SEO Title</label>
+                  <input
+                    value={websiteSettings.seoTitle}
+                    onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, seoTitle: event.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-slate-600">SEO Description</label>
+                  <textarea
+                    value={websiteSettings.seoDescription}
+                    onChange={(event) => setWebsiteSettings((previous) => ({ ...previous, seoDescription: event.target.value }))}
+                    className={`mt-1 min-h-[90px] ${inputClass}`}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button onClick={saveWebsiteManagement} className={primaryButtonClass}>
+                <Save className="w-4 h-4" /> Save Website Settings
+              </button>
             </div>
           </div>
         )}
