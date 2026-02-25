@@ -30,6 +30,18 @@ import {
   WandSparkles,
 } from "lucide-react";
 import { Sidebar, MenuItem } from "@/app/components/Sidebar";
+import { useToast } from "@/app/hooks/use-toast";
+import { Toaster } from "@/app/components/ui/toaster";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/components/ui/alert-dialog";
 
 type OverviewResponse = {
   success: boolean;
@@ -194,6 +206,15 @@ type CounselingResponse = {
   }[];
 };
 
+type ConfirmationState = {
+  open: boolean;
+  title: string;
+  description: string;
+  confirmLabel: string;
+  confirmVariant?: "default" | "destructive";
+  action: (() => Promise<void>) | null;
+};
+
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {
     credentials: "include",
@@ -213,6 +234,7 @@ async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 export default function AdminDashboardPage() {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -262,6 +284,15 @@ export default function AdminDashboardPage() {
 
   const [userSearch, setUserSearch] = useState("");
   const [feedbackStatus, setFeedbackStatus] = useState<"All" | "Pending" | "Reviewed" | "Responded">("All");
+  const [confirmation, setConfirmation] = useState<ConfirmationState>({
+    open: false,
+    title: "",
+    description: "",
+    confirmLabel: "Confirm",
+    confirmVariant: "default",
+    action: null,
+  });
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [contentSearch, setContentSearch] = useState<Record<ContentResource, string>>({
     colleges: "",
     careers: "",
@@ -274,6 +305,34 @@ export default function AdminDashboardPage() {
     carrerOption: "careers",
     competitiveExams: "exams",
     scholarships: "scholarships",
+  };
+
+  const showSuccessToast = (title: string, description: string) => {
+    toast({ title, description });
+  };
+
+  const showErrorToast = (description: string) => {
+    toast({ title: "Action failed", description, variant: "destructive" });
+  };
+
+  const askConfirmation = (config: Omit<ConfirmationState, "open">) => {
+    setConfirmation({ ...config, open: true });
+  };
+
+  const closeConfirmation = () => {
+    if (confirmLoading) return;
+    setConfirmation((prev) => ({ ...prev, open: false, action: null }));
+  };
+
+  const runConfirmedAction = async () => {
+    if (!confirmation.action) return;
+    setConfirmLoading(true);
+    try {
+      await confirmation.action();
+    } finally {
+      setConfirmLoading(false);
+      setConfirmation((prev) => ({ ...prev, open: false, action: null }));
+    }
   };
 
   const loadOverview = async () => {
@@ -375,8 +434,10 @@ export default function AdminDashboardPage() {
       });
       await loadUsers(userSearch);
       await loadOverview();
+      showSuccessToast("Role updated", "User role has been updated successfully.");
     } catch {
       setError("Could not update user role.");
+      showErrorToast("Could not update user role.");
     }
   };
 
@@ -387,8 +448,10 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ userId: user._id, isActive: !user.isActive }),
       });
       await loadUsers(userSearch);
+      showSuccessToast("User status updated", `${user.name} is now ${user.isActive ? "inactive" : "active"}.`);
     } catch {
       setError("Could not update user status.");
+      showErrorToast("Could not update user status.");
     }
   };
 
@@ -400,8 +463,10 @@ export default function AdminDashboardPage() {
       });
       await loadFeedbacks(feedbackStatus);
       await loadOverview();
+      showSuccessToast("Feedback updated", `Feedback status changed to ${status}.`);
     } catch {
       setError("Could not update feedback status.");
+      showErrorToast("Could not update feedback status.");
     }
   };
 
@@ -413,8 +478,10 @@ export default function AdminDashboardPage() {
       });
       await loadProfile();
       setAdminInfo((previous) => ({ ...previous, name: profile.name, profileImage: profile.profileImage || undefined }));
+      showSuccessToast("Profile saved", "Your admin profile has been updated.");
     } catch {
       setError("Could not save profile.");
+      showErrorToast("Could not save admin profile.");
     }
   };
 
@@ -425,8 +492,10 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ assessmentId, isActive }),
       });
       await Promise.all([loadAssessments(), loadAnalytics()]);
+      showSuccessToast("Assessment updated", `Assessment marked as ${isActive ? "active" : "inactive"}.`);
     } catch {
       setError("Could not update assessment status.");
+      showErrorToast("Could not update assessment status.");
     }
   };
 
@@ -437,8 +506,10 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ sessionId, status }),
       });
       await Promise.all([loadCounseling(), loadAnalytics()]);
+      showSuccessToast("Session status updated", `Session moved to ${status}.`);
     } catch {
       setError("Could not update session status.");
+      showErrorToast("Could not update session status.");
     }
   };
 
@@ -449,8 +520,10 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ resource, payload }),
       });
       await Promise.all([loadContent(resource, contentSearch[resource]), loadOverview()]);
+      showSuccessToast("Content added", `New ${resource.slice(0, -1)} record created successfully.`);
     } catch {
       setError(`Could not create ${resource.slice(0, -1)}.`);
+      showErrorToast(`Could not create ${resource.slice(0, -1)}.`);
     }
   };
 
@@ -461,8 +534,10 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ resource, id }),
       });
       await Promise.all([loadContent(resource, contentSearch[resource]), loadOverview(), loadAnalytics()]);
+      showSuccessToast("Content deleted", `${resource.slice(0, -1)} has been deleted.`);
     } catch {
       setError(`Could not delete ${resource.slice(0, -1)}.`);
+      showErrorToast(`Could not delete ${resource.slice(0, -1)}.`);
     }
   };
 
@@ -603,7 +678,7 @@ export default function AdminDashboardPage() {
         ) : null}
 
         {activeTab === "overview" && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
               <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10" />
               <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-white/10" />
@@ -710,7 +785,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "users" && (
-          <div className={`${panelClass} p-5`}>
+          <div className={`${panelClass} p-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300`}>
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-4">
               <h3 className="text-lg font-semibold text-slate-900">User Management</h3>
               <div className="flex gap-2">
@@ -769,7 +844,15 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="p-2">
                         <button
-                          onClick={() => toggleUserActive(user)}
+                          onClick={() =>
+                            askConfirmation({
+                              title: `${user.isActive ? "Deactivate" : "Activate"} User`,
+                              description: `Are you sure you want to ${user.isActive ? "deactivate" : "activate"} ${user.name}?`,
+                              confirmLabel: user.isActive ? "Deactivate" : "Activate",
+                              confirmVariant: user.isActive ? "destructive" : "default",
+                              action: async () => toggleUserActive(user),
+                            })
+                          }
                           className="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-1 hover:bg-slate-50"
                         >
                           <UserCheck className="w-4 h-4" />
@@ -785,7 +868,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "feedback" && (
-          <div className={`${panelClass} p-5`}>
+          <div className={`${panelClass} p-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300`}>
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-4">
               <h3 className="text-lg font-semibold text-slate-900">Feedback Management</h3>
               <div className="flex gap-2 items-center">
@@ -839,7 +922,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "content" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <Link href="/notifications/scholarship" className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all">
               <h4 className="font-semibold text-slate-900 mb-1">Scholarship Notifications</h4>
               <p className="text-sm text-slate-600">Manage scholarship updates visible to students.</p>
@@ -868,7 +951,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "profile" && (
-          <div className={`${panelClass} p-6 space-y-5`}>
+          <div className={`${panelClass} p-6 space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-slate-600">Full Name</label>
@@ -907,7 +990,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "progressTracker" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               <div className="bg-white rounded-xl border border-slate-200 p-4">
                 <p className="text-sm text-slate-500">Students</p>
@@ -960,7 +1043,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "psychometricTest" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-sm text-slate-500">Total Assessments</p><p className="text-2xl font-bold">{analytics?.psychometric.totalAssessments ?? 0}</p></div>
               <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-sm text-slate-500">Active Assessments</p><p className="text-2xl font-bold">{analytics?.psychometric.activeAssessments ?? 0}</p></div>
@@ -991,7 +1074,15 @@ export default function AdminDashboardPage() {
                       <td className="p-2 text-slate-600">{assessment.attempts}</td>
                       <td className="p-2">
                         <button
-                          onClick={() => updateAssessmentStatus(assessment._id, !assessment.isActive)}
+                          onClick={() =>
+                            askConfirmation({
+                              title: `${assessment.isActive ? "Disable" : "Enable"} Assessment`,
+                              description: `This will mark \"${assessment.title}\" as ${assessment.isActive ? "inactive" : "active"}.`,
+                              confirmLabel: assessment.isActive ? "Disable" : "Enable",
+                              confirmVariant: assessment.isActive ? "destructive" : "default",
+                              action: async () => updateAssessmentStatus(assessment._id, !assessment.isActive),
+                            })
+                          }
                           className={`inline-flex items-center gap-1 rounded px-2 py-1 text-xs ${assessment.isActive ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-700"}`}
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -1007,7 +1098,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "shortListedColleges" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-sm text-slate-500">Total Shortlisted</p><p className="text-3xl font-bold">{analytics?.shortlists.totalShortlisted ?? 0}</p></div>
               <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-sm text-slate-500">Applied Colleges</p><p className="text-3xl font-bold">{analytics?.shortlists.appliedCount ?? 0}</p></div>
@@ -1032,7 +1123,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "counselingBooking" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-sm text-slate-500">Total Sessions</p><p className="text-2xl font-bold">{analytics?.counseling.totalSessions ?? 0}</p></div>
               <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-sm text-slate-500">Upcoming</p><p className="text-2xl font-bold">{analytics?.counseling.upcomingSessions ?? 0}</p></div>
@@ -1082,7 +1173,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "govCollege" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <h4 className="font-semibold mb-3">Add College</h4>
               <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -1120,7 +1211,18 @@ export default function AdminDashboardPage() {
                       <p className="font-medium">{String(item.name || "-")}</p>
                       <p className="text-xs text-slate-500 capitalize">{String(item.type || "-")} • {String(item.category || "-")}</p>
                     </div>
-                    <button onClick={() => deleteContent("colleges", item._id)} className="text-rose-600 hover:text-rose-700"><Trash2 className="w-4 h-4" /></button>
+                    <button
+                      onClick={() =>
+                        askConfirmation({
+                          title: "Delete College",
+                          description: `Delete ${String(item.name || "this college")} permanently? This action cannot be undone.`,
+                          confirmLabel: "Delete",
+                          confirmVariant: "destructive",
+                          action: async () => deleteContent("colleges", item._id),
+                        })
+                      }
+                      className="text-rose-600 hover:text-rose-700"
+                    ><Trash2 className="w-4 h-4" /></button>
                   </div>
                 ))}
               </div>
@@ -1129,7 +1231,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "carrerOption" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <h4 className="font-semibold mb-3">Add Career</h4>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -1148,7 +1250,18 @@ export default function AdminDashboardPage() {
                     <p className="font-medium">{String(item.title || "-")}</p>
                     <p className="text-xs text-slate-500">{String(item.stream || "-")} • {String(item.salary_range || "-")}</p>
                   </div>
-                  <button onClick={() => deleteContent("careers", item._id)} className="text-rose-600 hover:text-rose-700"><Trash2 className="w-4 h-4" /></button>
+                  <button
+                    onClick={() =>
+                      askConfirmation({
+                        title: "Delete Career",
+                        description: `Delete ${String(item.title || "this career")} permanently? This action cannot be undone.`,
+                        confirmLabel: "Delete",
+                        confirmVariant: "destructive",
+                        action: async () => deleteContent("careers", item._id),
+                      })
+                    }
+                    className="text-rose-600 hover:text-rose-700"
+                  ><Trash2 className="w-4 h-4" /></button>
                 </div>
               ))}
             </div>
@@ -1156,7 +1269,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "competitiveExams" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <h4 className="font-semibold mb-3">Add Exam</h4>
               <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -1176,7 +1289,18 @@ export default function AdminDashboardPage() {
                     <p className="font-medium">{String(item.name || "-")}</p>
                     <p className="text-xs text-slate-500">{String(item.type || "-")} • {String(item.state || "-")}</p>
                   </div>
-                  <button onClick={() => deleteContent("exams", item._id)} className="text-rose-600 hover:text-rose-700"><Trash2 className="w-4 h-4" /></button>
+                  <button
+                    onClick={() =>
+                      askConfirmation({
+                        title: "Delete Exam",
+                        description: `Delete ${String(item.name || "this exam")} permanently? This action cannot be undone.`,
+                        confirmLabel: "Delete",
+                        confirmVariant: "destructive",
+                        action: async () => deleteContent("exams", item._id),
+                      })
+                    }
+                    className="text-rose-600 hover:text-rose-700"
+                  ><Trash2 className="w-4 h-4" /></button>
                 </div>
               ))}
             </div>
@@ -1184,7 +1308,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "scholarships" && (
-          <div className="space-y-5">
+          <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="bg-white rounded-xl border border-slate-200 p-5">
               <h4 className="font-semibold mb-3">Add Scholarship</h4>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -1203,7 +1327,18 @@ export default function AdminDashboardPage() {
                     <p className="font-medium">{String(item.name || "-")}</p>
                     <p className="text-xs text-slate-500">{String(item.provider || "-")} • {String(item.amount || "-")}</p>
                   </div>
-                  <button onClick={() => deleteContent("scholarships", item._id)} className="text-rose-600 hover:text-rose-700"><Trash2 className="w-4 h-4" /></button>
+                  <button
+                    onClick={() =>
+                      askConfirmation({
+                        title: "Delete Scholarship",
+                        description: `Delete ${String(item.name || "this scholarship")} permanently? This action cannot be undone.`,
+                        confirmLabel: "Delete",
+                        confirmVariant: "destructive",
+                        action: async () => deleteContent("scholarships", item._id),
+                      })
+                    }
+                    className="text-rose-600 hover:text-rose-700"
+                  ><Trash2 className="w-4 h-4" /></button>
                 </div>
               ))}
             </div>
@@ -1211,7 +1346,7 @@ export default function AdminDashboardPage() {
         )}
 
         {activeTab === "content" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-4 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
             <div className="bg-gradient-to-br from-indigo-600 to-blue-600 text-white rounded-xl p-5">
               <div className="flex items-center gap-2 text-indigo-100 mb-2"><BookOpen className="w-4 h-4" /> Content Coverage</div>
               <p className="text-3xl font-bold">{(overview?.counters.colleges ?? 0) + (overview?.counters.careers ?? 0) + (overview?.counters.exams ?? 0) + (overview?.counters.scholarships ?? 0)}</p>
@@ -1229,7 +1364,30 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         )}
+
+        <AlertDialog open={confirmation.open} onOpenChange={(open) => !open && closeConfirmation()}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{confirmation.title}</AlertDialogTitle>
+              <AlertDialogDescription>{confirmation.description}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={confirmLoading}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(event) => {
+                  event.preventDefault();
+                  runConfirmedAction();
+                }}
+                className={confirmation.confirmVariant === "destructive" ? "bg-rose-600 hover:bg-rose-700" : ""}
+                disabled={confirmLoading}
+              >
+                {confirmLoading ? "Please wait..." : confirmation.confirmLabel}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
+      <Toaster />
     </div>
   );
 }
