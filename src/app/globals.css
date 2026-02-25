@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+:root {
+	--app-surface-soft: #f8fafc;
+	--app-surface-subtle: #f1f5f9;
+	--app-accent-solid: #4f46e5;
+}
+
+[class*="bg-gradient-to-"] {
+	background-image: none !important;
+	background-color: var(--app-surface-soft) !important;
+}
+
+[class*="bg-gradient-to-"][class*="text-white"] {
+	background-color: var(--app-accent-solid) !important;
+}
+
+[class*="bg-[radial-gradient"] {
+	background-image: none !important;
+	background-color: var(--app-surface-soft) !important;
+}
+
+[class*="bg-clip-text"][class*="bg-gradient"] {
+	background-image: none !important;
+	-webkit-text-fill-color: currentColor !important;
+	color: #1e3a8a !important;
+}
+
+[class*="text-gradient"] {
+	background-image: none !important;
+	color: #1e3a8a !important;
+}

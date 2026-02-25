@@ -62,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={(e) => handleCollapsedItemClick(item, e)}
           className={`w-full flex items-center justify-center p-3 text-left transition-all duration-300 rounded-full group relative ${
             isActive
-              ? "bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-900/40"
+              ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/25"
               : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
           }`}
           title={item.label}
@@ -79,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => toggleSection(item.id)}
             className={`w-full flex items-center justify-between px-4 py-3 text-left rounded-full transition-all duration-300 group ${
               isActive
-                ? "bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-900/40"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/25"
                 : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
             }`}
           >
@@ -139,7 +139,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onClick={() => onPageChange(item.id)}
         className={`w-full flex items-center px-4 py-3 text-left transition-all duration-300 rounded-full group ${
           isActive
-            ? "bg-gradient-to-r from-indigo-600 to-cyan-600 text-white shadow-md shadow-indigo-900/40"
+            ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/25"
             : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
         }`}
       >
@@ -197,7 +197,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="space-y-1">{menuItems.map((item) => renderMenuItem(item))}</div>
       </nav>
 
-      <div className="border-t border-slate-200/80 p-4 bg-gradient-to-t from-white/60 to-transparent">
+      <div className="border-t border-slate-200/80 p-4 bg-white/50">
         {!sidebarCollapsed ? (
           <div className="bg-white/80 rounded-[1.8rem] p-4 border border-slate-200 backdrop-blur-sm">
             <div className="flex items-center justify-between">
