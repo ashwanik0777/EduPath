@@ -388,7 +388,18 @@ export default function CounselorDashboardPage() {
   const renderActiveTab = () => {
     switch (activeTab) {
       case "overview":
-        return <OverviewTab panelClass={panelClass} name={name} overview={overview} overviewInsights={overviewInsights} />;
+        return (
+          <OverviewTab
+            panelClass={panelClass}
+            name={name}
+            overview={overview}
+            overviewInsights={overviewInsights}
+            allSessions={allSessions}
+            students={students}
+            psychometric={psychometric}
+            resources={resources}
+          />
+        );
       case "sessions":
         return (
           <SessionsTab
