@@ -1,4 +1,19 @@
-import { Sparkles, Activity, CalendarClock, ShieldCheck } from "lucide-react";
+import {
+  Sparkles,
+  Activity,
+  CalendarClock,
+  ShieldCheck,
+  Users,
+  GraduationCap,
+  Briefcase,
+  Award,
+  Bell,
+  MessageSquare,
+  Target,
+  LineChart,
+  CheckCircle2,
+  AlertTriangle,
+} from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 type AdminUser = {
@@ -28,17 +43,83 @@ type OverviewTabProps = {
   adminName: string;
   metricCards: MetricCard[];
   overview: {
-    counters: { pendingFeedbacks: number };
+    counters: {
+      users: number;
+      students: number;
+      counselors: number;
+      admins: number;
+      colleges: number;
+      careers: number;
+      exams: number;
+      scholarships: number;
+      feedbacks: number;
+      pendingFeedbacks: number;
+    };
     recentUsers: AdminUser[];
     recentFeedbacks: AdminFeedback[];
   } | null;
   analytics: {
-    progress: { studentsWithAssessments: number };
-    counseling: { upcomingSessions: number };
+    progress: {
+      totalStudents: number;
+      studentsWithAssessments: number;
+      studentsWithSessions: number;
+      averageAssessmentScore: number;
+      completedSessions: number;
+      scheduledSessions: number;
+    };
+    psychometric: {
+      totalAssessments: number;
+      activeAssessments: number;
+      totalResults: number;
+      averageScore: number;
+    };
+    shortlists: {
+      totalShortlisted: number;
+      appliedCount: number;
+      uniqueCollegeCount: number;
+    };
+    counseling: {
+      totalSessions: number;
+      upcomingSessions: number;
+      completedSessions: number;
+      cancelledSessions: number;
+    };
   } | null;
 };
 
 export function OverviewTab({ panelClass, adminName, metricCards, overview, analytics }: OverviewTabProps) {
+  const progressTotalStudents = analytics?.progress.totalStudents ?? 0;
+  const progressStudentsWithAssessments = analytics?.progress.studentsWithAssessments ?? 0;
+  const progressStudentsWithSessions = analytics?.progress.studentsWithSessions ?? 0;
+  const counselingTotalSessions = analytics?.counseling.totalSessions ?? 0;
+  const counselingCompletedSessions = analytics?.counseling.completedSessions ?? 0;
+
+  const users = overview?.counters.users ?? 0;
+  const students = overview?.counters.students ?? 0;
+  const counselors = overview?.counters.counselors ?? 0;
+  const admins = overview?.counters.admins ?? 0;
+
+  const totalContent =
+    (overview?.counters.colleges ?? 0) +
+    (overview?.counters.careers ?? 0) +
+    (overview?.counters.exams ?? 0) +
+    (overview?.counters.scholarships ?? 0);
+
+  const studentAssessmentCoverage = progressTotalStudents
+    ? Math.round((progressStudentsWithAssessments / progressTotalStudents) * 100)
+    : 0;
+
+  const studentSessionCoverage = progressTotalStudents
+    ? Math.round((progressStudentsWithSessions / progressTotalStudents) * 100)
+    : 0;
+
+  const counselingCompletionRate = counselingTotalSessions
+    ? Math.round((counselingCompletedSessions / counselingTotalSessions) * 100)
+    : 0;
+
+  const pendingFeedbackRisk = (overview?.counters.pendingFeedbacks ?? 0) >= 10;
+  const highCancellationRisk = (analytics?.counseling.cancelledSessions ?? 0) >= 5;
+
   return (
     <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
       <div className="bg-gradient-to-r from-indigo-700 via-blue-700 to-cyan-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
@@ -76,6 +157,29 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
             </div>
           );
         })}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Users className="w-4 h-4 text-indigo-600" /> User Base</div>
+          <p className="text-2xl font-bold text-slate-900">{users}</p>
+          <p className="text-xs text-slate-500 mt-1">Students: {students} • Counselors: {counselors} • Admins: {admins}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Target className="w-4 h-4 text-violet-600" /> Student Coverage</div>
+          <p className="text-2xl font-bold text-slate-900">{studentAssessmentCoverage}%</p>
+          <p className="text-xs text-slate-500 mt-1">Assessment coverage • Session coverage: {studentSessionCoverage}%</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><LineChart className="w-4 h-4 text-cyan-600" /> Counseling Completion</div>
+          <p className="text-2xl font-bold text-slate-900">{counselingCompletionRate}%</p>
+          <p className="text-xs text-slate-500 mt-1">Completed {analytics?.counseling.completedSessions ?? 0} / {analytics?.counseling.totalSessions ?? 0} total sessions</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><MessageSquare className="w-4 h-4 text-amber-600" /> Feedback Queue</div>
+          <p className="text-2xl font-bold text-slate-900">{overview?.counters.pendingFeedbacks ?? 0}</p>
+          <p className="text-xs text-slate-500 mt-1">Total feedback: {overview?.counters.feedbacks ?? 0}</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -141,6 +245,94 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
           </div>
           <p className="text-2xl font-bold text-slate-900">{overview?.counters.pendingFeedbacks ?? 0}</p>
           <p className="text-xs text-slate-500">Pending feedback items</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className={`${panelClass} p-5`}>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><GraduationCap className="w-4 h-4 text-blue-600" /> Content Inventory</h3>
+          <div className="space-y-2 text-sm text-slate-700">
+            <div className="flex items-center justify-between"><span>Government Colleges</span><span className="font-semibold">{overview?.counters.colleges ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Career Options</span><span className="font-semibold">{overview?.counters.careers ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Competitive Exams</span><span className="font-semibold">{overview?.counters.exams ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Scholarships</span><span className="font-semibold">{overview?.counters.scholarships ?? 0}</span></div>
+            <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between">
+              <span className="font-medium">Total Content</span>
+              <span className="font-bold text-slate-900">{totalContent}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className={`${panelClass} p-5`}>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Assessment & Counseling Quality</h3>
+          <div className="space-y-2 text-sm text-slate-700">
+            <div className="flex items-center justify-between"><span>Average Assessment Score</span><span className="font-semibold">{Math.round(analytics?.psychometric.averageScore ?? 0)}%</span></div>
+            <div className="flex items-center justify-between"><span>Total Assessments</span><span className="font-semibold">{analytics?.psychometric.totalAssessments ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Active Assessments</span><span className="font-semibold">{analytics?.psychometric.activeAssessments ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Assessment Submissions</span><span className="font-semibold">{analytics?.psychometric.totalResults ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Total Shortlisted Colleges</span><span className="font-semibold">{analytics?.shortlists.totalShortlisted ?? 0}</span></div>
+          </div>
+        </div>
+
+        <div className={`${panelClass} p-5`}>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-600" /> Priority Alerts</h3>
+          <div className="space-y-2 text-sm">
+            <div className={`rounded-lg border px-3 py-2 ${pendingFeedbackRisk ? "border-amber-200 bg-amber-50 text-amber-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
+              Pending feedback {overview?.counters.pendingFeedbacks ?? 0} {pendingFeedbackRisk ? "requires attention" : "is under control"}.
+            </div>
+            <div className={`rounded-lg border px-3 py-2 ${highCancellationRisk ? "border-rose-200 bg-rose-50 text-rose-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
+              Cancelled sessions {analytics?.counseling.cancelledSessions ?? 0} {highCancellationRisk ? "are high, review counselor scheduling" : "are in healthy range"}.
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700">
+              Applied shortlists: {analytics?.shortlists.appliedCount ?? 0} • Unique colleges: {analytics?.shortlists.uniqueCollegeCount ?? 0}.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className={`${panelClass} p-5`}>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><Bell className="w-4 h-4 text-indigo-600" /> Feedback Status Snapshot</h3>
+          <div className="space-y-2 text-sm text-slate-700">
+            <div className="flex items-center justify-between"><span>Pending (overall)</span><span className="font-semibold">{overview?.counters.pendingFeedbacks ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Reviewed (recent)</span><span className="font-semibold">{(overview?.recentFeedbacks || []).filter((item) => item.status === "Reviewed").length}</span></div>
+            <div className="flex items-center justify-between"><span>Responded (recent)</span><span className="font-semibold">{(overview?.recentFeedbacks || []).filter((item) => item.status === "Responded").length}</span></div>
+          </div>
+        </div>
+
+        <div className={`${panelClass} p-5`}>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><Award className="w-4 h-4 text-violet-600" /> Guidance Outcome Snapshot</h3>
+          <div className="space-y-2 text-sm text-slate-700">
+            <div className="flex items-center justify-between"><span>Shortlists Total</span><span className="font-semibold">{analytics?.shortlists.totalShortlisted ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Applied Count</span><span className="font-semibold">{analytics?.shortlists.appliedCount ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Unique Colleges</span><span className="font-semibold">{analytics?.shortlists.uniqueCollegeCount ?? 0}</span></div>
+            <div className="flex items-center justify-between"><span>Avg Student Assessment</span><span className="font-semibold">{Math.round(analytics?.progress.averageAssessmentScore ?? 0)}%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-xs text-slate-500">Students</p><p className="text-2xl font-bold text-slate-900">{students}</p></div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-xs text-slate-500">Counselors</p><p className="text-2xl font-bold text-slate-900">{counselors}</p></div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-xs text-slate-500">Admins</p><p className="text-2xl font-bold text-slate-900">{admins}</p></div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4"><p className="text-xs text-slate-500">Users Total</p><p className="text-2xl font-bold text-slate-900">{users}</p></div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Briefcase className="w-4 h-4 text-emerald-600" /> Careers Impact</div>
+          <p className="text-2xl font-bold text-slate-900">{overview?.counters.careers ?? 0}</p>
+          <p className="text-xs text-slate-500">Career entries available for recommendations</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Target className="w-4 h-4 text-blue-600" /> Exams Readiness</div>
+          <p className="text-2xl font-bold text-slate-900">{overview?.counters.exams ?? 0}</p>
+          <p className="text-xs text-slate-500">Exam records supporting planning journeys</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Award className="w-4 h-4 text-amber-600" /> Scholarship Reach</div>
+          <p className="text-2xl font-bold text-slate-900">{overview?.counters.scholarships ?? 0}</p>
+          <p className="text-xs text-slate-500">Scholarship opportunities in current catalog</p>
         </div>
       </div>
     </div>
