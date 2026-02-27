@@ -119,6 +119,7 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
 
   const pendingFeedbackRisk = (overview?.counters.pendingFeedbacks ?? 0) >= 10;
   const highCancellationRisk = (analytics?.counseling.cancelledSessions ?? 0) >= 5;
+  const criticalActions = Number(pendingFeedbackRisk) + Number(highCancellationRisk);
 
   return (
     <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
@@ -136,6 +137,26 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
           <div className="hidden md:flex items-center gap-2 bg-white/15 px-3 py-2 rounded-lg">
             <Sparkles className="w-5 h-5" />
             <span className="text-sm">Admin Pro Mode</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={`${panelClass} p-5`}>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h3 className="font-semibold text-slate-900 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-600" /> Action Center</h3>
+          <span className={`text-xs px-2.5 py-1 rounded-full ${criticalActions > 0 ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-700"}`}>
+            {criticalActions > 0 ? `${criticalActions} critical checks need review` : "All critical checks are healthy"}
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+          <div className={`rounded-lg border px-3 py-2 ${pendingFeedbackRisk ? "border-amber-200 bg-amber-50 text-amber-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
+            Pending feedback {overview?.counters.pendingFeedbacks ?? 0} {pendingFeedbackRisk ? "requires attention" : "is under control"}.
+          </div>
+          <div className={`rounded-lg border px-3 py-2 ${highCancellationRisk ? "border-rose-200 bg-rose-50 text-rose-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
+            Cancelled sessions {analytics?.counseling.cancelledSessions ?? 0} {highCancellationRisk ? "are high, review counselor scheduling" : "are in healthy range"}.
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700">
+            Upcoming sessions {analytics?.counseling.upcomingSessions ?? 0} • Applied shortlists {analytics?.shortlists.appliedCount ?? 0}.
           </div>
         </div>
       </div>
@@ -275,16 +296,16 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
         </div>
 
         <div className={`${panelClass} p-5`}>
-          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-600" /> Priority Alerts</h3>
-          <div className="space-y-2 text-sm">
-            <div className={`rounded-lg border px-3 py-2 ${pendingFeedbackRisk ? "border-amber-200 bg-amber-50 text-amber-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
-              Pending feedback {overview?.counters.pendingFeedbacks ?? 0} {pendingFeedbackRisk ? "requires attention" : "is under control"}.
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-amber-600" /> Operational Watchlist</h3>
+          <div className="space-y-2 text-sm text-slate-700">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              Upcoming sessions to monitor: <span className="font-semibold">{analytics?.counseling.upcomingSessions ?? 0}</span>
             </div>
-            <div className={`rounded-lg border px-3 py-2 ${highCancellationRisk ? "border-rose-200 bg-rose-50 text-rose-800" : "border-emerald-200 bg-emerald-50 text-emerald-800"}`}>
-              Cancelled sessions {analytics?.counseling.cancelledSessions ?? 0} {highCancellationRisk ? "are high, review counselor scheduling" : "are in healthy range"}.
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              Applied shortlists: <span className="font-semibold">{analytics?.shortlists.appliedCount ?? 0}</span> • Unique colleges: <span className="font-semibold">{analytics?.shortlists.uniqueCollegeCount ?? 0}</span>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700">
-              Applied shortlists: {analytics?.shortlists.appliedCount ?? 0} • Unique colleges: {analytics?.shortlists.uniqueCollegeCount ?? 0}.
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              Scheduled sessions in progress pipeline: <span className="font-semibold">{analytics?.progress.scheduledSessions ?? 0}</span>
             </div>
           </div>
         </div>
