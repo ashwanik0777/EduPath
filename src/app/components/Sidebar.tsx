@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Users,
   ChevronLeft,
@@ -35,11 +35,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const sidebarRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!sidebarCollapsed || !expandedSection) return;
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!sidebarRef.current) return;
+      if (!sidebarRef.current.contains(event.target as Node)) {
+        setExpandedSection(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [sidebarCollapsed, expandedSection]);
 
   const handleCollapsedItemClick = (item: MenuItem, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (item.children && item.children.length > 0) {
       setExpandedSection(expandedSection === item.id ? null : item.id);
     } else {
+      setExpandedSection(null);
       onPageChange(item.id);
     }
   };
@@ -57,18 +76,49 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     if (sidebarCollapsed) {
       return (
-        <button
-          key={item.id}
-          onClick={(e) => handleCollapsedItemClick(item, e)}
-          className={`w-full flex items-center justify-center p-3 text-left transition-all duration-300 rounded-full group relative ${
-            isActive
-              ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/25"
-              : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
-          }`}
-          title={item.label}
-        >
-          <IconComponent className={`h-5 w-5 transition-transform duration-300 ${isActive ? "text-white scale-105" : `${item.color} group-hover:scale-105`}`} />
-        </button>
+        <div key={item.id} className="relative">
+          <button
+            onClick={(e) => handleCollapsedItemClick(item, e)}
+            className={`w-full flex items-center justify-center p-3 text-left transition-all duration-300 rounded-full group relative ${
+              isActive
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-900/25"
+                : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
+            }`}
+            title={item.label}
+          >
+            <IconComponent className={`h-5 w-5 transition-transform duration-300 ${isActive ? "text-white scale-105" : `${item.color} group-hover:scale-105`}`} />
+          </button>
+
+          {hasChildren && isExpanded && (
+            <div className="absolute left-full top-0 ml-2 w-64 rounded-2xl border border-slate-200 bg-white shadow-xl p-2 z-[90] animate-in fade-in-0 slide-in-from-left-1 duration-200">
+              <p className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{item.label}</p>
+              <div className="space-y-1">
+                {item.children?.map((child) => {
+                  const ChildIcon = child.icon;
+                  const isChildActive = activePage === child.id;
+                  return (
+                    <button
+                      key={child.id}
+                      onClick={() => {
+                        setExpandedSection(null);
+                        onPageChange(child.id);
+                      }}
+                      className={`w-full flex items-center px-3 py-2 rounded-xl text-left transition-all duration-200 ${
+                        isChildActive
+                          ? "bg-indigo-600 text-white"
+                          : "text-slate-600 hover:bg-indigo-50 hover:text-slate-900"
+                      }`}
+                      title={child.label}
+                    >
+                      <ChildIcon className={`h-4 w-4 mr-2 ${isChildActive ? "text-white" : child.color}`} />
+                      <span className="text-sm font-medium">{child.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       );
     }
 
@@ -151,7 +201,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`${sidebarCollapsed ? "w-20" : "w-[18.5rem]"} my-3 ml-3 mr-2 bg-white/55 text-slate-900 flex flex-col transition-all duration-300 ease-in-out relative z-40 h-[calc(100vh-1.5rem)] border border-slate-200/80 shadow-[0_20px_55px_rgba(99,102,241,0.12)] rounded-[2.2rem] overflow-hidden backdrop-blur-xl`}
+      ref={sidebarRef}
+      className={`${sidebarCollapsed ? "w-20" : "w-[18.5rem]"} my-3 ml-3 mr-2 bg-white/55 text-slate-900 flex flex-col transition-all duration-300 ease-in-out relative z-[70] h-[calc(100vh-1.5rem)] border border-slate-200/80 shadow-[0_20px_55px_rgba(99,102,241,0.12)] rounded-[2.2rem] overflow-visible backdrop-blur-xl`}
     >
       <div className={`${sidebarCollapsed ? "p-2" : "p-4"} border-b border-slate-200/80`}>
         <div className="flex items-center justify-between">
@@ -180,7 +231,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           )}
           <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            onClick={() => {
+              setSidebarCollapsed(!sidebarCollapsed);
+              setExpandedSection(null);
+            }}
             className="p-2.5 hover:bg-indigo-50 rounded-full transition-colors border border-slate-200"
             title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
@@ -193,7 +247,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      <nav className={`flex-1 overflow-y-auto py-4 ${sidebarCollapsed ? "px-2" : "px-3"}`}>
+      <nav
+        className={`relative flex-1 py-4 ${sidebarCollapsed ? "px-2 overflow-visible" : "px-3 overflow-y-auto overflow-x-visible"}`}
+      >
         <div className="space-y-1">{menuItems.map((item) => renderMenuItem(item))}</div>
       </nav>
 

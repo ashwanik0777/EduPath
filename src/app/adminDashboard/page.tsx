@@ -943,7 +943,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen flex bg-[radial-gradient(circle_at_top_right,_#e0e7ff_0%,_#f8fafc_38%,_#ffffff_65%)]">
-      <div className="h-screen min-h-screen sticky top-0 left-0 z-20">
+      <div className="h-screen min-h-screen sticky top-0 left-0 z-[120]">
         <Sidebar
           menuItems={menuItems}
           activePage={activeTab}
