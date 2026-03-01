@@ -22,6 +22,7 @@ import {
   LucideIcon,
   Calendar,
   Bell,
+  BadgeIndianRupee,
 } from "lucide-react";
 
 // Types
@@ -103,6 +104,12 @@ const NAVIGATION_CONFIG: NavMenu[] = [
     label: "Study Resources",
     icon: Calendar,
     directPath: "/studyResources",
+  },
+  {
+    key: "pricing",
+    label: "Pricing",
+    icon: BadgeIndianRupee,
+    directPath: "/pricing",
   },
   //notifications
   {

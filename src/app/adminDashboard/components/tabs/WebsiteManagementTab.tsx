@@ -1,4 +1,4 @@
-import { MonitorSmartphone, Settings2, Megaphone, Trash2, Palette, Globe, Save } from "lucide-react";
+import { MonitorSmartphone, Settings2, Megaphone, Trash2, Palette, Globe, Save, BadgeDollarSign, Percent } from "lucide-react";
 
 type WebsiteAnnouncement = {
   id: string;
@@ -25,6 +25,43 @@ type WebsiteSettings = {
   footerText: string;
   seoTitle: string;
   seoDescription: string;
+  pricing: {
+    freeTier: {
+      enabled: boolean;
+      durationDays: number;
+      maxAssessments: number;
+      maxCounselingSessions: number;
+      features: string[];
+      alwaysFreeFeatures: string[];
+    };
+    monthlyPlan: {
+      name: string;
+      description: string;
+      priceINR: number;
+      priceUSD: number;
+      features: string[];
+    };
+    yearlyPlan: {
+      name: string;
+      description: string;
+      priceINR: number;
+      priceUSD: number;
+      features: string[];
+    };
+    singleCounselingPlan: {
+      name: string;
+      description: string;
+      priceINR: number;
+      priceUSD: number;
+      durationMinutes: number;
+      features: string[];
+    };
+    firstSubscriptionOffers: {
+      monthly: number[];
+      yearly: number[];
+      singleCounseling: number[];
+    };
+  };
 };
 
 type WebsiteManagementTabProps = {
@@ -70,6 +107,13 @@ export function WebsiteManagementTab({
   removeAnnouncement,
   saveWebsiteManagement,
 }: WebsiteManagementTabProps) {
+  const toLines = (items: string[]) => items.join("\n");
+  const fromLines = (value: string) =>
+    value
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
   return (
     <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -269,6 +313,332 @@ export function WebsiteManagementTab({
                 </div>
               ))
             )}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-slate-900 font-semibold">
+              <BadgeDollarSign className="w-4 h-4 text-emerald-600" />
+              Pricing, Subscription & Free-Tier Management
+            </div>
+            <p className="text-sm text-slate-600 mt-1">
+              Monthly, yearly, single counseling, limited free tier, and fully free attraction features yahin se manage karein.
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-200 p-4 space-y-4 bg-slate-50/60">
+          <div className="flex items-center justify-between">
+            <p className="font-medium text-slate-900">Limited Free Tier</p>
+            <button
+              onClick={() =>
+                setWebsiteSettings((previous) => ({
+                  ...previous,
+                  pricing: {
+                    ...previous.pricing,
+                    freeTier: {
+                      ...previous.pricing.freeTier,
+                      enabled: !previous.pricing.freeTier.enabled,
+                    },
+                  },
+                }))
+              }
+              className={`w-12 h-7 rounded-full p-1 transition-colors ${websiteSettings.pricing.freeTier.enabled ? "bg-emerald-500" : "bg-slate-300"}`}
+            >
+              <span className={`block h-5 w-5 rounded-full bg-white transition-transform ${websiteSettings.pricing.freeTier.enabled ? "translate-x-5" : "translate-x-0"}`} />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="text-sm text-slate-600">Free Tier Duration (days)</label>
+              <input
+                type="number"
+                min={0}
+                value={websiteSettings.pricing.freeTier.durationDays}
+                onChange={(event) =>
+                  setWebsiteSettings((previous) => ({
+                    ...previous,
+                    pricing: {
+                      ...previous.pricing,
+                      freeTier: {
+                        ...previous.pricing.freeTier,
+                        durationDays: Number(event.target.value) || 0,
+                      },
+                    },
+                  }))
+                }
+                className={`mt-1 ${inputClass}`}
+              />
+            </div>
+            <div>
+              <label className="text-sm text-slate-600">Max Assessments</label>
+              <input
+                type="number"
+                min={0}
+                value={websiteSettings.pricing.freeTier.maxAssessments}
+                onChange={(event) =>
+                  setWebsiteSettings((previous) => ({
+                    ...previous,
+                    pricing: {
+                      ...previous.pricing,
+                      freeTier: {
+                        ...previous.pricing.freeTier,
+                        maxAssessments: Number(event.target.value) || 0,
+                      },
+                    },
+                  }))
+                }
+                className={`mt-1 ${inputClass}`}
+              />
+            </div>
+            <div>
+              <label className="text-sm text-slate-600">Max Counseling Sessions</label>
+              <input
+                type="number"
+                min={0}
+                value={websiteSettings.pricing.freeTier.maxCounselingSessions}
+                onChange={(event) =>
+                  setWebsiteSettings((previous) => ({
+                    ...previous,
+                    pricing: {
+                      ...previous.pricing,
+                      freeTier: {
+                        ...previous.pricing.freeTier,
+                        maxCounselingSessions: Number(event.target.value) || 0,
+                      },
+                    },
+                  }))
+                }
+                className={`mt-1 ${inputClass}`}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm text-slate-600">Limited Free Tier Features (one per line)</label>
+              <textarea
+                value={toLines(websiteSettings.pricing.freeTier.features)}
+                onChange={(event) =>
+                  setWebsiteSettings((previous) => ({
+                    ...previous,
+                    pricing: {
+                      ...previous.pricing,
+                      freeTier: {
+                        ...previous.pricing.freeTier,
+                        features: fromLines(event.target.value),
+                      },
+                    },
+                  }))
+                }
+                className={`mt-1 min-h-[110px] ${inputClass}`}
+              />
+            </div>
+            <div>
+              <label className="text-sm text-slate-600">Completely Free Features (always free)</label>
+              <textarea
+                value={toLines(websiteSettings.pricing.freeTier.alwaysFreeFeatures)}
+                onChange={(event) =>
+                  setWebsiteSettings((previous) => ({
+                    ...previous,
+                    pricing: {
+                      ...previous.pricing,
+                      freeTier: {
+                        ...previous.pricing.freeTier,
+                        alwaysFreeFeatures: fromLines(event.target.value),
+                      },
+                    },
+                  }))
+                }
+                className={`mt-1 min-h-[110px] ${inputClass}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          {[
+            { key: "monthlyPlan", title: "Monthly Subscription" },
+            { key: "yearlyPlan", title: "Yearly Subscription" },
+            { key: "singleCounselingPlan", title: "Single Counseling" },
+          ].map((planItem) => {
+            const plan = websiteSettings.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"];
+            const isSingle = planItem.key === "singleCounselingPlan";
+            return (
+              <div key={planItem.key} className="rounded-xl border border-slate-200 p-4 space-y-3">
+                <p className="font-medium text-slate-900">{planItem.title}</p>
+                <div>
+                  <label className="text-sm text-slate-600">Plan Name</label>
+                  <input
+                    value={plan.name}
+                    onChange={(event) =>
+                      setWebsiteSettings((previous) => ({
+                        ...previous,
+                        pricing: {
+                          ...previous.pricing,
+                          [planItem.key]: {
+                            ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                            name: event.target.value,
+                          },
+                        },
+                      }))
+                    }
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-slate-600">Description</label>
+                  <textarea
+                    value={plan.description}
+                    onChange={(event) =>
+                      setWebsiteSettings((previous) => ({
+                        ...previous,
+                        pricing: {
+                          ...previous.pricing,
+                          [planItem.key]: {
+                            ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                            description: event.target.value,
+                          },
+                        },
+                      }))
+                    }
+                    className={`mt-1 min-h-[80px] ${inputClass}`}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-slate-600">Price (₹)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={plan.priceINR}
+                      onChange={(event) =>
+                        setWebsiteSettings((previous) => ({
+                          ...previous,
+                          pricing: {
+                            ...previous.pricing,
+                            [planItem.key]: {
+                              ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                              priceINR: Number(event.target.value) || 0,
+                            },
+                          },
+                        }))
+                      }
+                      className={`mt-1 ${inputClass}`}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-slate-600">Price ($)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={plan.priceUSD}
+                      onChange={(event) =>
+                        setWebsiteSettings((previous) => ({
+                          ...previous,
+                          pricing: {
+                            ...previous.pricing,
+                            [planItem.key]: {
+                              ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                              priceUSD: Number(event.target.value) || 0,
+                            },
+                          },
+                        }))
+                      }
+                      className={`mt-1 ${inputClass}`}
+                    />
+                  </div>
+                </div>
+
+                {isSingle ? (
+                  <div>
+                    <label className="text-sm text-slate-600">Session Duration (minutes)</label>
+                    <input
+                      type="number"
+                      min={15}
+                      value={(plan as WebsiteSettings["pricing"]["singleCounselingPlan"]).durationMinutes}
+                      onChange={(event) =>
+                        setWebsiteSettings((previous) => ({
+                          ...previous,
+                          pricing: {
+                            ...previous.pricing,
+                            singleCounselingPlan: {
+                              ...previous.pricing.singleCounselingPlan,
+                              durationMinutes: Number(event.target.value) || 45,
+                            },
+                          },
+                        }))
+                      }
+                      className={`mt-1 ${inputClass}`}
+                    />
+                  </div>
+                ) : null}
+
+                <div>
+                  <label className="text-sm text-slate-600">Plan Features (one per line)</label>
+                  <textarea
+                    value={toLines(plan.features)}
+                    onChange={(event) =>
+                      setWebsiteSettings((previous) => ({
+                        ...previous,
+                        pricing: {
+                          ...previous.pricing,
+                          [planItem.key]: {
+                            ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                            features: fromLines(event.target.value),
+                          },
+                        },
+                      }))
+                    }
+                    className={`mt-1 min-h-[90px] ${inputClass}`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="rounded-xl border border-slate-200 p-4 space-y-3 bg-slate-50/60">
+          <div className="flex items-center gap-2 text-slate-900 font-medium">
+            <Percent className="w-4 h-4 text-amber-600" />
+            First Subscription Offers (Level-wise)
+          </div>
+          <p className="text-xs text-slate-500">Set 30%, 50%, 70% like discounts for monthly, yearly and single counseling first purchase offers.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { key: "monthly", label: "Monthly Offer %" },
+              { key: "yearly", label: "Yearly Offer %" },
+              { key: "singleCounseling", label: "Single Counseling Offer %" },
+            ].map((offer) => (
+              <div key={offer.key}>
+                <label className="text-sm text-slate-600">{offer.label} (comma separated)</label>
+                <input
+                  value={websiteSettings.pricing.firstSubscriptionOffers[offer.key as "monthly" | "yearly" | "singleCounseling"].join(",")}
+                  onChange={(event) =>
+                    setWebsiteSettings((previous) => ({
+                      ...previous,
+                      pricing: {
+                        ...previous.pricing,
+                        firstSubscriptionOffers: {
+                          ...previous.pricing.firstSubscriptionOffers,
+                          [offer.key]: event.target.value
+                            .split(",")
+                            .map((item) => Number(item.trim()))
+                            .filter((value) => Number.isFinite(value) && value >= 0 && value <= 100),
+                        },
+                      },
+                    }))
+                  }
+                  className={`mt-1 ${inputClass}`}
+                  placeholder="30,50,70"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -22,6 +22,39 @@ export interface IWebsiteAnnouncement {
   createdAt?: Date
 }
 
+export interface IPricingPlan {
+  name: string
+  description: string
+  priceINR: number
+  priceUSD: number
+  features: string[]
+}
+
+export interface IFreeTier {
+  enabled: boolean
+  durationDays: number
+  maxAssessments: number
+  maxCounselingSessions: number
+  features: string[]
+  alwaysFreeFeatures: string[]
+}
+
+export interface IFirstSubscriptionOffers {
+  monthly: number[]
+  yearly: number[]
+  singleCounseling: number[]
+}
+
+export interface IWebsitePricing {
+  freeTier: IFreeTier
+  monthlyPlan: IPricingPlan
+  yearlyPlan: IPricingPlan
+  singleCounselingPlan: IPricingPlan & {
+    durationMinutes: number
+  }
+  firstSubscriptionOffers: IFirstSubscriptionOffers
+}
+
 export interface IWebsiteManagement extends Document {
   singletonKey: string
   maintenanceMode: boolean
@@ -32,6 +65,7 @@ export interface IWebsiteManagement extends Document {
   footerText: string
   seoTitle: string
   seoDescription: string
+  pricing: IWebsitePricing
   pages: IWebsitePage[]
   announcements: IWebsiteAnnouncement[]
   createdAt: Date
@@ -64,6 +98,120 @@ const WebsiteAnnouncementSchema = new Schema<IWebsiteAnnouncement>(
   { _id: false },
 )
 
+const PricingPlanSchema = new Schema<IPricingPlan>(
+  {
+    name: { type: String, required: true, trim: true },
+    description: { type: String, default: "" },
+    priceINR: { type: Number, default: 0, min: 0 },
+    priceUSD: { type: Number, default: 0, min: 0 },
+    features: { type: [String], default: [] },
+  },
+  { _id: false },
+)
+
+const FreeTierSchema = new Schema<IFreeTier>(
+  {
+    enabled: { type: Boolean, default: true },
+    durationDays: { type: Number, default: 7, min: 0 },
+    maxAssessments: { type: Number, default: 1, min: 0 },
+    maxCounselingSessions: { type: Number, default: 1, min: 0 },
+    features: { type: [String], default: [] },
+    alwaysFreeFeatures: { type: [String], default: [] },
+  },
+  { _id: false },
+)
+
+const FirstSubscriptionOffersSchema = new Schema<IFirstSubscriptionOffers>(
+  {
+    monthly: { type: [Number], default: [30, 50, 70] },
+    yearly: { type: [Number], default: [30, 50, 70] },
+    singleCounseling: { type: [Number], default: [30, 50, 70] },
+  },
+  { _id: false },
+)
+
+const WebsitePricingSchema = new Schema<IWebsitePricing>(
+  {
+    freeTier: {
+      type: FreeTierSchema,
+      default: {
+        enabled: true,
+        durationDays: 7,
+        maxAssessments: 1,
+        maxCounselingSessions: 1,
+        features: [
+          "Career discovery starter assessment",
+          "1 counseling session with mentor",
+          "Basic progress dashboard",
+        ],
+        alwaysFreeFeatures: [
+          "Study resources access",
+          "Government college listings",
+          "Scholarship and exam notifications",
+        ],
+      },
+    },
+    monthlyPlan: {
+      type: PricingPlanSchema,
+      default: {
+        name: "Pro Monthly",
+        description: "For active students who need ongoing mentor and planning support.",
+        priceINR: 1999,
+        priceUSD: 29,
+        features: [
+          "Unlimited assessment attempts",
+          "4 counseling sessions / month",
+          "Personalized roadmap + reminders",
+        ],
+      },
+    },
+    yearlyPlan: {
+      type: PricingPlanSchema,
+      default: {
+        name: "Pro Yearly",
+        description: "Best value plan for complete yearly guidance and admissions prep.",
+        priceINR: 14999,
+        priceUSD: 199,
+        features: [
+          "Everything in Monthly",
+          "Priority counselor booking",
+          "Admission strategy guidance",
+        ],
+      },
+    },
+    singleCounselingPlan: {
+      type: new Schema(
+        {
+          ...PricingPlanSchema.obj,
+          durationMinutes: { type: Number, default: 45, min: 15 },
+        },
+        { _id: false },
+      ),
+      default: {
+        name: "Single Counseling Session",
+        description: "One focused session for stream/career/college decision support.",
+        priceINR: 799,
+        priceUSD: 12,
+        durationMinutes: 45,
+        features: [
+          "1:1 live counseling",
+          "Session summary notes",
+          "Next-step action checklist",
+        ],
+      },
+    },
+    firstSubscriptionOffers: {
+      type: FirstSubscriptionOffersSchema,
+      default: {
+        monthly: [30, 50, 70],
+        yearly: [30, 50, 70],
+        singleCounseling: [30, 50, 70],
+      },
+    },
+  },
+  { _id: false },
+)
+
 const WebsiteManagementSchema = new Schema<IWebsiteManagement>(
   {
     singletonKey: { type: String, required: true, unique: true, default: "primary" },
@@ -81,6 +229,7 @@ const WebsiteManagementSchema = new Schema<IWebsiteManagement>(
       type: String,
       default: "Career planning and counseling platform for students.",
     },
+    pricing: { type: WebsitePricingSchema, default: () => ({}) },
     pages: { type: [WebsitePageSchema], default: [] },
     announcements: { type: [WebsiteAnnouncementSchema], default: [] },
   },
