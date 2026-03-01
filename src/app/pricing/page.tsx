@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { BadgeCheck, Gift, Sparkles, ShieldCheck, IndianRupee, DollarSign, CalendarClock } from "lucide-react";
+import { BadgeCheck, Gift, Sparkles, ShieldCheck, IndianRupee, DollarSign, Euro, CalendarClock } from "lucide-react";
+
+type CurrencyCode = "INR" | "USD" | "EUR";
 
 type PricingResponse = {
   success: boolean;
@@ -46,6 +48,7 @@ const planCardClass =
 export default function PricingPage() {
   const [data, setData] = useState<PricingResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currency, setCurrency] = useState<CurrencyCode>("INR");
 
   useEffect(() => {
     const loadPricing = async () => {
@@ -123,7 +126,55 @@ export default function PricingPage() {
     );
   }
 
-  const discountedPrice = (price: number) => Math.max(0, Math.round((price * (100 - firstSubscriptionDiscount)) / 100));
+  const EUR_PER_USD = 0.92;
+
+  const toCurrencyValue = (priceINR: number, priceUSD: number, selectedCurrency: CurrencyCode) => {
+    if (selectedCurrency === "INR") return priceINR;
+    if (selectedCurrency === "USD") return priceUSD;
+    return priceUSD * EUR_PER_USD;
+  };
+
+  const toEnding99 = (amount: number, selectedCurrency: CurrencyCode) => {
+    if (selectedCurrency === "INR") {
+      const rounded = Math.max(1, Math.round(amount));
+      const base = Math.floor(rounded / 100) * 100 + 99;
+      const up = base < rounded ? base + 100 : base;
+      const down = base > rounded ? Math.max(99, base - 100) : base;
+      return Math.abs(up - rounded) < Math.abs(rounded - down) ? up : down;
+    }
+
+    const rounded = Math.max(1, Math.round(amount));
+    return Math.max(0.99, rounded - 0.01);
+  };
+
+  const applyDiscount = (amount: number) => Math.max(0, amount * (100 - firstSubscriptionDiscount) / 100);
+
+  const formatCurrency = (amount: number, selectedCurrency: CurrencyCode) => {
+    const hasFraction = selectedCurrency !== "INR";
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: selectedCurrency,
+      maximumFractionDigits: hasFraction ? 2 : 0,
+      minimumFractionDigits: hasFraction ? 2 : 0,
+    }).format(amount);
+  };
+
+  const renderPrice = (priceINR: number, priceUSD: number, accentClass: string) => {
+    const original = toCurrencyValue(priceINR, priceUSD, currency);
+    const discounted = applyDiscount(original);
+    const originalWith99 = toEnding99(original, currency);
+    const discountedWith99 = toEnding99(discounted, currency);
+
+    return (
+      <div className="mt-4 space-y-1">
+        <p className="text-xs text-slate-500 line-through">{formatCurrency(originalWith99, currency)}</p>
+        <p className={`text-2xl font-bold ${accentClass}`}>
+          {formatCurrency(discountedWith99, currency)}
+          <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">50% OFF</span>
+        </p>
+      </div>
+    );
+  };
 
   return (
     <main className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 space-y-10">
@@ -134,10 +185,36 @@ export default function PricingPage() {
         </div>
         <h1 className="text-3xl md:text-5xl font-bold text-slate-900">Pricing & Subscription Plans</h1>
         <p className="text-slate-600 max-w-3xl mx-auto">
-          Choose monthly, yearly, single counseling, or premium bundles with dual pricing in INR and USD. First subscription discount is directly applied on all paid plans.
+          Choose monthly, yearly, single counseling, or premium bundles with INR, USD, and EUR pricing. Ek time par ek currency view kar sakte hain with instant switch.
         </p>
         <div className="inline-flex items-center rounded-full bg-amber-100 border border-amber-200 text-amber-800 px-4 py-1.5 text-sm font-semibold">
           First Subscription Offer: {firstSubscriptionDiscount}% OFF on all paid plans
+        </div>
+        <div className="flex justify-center">
+          <div className="inline-flex items-center rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
+            {([
+              { code: "INR", label: "INR", icon: IndianRupee },
+              { code: "USD", label: "USD", icon: DollarSign },
+              { code: "EUR", label: "EUR", icon: Euro },
+            ] as const).map((item) => {
+              const Icon = item.icon;
+              const isActive = currency === item.code;
+              return (
+                <button
+                  key={item.code}
+                  onClick={() => setCurrency(item.code)}
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-slate-900 text-white"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -182,21 +259,7 @@ export default function PricingPage() {
         <div className={planCardClass}>
           <p className="text-lg font-semibold text-slate-900">{pricing.monthlyPlan.name}</p>
           <p className="text-sm text-slate-600 mt-1">{pricing.monthlyPlan.description}</p>
-          <div className="mt-4 space-y-1">
-            <p className="text-xs text-slate-500 line-through flex items-center gap-1">
-              <IndianRupee className="w-3.5 h-3.5" /> {pricing.monthlyPlan.priceINR}
-            </p>
-            <p className="flex items-center gap-1 text-2xl font-bold text-emerald-700">
-              <IndianRupee className="w-5 h-5" /> {discountedPrice(pricing.monthlyPlan.priceINR)}
-              <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">50% OFF</span>
-            </p>
-            <p className="text-xs text-slate-500 line-through flex items-center gap-1 mt-1">
-              <DollarSign className="w-3.5 h-3.5" /> {pricing.monthlyPlan.priceUSD}
-            </p>
-            <p className="flex items-center gap-1 text-sm text-slate-600">
-              <DollarSign className="w-4 h-4" /> {discountedPrice(pricing.monthlyPlan.priceUSD)}
-            </p>
-          </div>
+          {renderPrice(pricing.monthlyPlan.priceINR, pricing.monthlyPlan.priceUSD, "text-emerald-700")}
           <ul className="mt-4 space-y-2 text-sm text-slate-700">
             {pricing.monthlyPlan.features.map((feature, index) => (
               <li key={`monthly-feature-${index}`} className="flex items-start gap-2">
@@ -210,21 +273,7 @@ export default function PricingPage() {
         <div className={`${planCardClass} border-blue-300`}>
           <p className="text-lg font-semibold text-slate-900">{pricing.yearlyPlan.name}</p>
           <p className="text-sm text-slate-600 mt-1">{pricing.yearlyPlan.description}</p>
-          <div className="mt-4 space-y-1">
-            <p className="text-xs text-slate-500 line-through flex items-center gap-1">
-              <IndianRupee className="w-3.5 h-3.5" /> {pricing.yearlyPlan.priceINR}
-            </p>
-            <p className="flex items-center gap-1 text-2xl font-bold text-blue-700">
-              <IndianRupee className="w-5 h-5" /> {discountedPrice(pricing.yearlyPlan.priceINR)}
-              <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">50% OFF</span>
-            </p>
-            <p className="text-xs text-slate-500 line-through flex items-center gap-1 mt-1">
-              <DollarSign className="w-3.5 h-3.5" /> {pricing.yearlyPlan.priceUSD}
-            </p>
-            <p className="flex items-center gap-1 text-sm text-slate-600">
-              <DollarSign className="w-4 h-4" /> {discountedPrice(pricing.yearlyPlan.priceUSD)}
-            </p>
-          </div>
+          {renderPrice(pricing.yearlyPlan.priceINR, pricing.yearlyPlan.priceUSD, "text-blue-700")}
           <ul className="mt-4 space-y-2 text-sm text-slate-700">
             {pricing.yearlyPlan.features.map((feature, index) => (
               <li key={`yearly-feature-${index}`} className="flex items-start gap-2">
@@ -238,20 +287,8 @@ export default function PricingPage() {
         <div className={planCardClass}>
           <p className="text-lg font-semibold text-slate-900">{pricing.singleCounselingPlan.name}</p>
           <p className="text-sm text-slate-600 mt-1">{pricing.singleCounselingPlan.description}</p>
-          <div className="mt-4 space-y-1">
-            <p className="text-xs text-slate-500 line-through flex items-center gap-1">
-              <IndianRupee className="w-3.5 h-3.5" /> {pricing.singleCounselingPlan.priceINR}
-            </p>
-            <p className="flex items-center gap-1 text-2xl font-bold text-violet-700">
-              <IndianRupee className="w-5 h-5" /> {discountedPrice(pricing.singleCounselingPlan.priceINR)}
-              <span className="ml-2 text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full">50% OFF</span>
-            </p>
-            <p className="text-xs text-slate-500 line-through flex items-center gap-1 mt-1">
-              <DollarSign className="w-3.5 h-3.5" /> {pricing.singleCounselingPlan.priceUSD}
-            </p>
-            <p className="flex items-center gap-1 text-sm text-slate-600">
-              <DollarSign className="w-4 h-4" /> {discountedPrice(pricing.singleCounselingPlan.priceUSD)}
-            </p>
+          <div>
+            {renderPrice(pricing.singleCounselingPlan.priceINR, pricing.singleCounselingPlan.priceUSD, "text-violet-700")}
             <p className="flex items-center gap-1 text-xs text-slate-500">
               <CalendarClock className="w-4 h-4" />
               {pricing.singleCounselingPlan.durationMinutes} min session
@@ -278,21 +315,7 @@ export default function PricingPage() {
             <div key={plan.name} className={`${planCardClass} ${index === 0 ? "border-cyan-300" : ""}`}>
               <p className="text-lg font-semibold text-slate-900">{plan.name}</p>
               <p className="text-sm text-slate-600 mt-1">{plan.description}</p>
-              <div className="mt-4 space-y-1">
-                <p className="text-xs text-slate-500 line-through flex items-center gap-1">
-                  <IndianRupee className="w-3.5 h-3.5" /> {plan.priceINR}
-                </p>
-                <p className="flex items-center gap-1 text-2xl font-bold text-cyan-700">
-                  <IndianRupee className="w-5 h-5" /> {discountedPrice(plan.priceINR)}
-                  <span className="ml-2 text-xs bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-full">50% OFF</span>
-                </p>
-                <p className="text-xs text-slate-500 line-through flex items-center gap-1 mt-1">
-                  <DollarSign className="w-3.5 h-3.5" /> {plan.priceUSD}
-                </p>
-                <p className="flex items-center gap-1 text-sm text-slate-600">
-                  <DollarSign className="w-4 h-4" /> {discountedPrice(plan.priceUSD)}
-                </p>
-              </div>
+              {renderPrice(plan.priceINR, plan.priceUSD, "text-cyan-700")}
               <ul className="mt-4 space-y-2 text-sm text-slate-700">
                 {plan.features.map((feature) => (
                   <li key={`${plan.name}-${feature}`} className="flex items-start gap-2">
