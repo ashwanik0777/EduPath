@@ -1,13 +1,11 @@
 "use client"
 import { motion } from "framer-motion"
 
-// Theme type definition
 type Theme = {
   sectionBg: string
   circles: Array<{ class: string }>
 }
 
-// Theme gradients (soft, modern, based on given colors)
 const bgThemes: Record<number, Theme> = {
   1: {
     sectionBg: "bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100",
@@ -145,7 +143,7 @@ export default function HeroSection({
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg text-blue-900"
+          className="text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg text-white"
         >
           {title}
         </motion.h1>
@@ -154,7 +152,7 @@ export default function HeroSection({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
-          className="text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium text-blue-500 drop-shadow-md"
+          className="text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium text-white/90 drop-shadow-md"
         >
           {subtitle}
         </motion.p>
