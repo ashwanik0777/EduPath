@@ -1,4 +1,4 @@
-import { MonitorSmartphone, Settings2, Megaphone, Trash2, Palette, Globe, Save, BadgeDollarSign, Percent } from "lucide-react";
+import { MonitorSmartphone, Settings2, Megaphone, Trash2, Palette, Globe, Save, BadgeDollarSign } from "lucide-react";
 
 type WebsiteAnnouncement = {
   id: string;
@@ -56,11 +56,7 @@ type WebsiteSettings = {
       durationMinutes: number;
       features: string[];
     };
-    firstSubscriptionOffers: {
-      monthly: number[];
-      yearly: number[];
-      singleCounseling: number[];
-    };
+    firstSubscriptionDiscount: number;
   };
 };
 
@@ -602,43 +598,11 @@ export function WebsiteManagementTab({
           })}
         </div>
 
-        <div className="rounded-xl border border-slate-200 p-4 space-y-3 bg-slate-50/60">
-          <div className="flex items-center gap-2 text-slate-900 font-medium">
-            <Percent className="w-4 h-4 text-amber-600" />
-            First Subscription Offers (Level-wise)
-          </div>
-          <p className="text-xs text-slate-500">Set 30%, 50%, 70% like discounts for monthly, yearly and single counseling first purchase offers.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { key: "monthly", label: "Monthly Offer %" },
-              { key: "yearly", label: "Yearly Offer %" },
-              { key: "singleCounseling", label: "Single Counseling Offer %" },
-            ].map((offer) => (
-              <div key={offer.key}>
-                <label className="text-sm text-slate-600">{offer.label} (comma separated)</label>
-                <input
-                  value={websiteSettings.pricing.firstSubscriptionOffers[offer.key as "monthly" | "yearly" | "singleCounseling"].join(",")}
-                  onChange={(event) =>
-                    setWebsiteSettings((previous) => ({
-                      ...previous,
-                      pricing: {
-                        ...previous.pricing,
-                        firstSubscriptionOffers: {
-                          ...previous.pricing.firstSubscriptionOffers,
-                          [offer.key]: event.target.value
-                            .split(",")
-                            .map((item) => Number(item.trim()))
-                            .filter((value) => Number.isFinite(value) && value >= 0 && value <= 100),
-                        },
-                      },
-                    }))
-                  }
-                  className={`mt-1 ${inputClass}`}
-                  placeholder="30,50,70"
-                />
-              </div>
-            ))}
+        <div className="rounded-xl border border-slate-200 p-4 bg-amber-50/70">
+          <p className="text-sm font-medium text-amber-800">First Subscription Discount (Locked)</p>
+          <p className="text-xs text-amber-700 mt-1">Discount editor simplify kiya gaya hai. Backend + public pricing + admin sabhi jagah fixed 50% OFF follow hoga.</p>
+          <div className="mt-3 inline-flex items-center rounded-full bg-white border border-amber-200 text-amber-800 px-3 py-1 text-sm font-semibold">
+            {websiteSettings.pricing.firstSubscriptionDiscount}% OFF (Fixed)
           </div>
         </div>
       </div>

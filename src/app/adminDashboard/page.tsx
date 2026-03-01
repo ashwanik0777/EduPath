@@ -275,11 +275,7 @@ type WebsiteSettings = {
       durationMinutes: number;
       features: string[];
     };
-    firstSubscriptionOffers: {
-      monthly: number[];
-      yearly: number[];
-      singleCounseling: number[];
-    };
+    firstSubscriptionDiscount: number;
   };
 };
 
@@ -450,11 +446,7 @@ export default function AdminDashboardPage() {
           "Next-step action checklist",
         ],
       },
-      firstSubscriptionOffers: {
-        monthly: [30, 50, 70],
-        yearly: [30, 50, 70],
-        singleCounseling: [30, 50, 70],
-      },
+      firstSubscriptionDiscount: 50,
     },
   });
   const [announcementInput, setAnnouncementInput] = useState("");

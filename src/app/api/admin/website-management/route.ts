@@ -72,12 +72,21 @@ const DEFAULT_PRICING = {
       "Next-step action checklist",
     ],
   },
-  firstSubscriptionOffers: {
-    monthly: [30, 50, 70],
-    yearly: [30, 50, 70],
-    singleCounseling: [30, 50, 70],
-  },
+  firstSubscriptionDiscount: 50,
 };
+
+function normalizePricing(pricing: unknown) {
+  const source = (pricing || {}) as Record<string, unknown>;
+  const merged = {
+    ...DEFAULT_PRICING,
+    ...source,
+  } as typeof DEFAULT_PRICING;
+
+  return {
+    ...merged,
+    firstSubscriptionDiscount: 50,
+  };
+}
 
 const DEFAULT_PAGES: DefaultPage[] = [
   {
@@ -331,6 +340,10 @@ async function ensureWebsiteManagementDocument() {
   if (!doc.pricing) {
     (doc as any).pricing = DEFAULT_PRICING;
     await doc.save();
+  } else {
+    const normalizedPricing = normalizePricing((doc as any).pricing);
+    (doc as any).pricing = normalizedPricing;
+    await doc.save();
   }
 
   return doc;
@@ -391,7 +404,7 @@ export async function GET(request: NextRequest) {
         footerText: doc.footerText,
         seoTitle: doc.seoTitle,
         seoDescription: doc.seoDescription,
-        pricing: doc.pricing || DEFAULT_PRICING,
+        pricing: normalizePricing(doc.pricing || DEFAULT_PRICING),
       },
       announcements: (doc.announcements || []).map((item: { announcementId: string; text: string; active: boolean; createdAt?: Date }) => ({
         id: item.announcementId,
@@ -433,6 +446,10 @@ export async function PATCH(request: NextRequest) {
       if (patch[key] !== undefined) {
         (doc as unknown as Record<string, unknown>)[key] = patch[key];
       }
+    }
+
+    if ((doc as any).pricing) {
+      (doc as any).pricing = normalizePricing((doc as any).pricing);
     }
 
     await doc.save();

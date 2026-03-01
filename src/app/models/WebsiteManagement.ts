@@ -39,12 +39,6 @@ export interface IFreeTier {
   alwaysFreeFeatures: string[]
 }
 
-export interface IFirstSubscriptionOffers {
-  monthly: number[]
-  yearly: number[]
-  singleCounseling: number[]
-}
-
 export interface IWebsitePricing {
   freeTier: IFreeTier
   monthlyPlan: IPricingPlan
@@ -52,7 +46,7 @@ export interface IWebsitePricing {
   singleCounselingPlan: IPricingPlan & {
     durationMinutes: number
   }
-  firstSubscriptionOffers: IFirstSubscriptionOffers
+  firstSubscriptionDiscount: number
 }
 
 export interface IWebsiteManagement extends Document {
@@ -117,15 +111,6 @@ const FreeTierSchema = new Schema<IFreeTier>(
     maxCounselingSessions: { type: Number, default: 1, min: 0 },
     features: { type: [String], default: [] },
     alwaysFreeFeatures: { type: [String], default: [] },
-  },
-  { _id: false },
-)
-
-const FirstSubscriptionOffersSchema = new Schema<IFirstSubscriptionOffers>(
-  {
-    monthly: { type: [Number], default: [30, 50, 70] },
-    yearly: { type: [Number], default: [30, 50, 70] },
-    singleCounseling: { type: [Number], default: [30, 50, 70] },
   },
   { _id: false },
 )
@@ -200,14 +185,7 @@ const WebsitePricingSchema = new Schema<IWebsitePricing>(
         ],
       },
     },
-    firstSubscriptionOffers: {
-      type: FirstSubscriptionOffersSchema,
-      default: {
-        monthly: [30, 50, 70],
-        yearly: [30, 50, 70],
-        singleCounseling: [30, 50, 70],
-      },
-    },
+    firstSubscriptionDiscount: { type: Number, default: 50, min: 0, max: 100 },
   },
   { _id: false },
 )

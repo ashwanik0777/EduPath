@@ -53,12 +53,21 @@ const DEFAULT_PRICING = {
       "Next-step action checklist",
     ],
   },
-  firstSubscriptionOffers: {
-    monthly: [30, 50, 70],
-    yearly: [30, 50, 70],
-    singleCounseling: [30, 50, 70],
-  },
+  firstSubscriptionDiscount: 50,
 };
+
+function normalizePricing(pricing: unknown) {
+  const source = (pricing || {}) as Record<string, unknown>;
+  const merged = {
+    ...DEFAULT_PRICING,
+    ...source,
+  } as typeof DEFAULT_PRICING;
+
+  return {
+    ...merged,
+    firstSubscriptionDiscount: 50,
+  };
+}
 
 export async function GET() {
   await connectDB();
@@ -70,7 +79,7 @@ export async function GET() {
 
   return NextResponse.json({
     success: true,
-    pricing: doc?.pricing || DEFAULT_PRICING,
+    pricing: normalizePricing(doc?.pricing || DEFAULT_PRICING),
     maintenanceMode: doc?.maintenanceMode || false,
     supportEmail: doc?.supportEmail || "support@edupath.com",
   });

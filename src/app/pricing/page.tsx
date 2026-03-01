@@ -36,11 +36,7 @@ type PricingResponse = {
       durationMinutes: number;
       features: string[];
     };
-    firstSubscriptionOffers: {
-      monthly: number[];
-      yearly: number[];
-      singleCounseling: number[];
-    };
+    firstSubscriptionDiscount: number;
   };
 };
 
@@ -66,7 +62,7 @@ export default function PricingPage() {
   }, []);
 
   const pricing = data?.pricing;
-  const firstSubscriptionDiscount = 50;
+  const firstSubscriptionDiscount = pricing?.firstSubscriptionDiscount ?? 50;
 
   const additionalPlans = useMemo(
     () => [
