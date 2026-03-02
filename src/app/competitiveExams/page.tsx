@@ -10,7 +10,7 @@ export default function CompetitiveExamsPage() {
         <p className="text-lg text-blue-700 mb-6">Find government and entrance exams that match your goal and qualification.</p>
         <input
           type="text"
-          placeholder="Search exam by name (e.g. SSC, UPSC, JKSSB...)"
+          placeholder="Search exam by name (e.g. SSC, UPSC, IBPS, JEE...)"
           className="w-full max-w-xl mx-auto px-4 py-3 rounded-xl border border-blue-200 shadow focus:outline-none focus:ring-2 focus:ring-blue-300 text-lg"
         />
       </div>

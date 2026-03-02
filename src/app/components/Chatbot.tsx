@@ -7,8 +7,9 @@ const SUGGESTED_PROMPTS = [
   "Explore scholarships",
   "Show me govt colleges",
   "Best career after 12th PCM",
+  "Suggest foreign colleges for fluent English students",
   "How to use dashboard?",
-  "Next JKSSB exam?",
+  "Next SSC exam?",
 ];
 
 export default function Chatbot() {

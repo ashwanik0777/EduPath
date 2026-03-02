@@ -28,14 +28,14 @@ const ScholarshipNotifications = () => {
     const mockData: ScholarshipNotification[] = [
       {
         id: '1',
-        title: 'JK Government Merit Scholarship 2024',
-        provider: 'J&K Social Welfare Department',
+        title: 'National Merit Scholarship 2024',
+        provider: 'Ministry of Education, Government of India',
         amount: '₹25,000 per year',
         deadline: '2024-12-30',
         eligibility: '12th Pass, Family Income < ₹2.5L',
         category: 'Merit',
-        description: 'Scholarship for meritorious students from J&K state.',
-        applyLink: 'https://jk.gov.in/scholarships',
+        description: 'Scholarship for meritorious students across India.',
+        applyLink: 'https://scholarships.gov.in',
         isNew: true,
         priority: 'high'
       },
@@ -55,13 +55,13 @@ const ScholarshipNotifications = () => {
       {
         id: '3',
         title: 'SC/ST Post-Matric Scholarship',
-        provider: 'J&K Government',
+        provider: 'Ministry of Social Justice & Empowerment',
         amount: '₹12,000 per year',
         deadline: '2024-10-25',
         eligibility: 'SC/ST Category, 12th Pass',
         category: 'SC/ST',
         description: 'Post-matric scholarship for SC/ST students.',
-        applyLink: 'https://jkscst.gov.in',
+        applyLink: 'https://scholarships.gov.in',
         isNew: false,
         priority: 'medium'
       },

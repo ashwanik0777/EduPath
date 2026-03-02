@@ -9,7 +9,7 @@ export default function CTAColleges() {
           Ready to Start Your Journey?
         </h2>
         <p className="mb-10 text-lg max-w-lg mx-auto leading-relaxed">
-          Apply now to your preferred government college in Jammu and take the next step towards a bright career.
+          Apply now to your preferred government college in India and take the next step towards a bright career.
         </p>
         <a
           href="/apply"

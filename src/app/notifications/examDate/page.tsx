@@ -30,19 +30,19 @@ const ExamDateNotifications = () => {
     const mockData: ExamNotification[] = [
       {
         id: '1',
-        examName: 'JKSSB Panchayat Secretary Exam',
-        conductingBody: 'JKSSB',
+        examName: 'IBPS Clerk Preliminary Exam',
+        conductingBody: 'Institute of Banking Personnel Selection (IBPS)',
         examDate: '2024-11-20',
         registrationDeadline: '2024-10-30',
         admitCardDate: '2024-11-10',
         resultDate: '2024-12-15',
         examMode: 'Online',
-        venue: 'Various Centers in J&K',
-        category: 'Government Jobs',
+        venue: 'Various Centers in India',
+        category: 'Banking',
         isNew: true,
         priority: 'high',
         status: 'registration-open',
-        officialLink: 'https://jkssb.nic.in'
+        officialLink: 'https://www.ibps.in'
       },
       {
         id: '2',
@@ -62,19 +62,19 @@ const ExamDateNotifications = () => {
       },
       {
         id: '3',
-        examName: 'JK Bank PO Exam',
-        conductingBody: 'J&K Bank',
+        examName: 'SBI PO Preliminary Exam',
+        conductingBody: 'State Bank of India',
         examDate: '2024-10-28',
         registrationDeadline: '2024-10-15',
         admitCardDate: '2024-10-20',
         resultDate: '2024-11-20',
         examMode: 'Online',
-        venue: 'J&K Centers',
+        venue: 'All India Centers',
         category: 'Banking',
         isNew: false,
         priority: 'medium',
         status: 'registration-closed',
-        officialLink: 'https://jkbank.com'
+        officialLink: 'https://sbi.co.in'
       },
       {
         id: '4',

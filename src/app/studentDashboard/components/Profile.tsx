@@ -42,7 +42,20 @@ const genderOptions = [
   { label: "Female", value: "female" },
   { label: "Other", value: "other" },
 ];
-const stateOptions = ["Jammu & Kashmir", "Delhi", "Maharashtra", "Uttar Pradesh", "Other"];
+const stateOptions = [
+  "Andhra Pradesh",
+  "Delhi",
+  "Gujarat",
+  "Karnataka",
+  "Kerala",
+  "Maharashtra",
+  "Rajasthan",
+  "Tamil Nadu",
+  "Telangana",
+  "Uttar Pradesh",
+  "West Bengal",
+  "Other",
+];
 const careerFields = ["Engineering", "Medical", "Civil Services", "Business", "Teaching", "Design", "Other"];
 const courseOptions = ["B.Tech", "MBBS", "B.Com", "BA", "B.Sc", "Other"];
 const examOptions = ["JEE", "NEET", "UPSC", "CAT", "Other"];

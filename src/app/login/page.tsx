@@ -245,7 +245,7 @@ export default function Login() {
               with expert guidance
             </h1>
             <p className="mt-5 max-w-md text-base leading-relaxed text-slate-400">
-              Personalized counseling, real-time assessments, and government college pathways — built for J&K students.
+              Personalized counseling, real-time assessments, and government college pathways — built for students across India.
             </p>
           </div>
 
@@ -450,7 +450,7 @@ export default function Login() {
                 </div>
 
                 <p className="mt-10 text-center text-xs text-slate-400">
-                  &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+                  &copy; {new Date().getFullYear()} EduPath &mdash; India Career Guidance Portal
                 </p>
               </>
             )}
@@ -505,7 +505,7 @@ export default function Login() {
                 </form>
 
                 <p className="mt-10 text-center text-xs text-slate-400">
-                  &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+                  &copy; {new Date().getFullYear()} EduPath &mdash; India Career Guidance Portal
                 </p>
               </>
             )}
@@ -599,7 +599,7 @@ export default function Login() {
                 </form>
 
                 <p className="mt-8 text-center text-xs text-slate-400">
-                  &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+                  &copy; {new Date().getFullYear()} EduPath &mdash; India Career Guidance Portal
                 </p>
               </>
             )}
@@ -623,7 +623,7 @@ export default function Login() {
                   Back to Sign in <ArrowRight className="h-4 w-4" />
                 </button>
                 <p className="mt-8 text-xs text-slate-400">
-                  &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+                  &copy; {new Date().getFullYear()} EduPath &mdash; India Career Guidance Portal
                 </p>
               </div>
             )}

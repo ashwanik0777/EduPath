@@ -376,7 +376,7 @@ export default function Register() {
           </Form>
 
           <p className="mt-8 text-center text-xs text-slate-400">
-            &copy; {new Date().getFullYear()} EduPath &mdash; Jammu & Kashmir Career Guidance Portal
+            &copy; {new Date().getFullYear()} EduPath &mdash; India Career Guidance Portal
           </p>
         </div>
       </section>
@@ -465,7 +465,7 @@ export default function Register() {
               to a better future
             </h1>
             <p className="mt-5 max-w-md text-base leading-relaxed text-slate-400">
-              Join thousands of J&K students who found their path with expert counselors, AI-based assessments, and real college data.
+              Join thousands of Indian students who found their path with expert counselors, AI-based assessments, and real college data.
             </p>
           </div>
 

@@ -54,7 +54,7 @@ const CounselingScheduleNotifications = () => {
         mode: 'audio',
         topic: 'Best Colleges for Computer Science',
         status: 'completed',
-        description: 'Discussion about top engineering colleges in J&K and admission process.',
+        description: 'Discussion about top engineering colleges in India and admission process.',
         isNew: false,
         priority: 'medium',
         counselorImage: '/counselor2.jpg'
@@ -69,7 +69,7 @@ const CounselingScheduleNotifications = () => {
         mode: 'in-person',
         topic: 'Available Scholarships for Minorities',
         status: 'upcoming',
-        venue: 'EduPath Office, Srinagar',
+        venue: 'EduPath Counseling Center, Delhi',
         description: 'Comprehensive guidance on scholarship opportunities and application process.',
         isNew: true,
         priority: 'high',

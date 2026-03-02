@@ -89,7 +89,7 @@ export default function Scholarships() {
   const categories = ["", "General", "SC", "ST", "OBC", "Minority"];
   const incomes = ["", "Below ₹1L", "₹1L–₹3L", "₹3L+"];
   const types = ["", "Merit-based", "Need-based", "Caste-based", "Govt", "Private"];
-  const locations = ["", "J&K", "National", "International"];
+  const locations = ["", "All India", "State-level", "International"];
   const genders = ["", "For Girls Only", "All Students"];
 
   const handleFilter = (key: string, value: string) => {
@@ -106,7 +106,7 @@ export default function Scholarships() {
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Search scholarship by name (e.g. PM Scholarship, JK Govt...)"
+          placeholder="Search scholarship by name (e.g. PM Scholarship, NSP Merit...)"
           className="w-full max-w-xl mx-auto px-4 py-3 rounded-xl border border-neutral-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 text-lg bg-white"
         />
       </div>

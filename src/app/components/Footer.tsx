@@ -21,13 +21,6 @@ const Footer = () => {
           <div className="flex space-x-4">
           <Link href="/" className="flex items-center" aria-label="GBU Home">
               <img
-                src="/J&KLogo.png"
-                alt="EduPath Logo"
-                className="h-14 w-auto bg-white rounded-full py-1 px-1"
-              />
-            </Link>
-          <Link href="/" className="flex items-center" aria-label="GBU Home">
-              <img
                 src="/EdupathLogo.png"
                 alt="EduPath Logo"
                 className="h-14 w-auto rounded-full py-1 px-1"

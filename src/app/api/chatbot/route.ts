@@ -7,9 +7,10 @@ function classifyIntent(message: string): string {
   if (/college|govt college|engineering|medical|admission|cut[- ]?off/.test(lower)) return "college";
   if (/scholarship|fee waiver|obc|sc|st|minority|grant|fellowship/.test(lower)) return "scholarship";
   if (/psychometric|personality|test result|ocean|big five|assessment/.test(lower)) return "psychometric";
-  if (/exam|jkssb|ssc|neet|jee|cuet|competitive|entrance|date|syllabus|eligibility/.test(lower)) return "exam";
+  if (/exam|ssc|neet|jee|cuet|competitive|entrance|date|syllabus|eligibility/.test(lower)) return "exam";
   if (/dashboard|profile|progress|tracker|tab|navigation|where|how to use/.test(lower)) return "dashboard";
   if (/career|scope|after 12th|pcm|pcb|arts|commerce|future|job|salary/.test(lower)) return "career";
+  if (/foreign|abroad|international|overseas|outside india|ielts|toefl/.test(lower)) return "foreign";
   if (/counseling|counsellor|book session|appointment|advice/.test(lower)) return "counseling";
   if (/feedback|support|error|problem|site not opening|not working/.test(lower)) return "support";
   if (/remind|reminder|notify|alert/.test(lower)) return "reminder";
@@ -19,13 +20,13 @@ function classifyIntent(message: string): string {
 
 // Dummy internal API fetchers (replace with real DB/API calls)
 async function fetchCollegeInfo(): Promise<string> {
-  return "Here are some government colleges in J&K for 12th pass students: ...";
+  return "Here are some top government colleges in India for 12th pass students: IITs, NITs, AIIMS, Delhi University, BHU, and state universities based on your stream.";
 }
 async function fetchScholarshipInfo(): Promise<string> {
-  return "Scholarships for OBC students in J&K: ...";
+  return "For OBC students in India, check National Scholarship Portal options like Post-Matric Scholarship, Central Sector scholarships, and state-level merit schemes.";
 }
 async function fetchExamInfo(): Promise<string> {
-  return "Next JKSSB exam is on ... Eligibility for SSC CHSL: ...";
+  return "Upcoming exams in India include SSC, UPSC, IBPS, Railways, JEE, NEET, and CUET. Tell me your qualification to get exact eligibility and timeline.";
 }
 async function fetchDashboardHelp(): Promise<string> {
   return "To use the dashboard, click on the sidebar tabs. For the psychometric test, go to 'Psychometric Test' tab.";
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
   else if (intent === "exam") reply = await fetchExamInfo();
   else if (intent === "dashboard") reply = await fetchDashboardHelp();
   else if (intent === "career") reply = "Here are some career options after 12th: ...";
+  else if (intent === "foreign") reply = "If your English is fluent, we can also suggest foreign colleges in USA, UK, Canada, Australia, and Europe based on your stream, budget, and exam profile (IELTS/TOEFL/SAT).";
   else if (intent === "counseling") reply = "To book a counseling session, go to the 'Counseling Booking' tab in your dashboard.";
   else if (intent === "support") reply = "If you are facing issues, please describe your problem or use the Feedback tab.";
   else if (intent === "reminder") reply = "Reminder feature coming soon!";
@@ -65,7 +67,7 @@ async function callGeminiWithContext(message: string, lang: string, context: Arr
   if (lang === "hi") langLabel = "Hindi";
   else if (lang === "doi") langLabel = "Dogri";
   const prePrompt =
-    `You are a student support chatbot. Your users are students from Jammu & Kashmir, mostly between age 14–21. They ask about colleges, careers, exams, scholarships, and dashboard help. Always reply politely in clear language (${langLabel}). If question is about JK-specific info, try to use local references. Avoid long answers, keep them friendly and to the point.`;
+    `You are a student support chatbot. Your users are students from across India, mostly between age 14–21. They ask about colleges, careers, exams, scholarships, and dashboard help. Always reply politely in clear language (${langLabel}). Prioritize India-focused guidance; if the user has fluent English and asks for global options, you may suggest foreign colleges as an optional path. Avoid long answers, keep them friendly and to the point.`;
   // Build context for Gemini
   const contextText = context
     .map((c) => `${c.sender === "user" ? "User" : "Bot"}: ${c.text}`)

@@ -50,7 +50,7 @@ export default function GovernmentCollege() {
       }
     }
     fetchProfile();
-    setDistricts(["Srinagar", "Baramulla", "Budgam", "Anantnag", "Jammu", "Pulwama", "Kupwara", "Kathua"]);
+    setDistricts(["Delhi", "Mumbai", "Bengaluru", "Pune", "Chennai", "Hyderabad", "Kolkata", "Ahmedabad", "Jaipur", "Lucknow"]);
   }, []);
 
   // Fetch institutes from API (wait for academic)
@@ -84,8 +84,8 @@ export default function GovernmentCollege() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 p-0 md:p-6">
       {/* Header */}
       <div className="max-w-5xl mx-auto py-8 px-4 md:px-0">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2 text-center">Explore Government Schools & Colleges in Jammu & Kashmir</h1>
-        <div className="text-center text-zinc-600 mb-6 text-base md:text-lg">Based on your profile, we’ve listed relevant institutions.</div>
+        <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2 text-center">Explore Government Schools & Colleges Across India</h1>
+        <div className="text-center text-zinc-600 mb-6 text-base md:text-lg">Based on your profile, we’ve listed relevant institutions from across India.</div>
 
         {/* Filters (to be redesigned in next step) */}
         <div className="flex flex-wrap gap-4 justify-center mb-6">
@@ -112,6 +112,12 @@ export default function GovernmentCollege() {
         </div>
 
         {/* Institute Listing (unchanged, will improve in next step) */}
+        {medium === "English" && (
+          <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+            <span className="font-semibold">Bonus suggestion:</span> Since you selected English medium, we can also suggest foreign colleges (USA/UK/Canada/Australia/Europe) based on stream, budget, and exams.
+          </div>
+        )}
+
         {loading ? (
           <div className="flex justify-center items-center py-16"><Loader2 className="animate-spin text-indigo-500" size={36} /></div>
         ) : institutes.length === 0 ? (

@@ -67,7 +67,7 @@ export default function CompetitiveExamsPage() {
   const qualifications = ["", "After 10th", "After 12th", "After Graduation"];
   const departments = ["", "Banking", "Railways", "Teaching", "Medical", "Engineering"];
   const modes = ["", "Online", "Offline"];
-  const states = ["", "JK", "All India"];
+  const states = ["", "All India", "State-level"];
   const languages = ["", "English", "Hindi", "Urdu"];
 
   // Handlers
@@ -87,7 +87,7 @@ export default function CompetitiveExamsPage() {
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search exam by name (e.g. SSC, UPSC, JKSSB...)"
+              placeholder="Search exam by name (e.g. SSC, UPSC, IBPS, JEE...)"
               className="w-full max-w-xl px-5 py-3 rounded-2xl border-2 border-blue-200 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-lg bg-white/80"
             />
             <Search className="w-6 h-6 text-blue-500" />

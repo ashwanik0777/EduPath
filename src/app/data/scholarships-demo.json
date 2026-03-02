@@ -1,8 +1,8 @@
 [
   {
     "scholarship_id": "sch1",
-    "name": "JK Government Merit Scholarship",
-    "provider": "J&K Govt",
+    "name": "National Merit Scholarship",
+    "provider": "Government of India",
     "eligibility": {
       "class": "12th",
       "category": "General",
@@ -10,16 +10,16 @@
     },
     "amount": "₹10,000/year",
     "deadline": "2025-10-15",
-    "apply_link": "https://jk.gov.in/merit-scholarship",
+    "apply_link": "https://scholarships.gov.in",
     "type": "Merit-based",
-    "location": "J&K",
+    "location": "All India",
     "gender": "All Students",
-    "documents_required": ["Marksheet", "Domicile"],
+    "documents_required": ["Marksheet", "Income Certificate"],
     "renewal": "Yes, based on annual performance",
     "selection_process": "Merit list",
-    "how_to_apply": "Apply online via official portal",
+    "how_to_apply": "Apply online via National Scholarship Portal",
     "important_dates": {"Application Start": "2025-09-01", "Last Date": "2025-10-15"},
-    "pdf": "https://jk.gov.in/merit-scholarship/notification.pdf"
+    "pdf": "https://scholarships.gov.in/notification.pdf"
   },
   {
     "scholarship_id": "sch2",
