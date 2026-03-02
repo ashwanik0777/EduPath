@@ -52,6 +52,7 @@ export interface IWebsitePricing {
 export interface IWebsiteManagement extends Document {
   singletonKey: string
   maintenanceMode: boolean
+  collegeSearchProvider: "algolia" | "database"
   heroTitle: string
   heroSubtitle: string
   primaryColor: string
@@ -194,6 +195,7 @@ const WebsiteManagementSchema = new Schema<IWebsiteManagement>(
   {
     singletonKey: { type: String, required: true, unique: true, default: "primary" },
     maintenanceMode: { type: Boolean, default: false },
+    collegeSearchProvider: { type: String, enum: ["algolia", "database"], default: "algolia" },
     heroTitle: { type: String, default: "Discover Your Best Career Path" },
     heroSubtitle: {
       type: String,

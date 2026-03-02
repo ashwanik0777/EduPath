@@ -237,6 +237,7 @@ type CounselingResponse = {
 
 type WebsiteSettings = {
   maintenanceMode: boolean;
+  collegeSearchProvider: "algolia" | "database";
   heroTitle: string;
   heroSubtitle: string;
   primaryColor: string;
@@ -401,6 +402,7 @@ export default function AdminDashboardPage() {
   const [scholarshipForm, setScholarshipForm] = useState({ name: "", provider: "", amount: "", deadline: "" });
   const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>({
     maintenanceMode: false,
+    collegeSearchProvider: "algolia",
     heroTitle: "Discover Your Best Career Path",
     heroSubtitle: "Personalized guidance, top colleges, scholarships, and counseling in one platform.",
     primaryColor: "#4f46e5",
@@ -787,6 +789,19 @@ export default function AdminDashboardPage() {
     } catch {
       setError("Could not save website settings.");
       showErrorToast("Could not save website settings.");
+    }
+  };
+
+  const reindexCollegesSearch = async () => {
+    try {
+      const result = await fetchJson<{ success: boolean; data?: { indexedCount: number; provider: string } }>("/api/admin/colleges/reindex", {
+        method: "POST",
+      });
+      const count = result?.data?.indexedCount ?? 0;
+      showSuccessToast("Reindex completed", `${count} colleges synced to search index.`);
+    } catch {
+      setError("Could not reindex colleges.");
+      showErrorToast("Could not reindex colleges search index.");
     }
   };
 
@@ -1243,6 +1258,7 @@ export default function AdminDashboardPage() {
             toggleAnnouncement={toggleAnnouncement}
             askConfirmation={askConfirmation}
             removeAnnouncement={removeAnnouncement}
+            reindexCollegesSearch={reindexCollegesSearch}
             saveWebsiteManagement={saveWebsiteManagement}
           />
         )}

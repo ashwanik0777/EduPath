@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "reindex:colleges": "node scripts/reindex-colleges.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

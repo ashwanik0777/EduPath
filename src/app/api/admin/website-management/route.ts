@@ -346,6 +346,11 @@ async function ensureWebsiteManagementDocument() {
     await doc.save();
   }
 
+  if (!(doc as any).collegeSearchProvider) {
+    (doc as any).collegeSearchProvider = "algolia";
+    await doc.save();
+  }
+
   return doc;
 }
 
@@ -397,6 +402,7 @@ export async function GET(request: NextRequest) {
     data: {
       settings: {
         maintenanceMode: doc.maintenanceMode,
+        collegeSearchProvider: (doc as any).collegeSearchProvider || "algolia",
         heroTitle: doc.heroTitle,
         heroSubtitle: doc.heroSubtitle,
         primaryColor: doc.primaryColor,
@@ -432,6 +438,7 @@ export async function PATCH(request: NextRequest) {
     const patch = body?.payload || {};
     const allowedKeys = [
       "maintenanceMode",
+      "collegeSearchProvider",
       "heroTitle",
       "heroSubtitle",
       "primaryColor",

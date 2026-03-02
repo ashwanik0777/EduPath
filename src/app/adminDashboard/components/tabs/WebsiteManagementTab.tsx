@@ -18,6 +18,7 @@ type WebsitePage = {
 
 type WebsiteSettings = {
   maintenanceMode: boolean;
+  collegeSearchProvider: "algolia" | "database";
   heroTitle: string;
   heroSubtitle: string;
   primaryColor: string;
@@ -82,6 +83,7 @@ type WebsiteManagementTabProps = {
     action: () => Promise<void>;
   }) => void;
   removeAnnouncement: (id: string) => Promise<void>;
+  reindexCollegesSearch: () => Promise<void>;
   saveWebsiteManagement: () => Promise<void>;
 };
 
@@ -101,6 +103,7 @@ export function WebsiteManagementTab({
   toggleAnnouncement,
   askConfirmation,
   removeAnnouncement,
+  reindexCollegesSearch,
   saveWebsiteManagement,
 }: WebsiteManagementTabProps) {
   const toLines = (items: string[]) => items.join("\n");
@@ -130,6 +133,10 @@ export function WebsiteManagementTab({
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <p className="text-xs text-slate-500 uppercase tracking-wide">Support Email</p>
           <p className="text-sm font-semibold mt-2 text-slate-900 truncate">{websiteSettings.supportEmail}</p>
+        </div>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <p className="text-xs text-slate-500 uppercase tracking-wide">College Search Engine</p>
+          <p className="text-sm font-semibold mt-2 text-slate-900 capitalize">{websiteSettings.collegeSearchProvider}</p>
         </div>
       </div>
 
@@ -248,6 +255,35 @@ export function WebsiteManagementTab({
               className={`w-12 h-7 rounded-full p-1 transition-colors ${websiteSettings.maintenanceMode ? "bg-rose-500" : "bg-slate-300"}`}
             >
               <span className={`block h-5 w-5 rounded-full bg-white transition-transform ${websiteSettings.maintenanceMode ? "translate-x-5" : "translate-x-0"}`} />
+            </button>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 p-3 space-y-3">
+            <div>
+              <label className="text-sm text-slate-600">College Search Technique</label>
+              <select
+                value={websiteSettings.collegeSearchProvider}
+                onChange={(event) =>
+                  setWebsiteSettings((previous) => ({
+                    ...previous,
+                    collegeSearchProvider: event.target.value as "algolia" | "database",
+                  }))
+                }
+                className={`mt-1 ${inputClass}`}
+              >
+                <option value="algolia">Algolia Search</option>
+                <option value="database">Database Search (Backup)</option>
+              </select>
+              <p className="text-xs text-slate-500 mt-1">
+                Ek time par ek hi engine active rahega. Algolia issue ho to yahin se Database Search pe switch karein.
+              </p>
+            </div>
+
+            <button
+              onClick={() => reindexCollegesSearch()}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Reindex Colleges to Algolia
             </button>
           </div>
         </div>
