@@ -4,17 +4,19 @@ import HeroSection from "../../components/HeroSection"
 import FilterColleges from "@/app/components/governmentCollege/FilterColleges"
 import CollegeList from "@/app/components/governmentCollege/CollegeList"
 import CTAColleges from "@/app/components/governmentCollege/CTAColleges"
+import { getCollegeHeroContent, type OwnershipFilter } from "@/app/components/governmentCollege/heroContent"
 
 export default function PrivateCollegesPage() {
-  const [ownershipFilter, setOwnershipFilter] = useState<"Central Government" | "State Government" | "Private">("Private")
+  const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>("Private")
   const [streamFilter, setStreamFilter] = useState<"All" | "Arts" | "Science" | "Commerce">("All")
   const [searchQuery, setSearchQuery] = useState("")
+  const heroContent = getCollegeHeroContent(ownershipFilter)
 
   return (
     <main>
       <HeroSection
-        title="Top Private Colleges in India"
-        subtitle="Explore top private colleges across India with key details on courses, admissions, and campus opportunities."
+        title={heroContent.title}
+        subtitle={heroContent.subtitle}
         bgTheme={6}
       />
       <FilterColleges
