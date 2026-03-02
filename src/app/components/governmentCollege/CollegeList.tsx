@@ -5,29 +5,29 @@ const colleges = [
   {
     name: "Lady Shri Ram College for Women",
     location: "New Delhi",
-    ownership: "Government",
+    ownership: "Central Government",
     courses: ["B.A", "B.Sc", "B.Com", "BCA"],
     facilities: ["Library", "Hostel", "Labs", "Wi-Fi"],
   },
   {
     name: "Government Arts College",
     location: "Bengaluru, Karnataka",
-    ownership: "Government",
+    ownership: "State Government",
     courses: ["B.Sc", "B.A", "B.Com", "BBA"],
     facilities: ["Library", "Sports Complex", "Labs"],
   },
   {
     name: "Presidency College",
     location: "Chennai, Tamil Nadu",
-    ownership: "Government",
+    ownership: "State Government",
     courses: ["B.Com", "B.A", "B.Sc"],
     facilities: ["Hostel", "Digital Classrooms", "Library"],
   },
   {
-    name: "Maharaja College",
-    location: "Jaipur, Rajasthan",
-    ownership: "Government",
-    courses: ["B.Sc", "B.A", "B.Com"],
+    name: "Jawaharlal Nehru University",
+    location: "New Delhi",
+    ownership: "Central Government",
+    courses: ["B.A", "M.A", "M.Sc"],
     facilities: ["Library", "Computer Lab"],
   },
   {
@@ -47,7 +47,7 @@ const colleges = [
   {
     name: "Christ University",
     location: "Bengaluru, Karnataka",
-    ownership: "Deemed",
+    ownership: "Private",
     courses: ["B.Com", "BBA"],
     facilities: ["Library", "Digital Classrooms", "Wi-Fi"],
   },
@@ -83,7 +83,7 @@ function CollegeCard({ name, location, ownership, courses, facilities }: {
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col">
       <div className="flex items-start justify-between gap-3 mb-2">
         <h3 className="text-xl font-semibold text-[#2E358B]">{name}</h3>
-        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${ownership === "Government" ? "bg-emerald-100 text-emerald-700" : ownership === "Private" ? "bg-violet-100 text-violet-700" : "bg-amber-100 text-amber-700"}`}>
+        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${ownership === "State Government" ? "bg-emerald-100 text-emerald-700" : ownership === "Central Government" ? "bg-cyan-100 text-cyan-700" : "bg-violet-100 text-violet-700"}`}>
           {ownership}
         </span>
       </div>
@@ -123,7 +123,7 @@ function CollegeCard({ name, location, ownership, courses, facilities }: {
 export default function CollegeList({ filter }: { filter: string }) {
   const filtered = colleges.filter((c) => {
     if (filter === "All") return true
-    if (["Government", "Private", "Deemed"].includes(filter)) return c.ownership === filter
+    if (["Private", "State Government", "Central Government"].includes(filter)) return c.ownership === filter
     return c.courses.some((course) => course.includes(filter))
   })
 

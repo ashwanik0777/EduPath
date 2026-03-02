@@ -77,10 +77,12 @@ export async function POST(request: NextRequest) {
   let createPayload: Record<string, unknown> = payload;
 
   if (resource === "colleges") {
+    const governingBody = payload.governingBody || (payload.type === "private" ? "private" : "state-government");
     createPayload = {
       name: payload.name || "New College",
       shortName: payload.name || "College",
-      type: payload.type || "government",
+      type: governingBody === "private" ? "private" : "government",
+      governingBody,
       category: payload.category || "engineering",
       location: {
         city: payload.city || "Unknown",

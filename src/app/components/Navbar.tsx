@@ -29,6 +29,7 @@ import {
 type NavItem = {
   slug: string;
   label: string;
+  href?: string;
   isExternal?: boolean;
 };
 
@@ -94,10 +95,15 @@ const NAVIGATION_CONFIG: NavMenu[] = [
     directPath: "/careerAssessment",
   },
   {
-    key: "Government college",
-    label: "Government College",
+    key: "colleges",
+    label: "Colleges",
     icon: FileText,
-    directPath: "/governmentCollege",
+    items: [
+      { slug: "private", label: "Private Colleges", href: "/governmentCollege/private" },
+      { slug: "state-government", label: "State Government Colleges", href: "/governmentCollege/state-government" },
+      { slug: "central-government", label: "Central Government Colleges", href: "/governmentCollege/central-government" },
+    ],
+    baseRoute: "/governmentCollege",
   },
   {
     key: "StudyResources",
@@ -204,10 +210,12 @@ const useMobileMenu = () => {
 const MenuIcon: React.FC<MenuIconProps> = ({ icon: Icon, size = 16 }) => <Icon size={size} />;
 
 const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ item, baseRoute, onClick }) => {
+  const resolvedHref = item.href || (baseRoute ? `${baseRoute}/${item.slug}` : item.slug);
+
   if (item.isExternal) {
     return (
       <a
-        href={item.slug}
+        href={resolvedHref}
         target="_blank"
         rel="noopener noreferrer"
         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
@@ -220,7 +228,7 @@ const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({ item, baseRoute, on
 
   return (
     <Link
-      href={`${baseRoute}/${item.slug}`}
+      href={resolvedHref}
       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
       onClick={onClick}
     >

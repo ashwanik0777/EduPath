@@ -4,18 +4,18 @@ import { BookOpen, Atom, DollarSign, Layers, Landmark, Building2, GraduationCap 
 
 const filterIcons = {
   All: <Layers className="w-5 h-5 mr-2" />,
-  Government: <Landmark className="w-5 h-5 mr-2" />,
+  "State Government": <Landmark className="w-5 h-5 mr-2" />,
+  "Central Government": <GraduationCap className="w-5 h-5 mr-2" />,
   Private: <Building2 className="w-5 h-5 mr-2" />,
-  Deemed: <GraduationCap className="w-5 h-5 mr-2" />,
   Arts: <BookOpen className="w-5 h-5 mr-2" />,
   Science: <Atom className="w-5 h-5 mr-2" />,
   Commerce: <DollarSign className="w-5 h-5 mr-2" />,
 }
 
-export default function FilterColleges({ onFilter }: { onFilter: (filter: string) => void }) {
-  const [selected, setSelected] = useState("All")
+export default function FilterColleges({ onFilter, initialFilter = "All" }: { onFilter: (filter: string) => void; initialFilter?: string }) {
+  const [selected, setSelected] = useState(initialFilter)
 
-  const filters = ["All", "Government", "Private", "Deemed", "Arts", "Science", "Commerce"]
+  const filters = ["All", "Private", "State Government", "Central Government", "Arts", "Science", "Commerce"]
 
   return (
     <div className="bg-gray-100 py-6">

@@ -15,7 +15,7 @@ export default function CollegesPage() {
         subtitle="Explore top government and private colleges across India. Find courses, admissions, and campus details."
         bgTheme={6}
       />  
-      <FilterColleges onFilter={setFilter} />
+      <FilterColleges onFilter={setFilter} initialFilter="All" />
       <CollegeList filter={filter} />
       <CTAColleges />
     </main>

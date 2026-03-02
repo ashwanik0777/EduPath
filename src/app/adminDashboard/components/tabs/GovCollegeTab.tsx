@@ -6,6 +6,7 @@ type GovCollegeTabProps = {
   collegeForm: {
     name: string;
     type: string;
+    governingBody: string;
     category: string;
     city: string;
     state: string;
@@ -16,6 +17,7 @@ type GovCollegeTabProps = {
   setCollegeForm: React.Dispatch<React.SetStateAction<{
     name: string;
     type: string;
+    governingBody: string;
     category: string;
     city: string;
     state: string;
@@ -52,10 +54,11 @@ export function GovCollegeTab({
   return (
     <div className="space-y-5 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
       <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <h4 className="font-semibold mb-3">Add College (Government + Private + Deemed)</h4>
+        <h4 className="font-semibold mb-3">Add College (Private / State Government / Central Government)</h4>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
           <input value={collegeForm.name} onChange={(event) => setCollegeForm((p) => ({ ...p, name: event.target.value }))} placeholder="College Name" className="border border-slate-300 rounded-lg px-3 py-2" />
-          <select value={collegeForm.type} onChange={(event) => setCollegeForm((p) => ({ ...p, type: event.target.value }))} className="border border-slate-300 rounded-lg px-3 py-2"><option value="government">government</option><option value="private">private</option><option value="deemed">deemed</option></select>
+          <select value={collegeForm.type} onChange={(event) => setCollegeForm((p) => ({ ...p, type: event.target.value }))} className="border border-slate-300 rounded-lg px-3 py-2"><option value="government">government</option><option value="private">private</option></select>
+          <select value={collegeForm.governingBody} onChange={(event) => setCollegeForm((p) => ({ ...p, governingBody: event.target.value, type: event.target.value === "private" ? "private" : "government" }))} className="border border-slate-300 rounded-lg px-3 py-2"><option value="private">private</option><option value="state-government">state government</option><option value="central-government">central government</option></select>
           <select value={collegeForm.category} onChange={(event) => setCollegeForm((p) => ({ ...p, category: event.target.value }))} className="border border-slate-300 rounded-lg px-3 py-2"><option value="engineering">engineering</option><option value="medical">medical</option><option value="arts">arts</option><option value="science">science</option><option value="commerce">commerce</option><option value="law">law</option><option value="management">management</option></select>
           <input value={collegeForm.city} onChange={(event) => setCollegeForm((p) => ({ ...p, city: event.target.value }))} placeholder="City" className="border border-slate-300 rounded-lg px-3 py-2" />
           <input value={collegeForm.state} onChange={(event) => setCollegeForm((p) => ({ ...p, state: event.target.value }))} placeholder="State" className="border border-slate-300 rounded-lg px-3 py-2" />
@@ -89,7 +92,7 @@ export function GovCollegeTab({
             <div key={item._id} className="border border-slate-200 rounded-lg p-3 flex items-center justify-between">
               <div>
                 <p className="font-medium">{String(item.name || "-")}</p>
-                <p className="text-xs text-slate-500 capitalize">{String(item.type || "-")} • {String(item.category || "-")} • {String((item as Record<string, unknown>).isRecommended ? "recommended" : "normal")}</p>
+                <p className="text-xs text-slate-500 capitalize">{String((item as Record<string, unknown>).governingBody || item.type || "-").replace(/-/g, " ")} • {String(item.category || "-")} • {String((item as Record<string, unknown>).isRecommended ? "recommended" : "normal")}</p>
                 {(item as Record<string, unknown>).recommendationScore ? (
                   <p className="text-[11px] text-indigo-600 mt-1">Score: {String((item as Record<string, unknown>).recommendationScore)} / 100</p>
                 ) : null}

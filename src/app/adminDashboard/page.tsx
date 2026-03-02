@@ -385,6 +385,7 @@ export default function AdminDashboardPage() {
   const [collegeForm, setCollegeForm] = useState({
     name: "",
     type: "government",
+    governingBody: "state-government",
     category: "engineering",
     city: "",
     state: "",
@@ -398,7 +399,7 @@ export default function AdminDashboardPage() {
   const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>({
     maintenanceMode: false,
     heroTitle: "Discover Your Best Career Path",
-    heroSubtitle: "Personalized guidance, government colleges, scholarships, and counseling in one platform.",
+    heroSubtitle: "Personalized guidance, top colleges, scholarships, and counseling in one platform.",
     primaryColor: "#4f46e5",
     supportEmail: "support@edupath.com",
     footerText: "© 2026 EduPath. All rights reserved.",
@@ -948,7 +949,7 @@ export default function AdminDashboardPage() {
       color: "text-violet-500",
       children: [
         { id: "psychometricTest", label: "Psychometric Test", icon: Target, color: "text-purple-500" },
-        { id: "govCollege", label: "Government Colleges", icon: GraduationCap, color: "text-blue-500" },
+        { id: "govCollege", label: "Colleges", icon: GraduationCap, color: "text-blue-500" },
         { id: "scholarships", label: "Government Scholarships", icon: GraduationCap, color: "text-yellow-500" },
         { id: "competitiveExams", label: "Government Exams", icon: Award, color: "text-orange-500" },
         { id: "carrerOption", label: "Career Options", icon: Briefcase, color: "text-emerald-500" },
@@ -1012,7 +1013,7 @@ export default function AdminDashboardPage() {
     profile: { title: "Admin Profile", subtitle: "Update your profile and contact settings" },
     progressTracker: { title: "Progress Tracker", subtitle: "Track engagement and student progression KPIs" },
     psychometricTest: { title: "Psychometric Tests", subtitle: "Monitor assessments, results, and activation status" },
-    govCollege: { title: "Colleges (Gov + Private)", subtitle: "Manage government, private, and deemed college recommendations" },
+    govCollege: { title: "Colleges", subtitle: "Manage private, state government, and central government colleges" },
     shortListedColleges: { title: "Short Listed College", subtitle: "Analyze shortlist trends and adoption" },
     carrerOption: { title: "Career Option", subtitle: "Manage career roadmap content" },
     counselingBooking: { title: "Counseling Booking", subtitle: "Control counseling schedules and session states" },

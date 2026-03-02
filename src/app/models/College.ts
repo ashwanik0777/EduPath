@@ -4,6 +4,7 @@ export interface ICollege extends Document {
   name: string
   shortName: string
   type: "government" | "private" | "deemed"
+  governingBody?: "private" | "state-government" | "central-government"
   category: "engineering" | "medical" | "arts" | "science" | "commerce" | "law" | "management"
   location: {
     city: string
@@ -74,6 +75,12 @@ const CollegeSchema = new Schema<ICollege>(
       enum: ["government", "private", "deemed"],
       required: true,
       index: true,
+    },
+    governingBody: {
+      type: String,
+      enum: ["private", "state-government", "central-government"],
+      index: true,
+      default: "state-government",
     },
     category: {
       type: String,
