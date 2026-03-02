@@ -6,7 +6,9 @@ import CollegeList from "@/app/components/governmentCollege/CollegeList"
 import CTAColleges from "@/app/components/governmentCollege/CTAColleges"
 
 export default function CollegesPage() {
-  const [filter, setFilter] = useState("All")
+  const [ownershipFilter, setOwnershipFilter] = useState<"Central Government" | "State Government" | "Private">("Central Government")
+  const [streamFilter, setStreamFilter] = useState<"All" | "Arts" | "Science" | "Commerce">("All")
+  const [searchQuery, setSearchQuery] = useState("")
 
   return (
     <main>
@@ -15,8 +17,15 @@ export default function CollegesPage() {
         subtitle="Explore top government and private colleges across India. Find courses, admissions, and campus details."
         bgTheme={6}
       />  
-      <FilterColleges onFilter={setFilter} initialFilter="All" />
-      <CollegeList filter={filter} />
+      <FilterColleges
+        ownershipFilter={ownershipFilter}
+        streamFilter={streamFilter}
+        searchQuery={searchQuery}
+        onOwnershipChange={setOwnershipFilter}
+        onStreamChange={setStreamFilter}
+        onSearchChange={setSearchQuery}
+      />
+      <CollegeList ownershipFilter={ownershipFilter} streamFilter={streamFilter} searchQuery={searchQuery} />
       <CTAColleges />
     </main>
   )

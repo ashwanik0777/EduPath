@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useMemo, useState } from "react"
-import { BookOpen, Library, Wifi, Home, Beaker, Dumbbell, Monitor, Search, ExternalLink, MapPin } from "lucide-react"
+import { BookOpen, Library, Wifi, Home, Beaker, Dumbbell, Monitor, ExternalLink, MapPin } from "lucide-react"
 
 const colleges = [
   {
@@ -178,8 +178,10 @@ function CollegeCard({ name, location, ownership, courses, facilities, eligibili
   )
 }
 
-export default function CollegeList({ filter }: { filter: string }) {
-  const [query, setQuery] = useState("")
+type OwnershipFilter = "Central Government" | "State Government" | "Private"
+type StreamFilter = "All" | "Arts" | "Science" | "Commerce"
+
+export default function CollegeList({ ownershipFilter, streamFilter, searchQuery }: { ownershipFilter: OwnershipFilter; streamFilter: StreamFilter; searchQuery: string }) {
   const [apiColleges, setApiColleges] = useState<ApiCollege[]>([])
   const [searchResults, setSearchResults] = useState<ApiCollege[]>([])
 
@@ -199,7 +201,7 @@ export default function CollegeList({ filter }: { filter: string }) {
   }, [])
 
   useEffect(() => {
-    const trimmed = query.trim()
+    const trimmed = searchQuery.trim()
 
     if (!trimmed) {
       setSearchResults([])
@@ -220,7 +222,7 @@ export default function CollegeList({ filter }: { filter: string }) {
     }, 250)
 
     return () => clearTimeout(timeout)
-  }, [query])
+  }, [searchQuery])
 
   const mapApiCollege = (item: ApiCollege, index: number) => {
       const ownership = item.governingBody === "central-government"
@@ -258,36 +260,35 @@ export default function CollegeList({ filter }: { filter: string }) {
     [searchResults],
   )
 
-  const source = query.trim() ? normalizedSearchResults : normalized
+  const source = searchQuery.trim() ? normalizedSearchResults : normalized
+
+  const streamMatches = (college: {
+    courses: string[]
+    eligibilitySummary: string
+  }) => {
+    if (streamFilter === "All") return true
+
+    const joined = `${college.courses.join(" ")} ${college.eligibilitySummary}`.toLowerCase()
+
+    if (streamFilter === "Arts") {
+      return /(arts|humanities|literature|history|political|ba\b|b\.a\b|ma\b|m\.a\b)/i.test(joined)
+    }
+
+    if (streamFilter === "Science") {
+      return /(science|physics|chemistry|biology|math|engineering|technology|bsc\b|b\.sc\b|msc\b|m\.sc\b|btech\b|b\.tech\b|bca\b)/i.test(joined)
+    }
+
+    return /(commerce|finance|account|economics|business|bcom\b|b\.com\b|mcom\b|m\.com\b|bba\b|mba\b)/i.test(joined)
+  }
 
   const filtered = source.filter((c) => {
-    const matchesFilter =
-      filter === "All"
-        ? true
-        : ["Private", "State Government", "Central Government"].includes(filter)
-          ? c.ownership === filter
-          : c.courses.some((course) => course.includes(filter))
-
-    return matchesFilter
+    return c.ownership === ownershipFilter && streamMatches(c)
   })
 
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-10 text-center text-[#2E358B]">Recommended Government & Private Colleges</h2>
-        <div className="max-w-2xl mx-auto mb-8">
-          <label htmlFor="college-search" className="sr-only">Search college by name</label>
-          <div className="flex items-center gap-2 rounded-xl bg-white border border-indigo-200 px-3 py-2 shadow-sm">
-            <Search className="w-4 h-4 text-indigo-600" />
-            <input
-              id="college-search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search by college name, city, course, or eligibility"
-              className="w-full bg-transparent outline-none text-slate-700"
-            />
-          </div>
-        </div>
+        {/* <h2 className="text-3xl font-bold mb-10 text-center text-[#2E358B]">Recommended Government & Private Colleges</h2> */}
         {filtered.length === 0 ? (
           <p className="text-center text-slate-600 mb-8">No college found. Try another college name or keyword.</p>
         ) : null}

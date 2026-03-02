@@ -6,7 +6,9 @@ import CollegeList from "@/app/components/governmentCollege/CollegeList"
 import CTAColleges from "@/app/components/governmentCollege/CTAColleges"
 
 export default function StateGovernmentCollegesPage() {
-  const [filter, setFilter] = useState("State Government")
+  const [ownershipFilter, setOwnershipFilter] = useState<"Central Government" | "State Government" | "Private">("State Government")
+  const [streamFilter, setStreamFilter] = useState<"All" | "Arts" | "Science" | "Commerce">("All")
+  const [searchQuery, setSearchQuery] = useState("")
 
   return (
     <main>
@@ -15,8 +17,15 @@ export default function StateGovernmentCollegesPage() {
         subtitle="Find top state government colleges with quality academics, affordable education, and strong regional opportunities."
         bgTheme={6}
       />
-      <FilterColleges onFilter={setFilter} initialFilter="State Government" />
-      <CollegeList filter={filter} />
+      <FilterColleges
+        ownershipFilter={ownershipFilter}
+        streamFilter={streamFilter}
+        searchQuery={searchQuery}
+        onOwnershipChange={setOwnershipFilter}
+        onStreamChange={setStreamFilter}
+        onSearchChange={setSearchQuery}
+      />
+      <CollegeList ownershipFilter={ownershipFilter} streamFilter={streamFilter} searchQuery={searchQuery} />
       <CTAColleges />
     </main>
   )
