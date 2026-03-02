@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/app/components/ui/card"
 import { Badge } from "@/app/components/ui/badge"
-import { MapPin, Users, Award, Star } from "lucide-react"
+import { MapPin, Star } from "lucide-react"
 import Image from "next/image"
 
 const featuredColleges = [
@@ -12,10 +12,8 @@ const featuredColleges = [
     location: "New Delhi",
     type: "Engineering",
     rating: 4.8,
-    students: "8,000+",
-    established: 1961,
-    image: "/iit-delhi-campus.jpg",
-    highlights: ["Top Engineering College", "NIRF Rank 2", "100% Placement"],
+    image: "/blog.jpg",
+    shortTag: "NIRF Top Engineering",
     fees: "₹2.5L/year",
   },
   {
@@ -24,10 +22,8 @@ const featuredColleges = [
     location: "New Delhi",
     type: "Medical",
     rating: 4.9,
-    students: "3,000+",
-    established: 1956,
-    image: "/aiims-delhi-hospital.jpg",
-    highlights: ["Premier Medical Institute", "NIRF Rank 1", "Research Excellence"],
+    image: "/blog.jpg",
+    shortTag: "NIRF Top Medical",
     fees: "₹1.4L/year",
   },
   {
@@ -36,10 +32,8 @@ const featuredColleges = [
     location: "Kolkata",
     type: "Statistics & Mathematics",
     rating: 4.7,
-    students: "2,500+",
-    established: 1931,
-    image: "/isi-kolkata-campus.jpg",
-    highlights: ["Statistics Pioneer", "Research Focus", "Global Recognition"],
+    image: "/blog.jpg",
+    shortTag: "Research Focused",
     fees: "₹1.8L/year",
   },
   {
@@ -48,82 +42,69 @@ const featuredColleges = [
     location: "New Delhi",
     type: "Liberal Arts & Sciences",
     rating: 4.6,
-    students: "8,500+",
-    established: 1969,
-    image: "/jnu-delhi-campus.jpg",
-    highlights: ["Liberal Arts Excellence", "Diverse Programs", "Research Hub"],
+    image: "/blog.jpg",
+    shortTag: "Top Arts & Research",
     fees: "₹0.3L/year",
   },
 ]
 
 export default function CollegeShowcase() {
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <section className="py-20 bg-gradient-to-b from-blue-50 via-indigo-50 to-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Top Government Colleges in India</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover premier government institutions offering world-class education at affordable fees with excellent
-            placement records.
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center rounded-full bg-indigo-100 text-indigo-700 border border-indigo-200 px-4 py-1 text-sm font-medium">
+            Featured Institutions
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-4 mb-3">Top Government Colleges in India</h2>
+          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+            Popular and trusted government colleges, curated in a clean and quick-compare format.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           {featuredColleges.map((college) => (
-            <Card key={college.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-              <div className="relative h-48 overflow-hidden">
+            <Card key={college.id} className="group overflow-hidden border border-slate-200 hover:border-indigo-200 hover:shadow-xl transition-all duration-300 rounded-2xl">
+              <div className="relative h-36 overflow-hidden">
                 <Image
-                  src={college.image || "/placeholder.svg"}
+                  src={college.image}
                   alt={college.name}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute top-4 right-4">
-                  <Badge className="bg-white/90 text-gray-900 hover:bg-white">{college.type}</Badge>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+                <div className="absolute top-3 left-3">
+                  <Badge className="bg-white/90 text-gray-900 hover:bg-white text-[11px]">{college.type}</Badge>
                 </div>
-                <div className="absolute bottom-4 left-4">
-                  <div className="flex items-center gap-1 bg-white/90 rounded-full px-3 py-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-medium">{college.rating}</span>
+                <div className="absolute bottom-3 right-3">
+                  <div className="flex items-center gap-1 bg-white/95 rounded-full px-2.5 py-1">
+                    <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs font-semibold">{college.rating}</span>
                   </div>
                 </div>
               </div>
 
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+              <CardContent className="p-4">
+                <h3 className="text-base font-bold text-gray-900 mb-1 leading-snug line-clamp-2 group-hover:text-indigo-600 transition-colors min-h-[44px]">
                   {college.name}
                 </h3>
 
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4" />
-                    {college.location}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    {college.students}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Award className="h-4 w-4" />
-                    Est. {college.established}
-                  </div>
+                <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-2">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {college.location}
                 </div>
 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {college.highlights.map((highlight, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
-                      {highlight}
-                    </Badge>
-                  ))}
+                <div className="mb-3">
+                  <p className="text-xs text-slate-500 line-clamp-1">{college.shortTag}</p>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-sm text-gray-600">Annual Fees</span>
-                    <div className="text-lg font-bold text-green-600">{college.fees}</div>
+                    <span className="text-[11px] text-gray-500">Annual Fees</span>
+                    <div className="text-base font-bold text-emerald-600">{college.fees}</div>
                   </div>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-                    View Details
+                  <button className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-xs font-medium">
+                    Details
                   </button>
                 </div>
               </CardContent>
