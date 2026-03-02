@@ -95,15 +95,19 @@ const colleges = [
 
 type ApiCollege = {
   _id: string
+  objectID?: string
   name?: string
+  ownership?: string
   type?: string
   governingBody?: string
   category?: string
   eligibilitySummary?: string
   admissionProcess?: string
   eligibilityPageUrl?: string
+  city?: string
+  state?: string
   location?: { city?: string; state?: string }
-  courses?: { name?: string; eligibility?: string }[]
+  courses?: ({ name?: string; eligibility?: string } | string)[]
   facilities?: string[]
   contact?: { website?: string }
 }
@@ -231,14 +235,21 @@ export default function CollegeList({ ownershipFilter, streamFilter, searchQuery
           ? "State Government"
           : item.type === "private"
             ? "Private"
-            : "State Government"
+            : item.ownership || "State Government"
 
-      const location = [item.location?.city, item.location?.state].filter(Boolean).join(", ") || "India"
-      const courses = (item.courses || []).map((course) => course.name || "").filter(Boolean)
-      const eligibilityFromCourses = (item.courses || []).map((course) => course.eligibility || "").filter(Boolean).join(" | ")
+      const city = item.location?.city || item.city || ""
+      const state = item.location?.state || item.state || ""
+      const location = [city, state].filter(Boolean).join(", ") || "India"
+      const courses = (item.courses || [])
+        .map((course) => (typeof course === "string" ? course : course.name || ""))
+        .filter(Boolean)
+      const eligibilityFromCourses = (item.courses || [])
+        .map((course) => (typeof course === "string" ? "" : course.eligibility || ""))
+        .filter(Boolean)
+        .join(" | ")
 
     return {
-      _id: item._id || `api-${index}`,
+      _id: item._id || item.objectID || `api-${index}`,
       name: item.name || "Unnamed College",
       location,
       ownership,
@@ -260,7 +271,26 @@ export default function CollegeList({ ownershipFilter, streamFilter, searchQuery
     [searchResults],
   )
 
-  const source = searchQuery.trim() ? normalizedSearchResults : normalized
+  const localSearchResults = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return normalized
+
+    return normalized.filter((college) => {
+      return (
+        college.name.toLowerCase().includes(q) ||
+        college.location.toLowerCase().includes(q) ||
+        college.eligibilitySummary.toLowerCase().includes(q) ||
+        college.admissionProcess.toLowerCase().includes(q) ||
+        college.courses.some((course) => course.toLowerCase().includes(q))
+      )
+    })
+  }, [normalized, searchQuery])
+
+  const source = !searchQuery.trim()
+    ? normalized
+    : normalizedSearchResults.length > 0
+      ? normalizedSearchResults
+      : localSearchResults
 
   const streamMatches = (college: {
     courses: string[]

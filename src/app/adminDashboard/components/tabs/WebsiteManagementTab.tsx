@@ -276,9 +276,7 @@ export function WebsiteManagementTab({
                 <option value="algolia">Algolia Search</option>
                 <option value="database">Database Search (Backup)</option>
               </select>
-              <p className="text-xs text-slate-500 mt-1">
-                Ek time par ek hi engine active rahega. Algolia issue ho to yahin se Database Search pe switch karein.
-              </p>
+             
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -373,9 +371,7 @@ export function WebsiteManagementTab({
               <BadgeDollarSign className="w-4 h-4 text-emerald-600" />
               Pricing, Subscription & Free-Tier Management
             </div>
-            <p className="text-sm text-slate-600 mt-1">
-              Monthly, yearly, single counseling, limited free tier, and fully free attraction features yahin se manage karein.
-            </p>
+            
           </div>
         </div>
 
@@ -652,8 +648,8 @@ export function WebsiteManagementTab({
         </div>
 
         <div className="rounded-xl border border-slate-200 p-4 bg-amber-50/70">
-          <p className="text-sm font-medium text-amber-800">First Subscription Discount (Locked)</p>
-          <p className="text-xs text-amber-700 mt-1">Discount editor simplify kiya gaya hai. Backend + public pricing + admin sabhi jagah fixed 50% OFF follow hoga.</p>
+          <p className="text-sm font-medium text-amber-800">First Subscription Discount </p>
+         
           <div className="mt-3 inline-flex items-center rounded-full bg-white border border-amber-200 text-amber-800 px-3 py-1 text-sm font-semibold">
             {websiteSettings.pricing.firstSubscriptionDiscount}% OFF (Fixed)
           </div>
