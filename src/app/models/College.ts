@@ -6,6 +6,9 @@ export interface ICollege extends Document {
   type: "government" | "private" | "deemed"
   governingBody?: "private" | "state-government" | "central-government"
   category: "engineering" | "medical" | "arts" | "science" | "commerce" | "law" | "management"
+  eligibilitySummary?: string
+  admissionProcess?: string
+  eligibilityPageUrl?: string
   location: {
     city: string
     state: string
@@ -87,6 +90,21 @@ const CollegeSchema = new Schema<ICollege>(
       enum: ["engineering", "medical", "arts", "science", "commerce", "law", "management"],
       required: true,
       index: true,
+    },
+    eligibilitySummary: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    admissionProcess: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    eligibilityPageUrl: {
+      type: String,
+      trim: true,
+      default: "",
     },
     location: {
       city: {

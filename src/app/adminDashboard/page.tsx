@@ -389,6 +389,9 @@ export default function AdminDashboardPage() {
     category: "engineering",
     city: "",
     state: "",
+    eligibilitySummary: "",
+    admissionProcess: "",
+    eligibilityPageUrl: "",
     isRecommended: true,
     recommendationScore: 85,
     recommendationNote: "Strong academics and placements",
@@ -735,6 +738,20 @@ export default function AdminDashboardPage() {
     } catch {
       setError(`Could not create ${resource.slice(0, -1)}.`);
       showErrorToast(`Could not create ${resource.slice(0, -1)}.`);
+    }
+  };
+
+  const updateContent = async (resource: ContentResource, id: string, payload: Record<string, unknown>) => {
+    try {
+      await fetchJson("/api/admin/content", {
+        method: "PUT",
+        body: JSON.stringify({ resource, id, payload }),
+      });
+      await Promise.all([loadContent(resource, contentSearch[resource]), loadOverview()]);
+      showSuccessToast("Content updated", `${resource.slice(0, -1)} record updated successfully.`);
+    } catch {
+      setError(`Could not update ${resource.slice(0, -1)}.`);
+      showErrorToast(`Could not update ${resource.slice(0, -1)}.`);
     }
   };
 
@@ -1164,6 +1181,7 @@ export default function AdminDashboardPage() {
             collegeForm={collegeForm}
             setCollegeForm={setCollegeForm}
             createContent={createContent}
+            updateContent={updateContent}
             getResourceRows={getResourceRows}
             contentSearch={contentSearch}
             setContentSearch={setContentSearch}

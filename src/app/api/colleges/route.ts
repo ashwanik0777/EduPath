@@ -29,32 +29,35 @@ export async function GET(request: NextRequest) {
     const skip = (pageNum - 1) * limitNum
 
     // Build filter query
-    const filter: any = {}
+    const filter: Record<string, unknown> = { isActive: { $ne: false } }
 
     if (search) {
       filter.$or = [
         { name: { $regex: search, $options: "i" } },
-        { location: { $regex: search, $options: "i" } },
-        { courses: { $elemMatch: { $regex: search, $options: "i" } } },
+        { shortName: { $regex: search, $options: "i" } },
+        { "location.city": { $regex: search, $options: "i" } },
+        { "location.state": { $regex: search, $options: "i" } },
+        { "courses.name": { $regex: search, $options: "i" } },
+        { eligibilitySummary: { $regex: search, $options: "i" } },
       ]
     }
 
     if (state && state !== "All") {
-      filter.state = state
+      filter["location.state"] = state
     }
 
     if (category && category !== "All") {
-      filter.category = category
+      filter.category = category.toLowerCase()
     }
 
     if (course && course !== "All") {
-      filter.courses = { $in: [course] }
+      filter["courses.name"] = { $regex: course, $options: "i" }
     }
 
     if (ranking && ranking !== "All") {
       const rankingRange = ranking.split("-")
       if (rankingRange.length === 2) {
-        filter.nirfRanking = {
+        filter["ranking.nirf"] = {
           $gte: Number.parseInt(rankingRange[0]),
           $lte: Number.parseInt(rankingRange[1]),
         }

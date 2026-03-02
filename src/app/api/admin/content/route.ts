@@ -5,6 +5,7 @@ import College from "@/app/models/College";
 import Career from "@/app/models/Career";
 import Exam from "@/app/models/Exam";
 import Scholarship from "@/app/models/Scholarship";
+import { indexCollegeInAlgolia, removeCollegeFromAlgolia } from "@/app/lib/algolia";
 
 type Resource = "colleges" | "careers" | "exams" | "scholarships";
 
@@ -23,6 +24,38 @@ function getModel(resource: Resource) {
 
 function createId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+}
+
+function buildCollegePayload(payload: Record<string, any>) {
+  const governingBody = payload.governingBody || (payload.type === "private" ? "private" : "state-government");
+  const eligibilityPageUrl = payload.eligibilityPageUrl || "";
+
+  return {
+    name: payload.name || "New College",
+    shortName: payload.name || "College",
+    type: governingBody === "private" ? "private" : "government",
+    governingBody,
+    category: payload.category || "engineering",
+    eligibilitySummary: payload.eligibilitySummary || "",
+    admissionProcess: payload.admissionProcess || "",
+    eligibilityPageUrl,
+    location: {
+      city: payload.city || "Unknown",
+      state: payload.state || "Unknown",
+      pincode: payload.pincode || "000000",
+    },
+    courses: Array.isArray(payload.courses) ? payload.courses : [],
+    facilities: Array.isArray(payload.facilities) ? payload.facilities : [],
+    placement: payload.placement || {},
+    contact: {
+      website: eligibilityPageUrl,
+      ...(payload.contact || {}),
+    },
+    isRecommended: Boolean(payload.isRecommended),
+    recommendationScore: Number(payload.recommendationScore || 0),
+    recommendationNote: payload.recommendationNote || "",
+    isActive: payload.isActive !== false,
+  };
 }
 
 export async function GET(request: NextRequest) {
@@ -77,27 +110,7 @@ export async function POST(request: NextRequest) {
   let createPayload: Record<string, unknown> = payload;
 
   if (resource === "colleges") {
-    const governingBody = payload.governingBody || (payload.type === "private" ? "private" : "state-government");
-    createPayload = {
-      name: payload.name || "New College",
-      shortName: payload.name || "College",
-      type: governingBody === "private" ? "private" : "government",
-      governingBody,
-      category: payload.category || "engineering",
-      location: {
-        city: payload.city || "Unknown",
-        state: payload.state || "Unknown",
-        pincode: "000000",
-      },
-      courses: [],
-      facilities: [],
-      placement: {},
-      contact: {},
-      isRecommended: Boolean(payload.isRecommended),
-      recommendationScore: Number(payload.recommendationScore || 0),
-      recommendationNote: payload.recommendationNote || "",
-      isActive: true,
-    };
+    createPayload = buildCollegePayload(payload);
   }
 
   if (resource === "careers") {
@@ -139,7 +152,51 @@ export async function POST(request: NextRequest) {
 
   const model = getModel(resource);
   const created = await model.create(createPayload);
+
+  if (resource === "colleges") {
+    try {
+      await indexCollegeInAlgolia(created.toObject ? created.toObject() : created);
+    } catch (error) {
+      console.warn("Failed to index college in Algolia:", error);
+    }
+  }
+
   return NextResponse.json({ success: true, data: created }, { status: 201 });
+}
+
+export async function PUT(request: NextRequest) {
+  const { unauthorizedResponse } = await requireAdmin(request);
+  if (unauthorizedResponse) return unauthorizedResponse;
+
+  await connectDB();
+
+  const body = await request.json();
+  const resource = body.resource as Resource;
+  const id = body.id as string;
+  const payload = (body.payload || {}) as Record<string, any>;
+
+  if (!allowedResources.includes(resource) || !id) {
+    return NextResponse.json({ success: false, message: "Invalid payload" }, { status: 400 });
+  }
+
+  const model = getModel(resource);
+  const updatePayload = resource === "colleges" ? buildCollegePayload(payload) : payload;
+
+  const updated = await model.findByIdAndUpdate(id, { $set: updatePayload }, { new: true }).lean();
+
+  if (!updated) {
+    return NextResponse.json({ success: false, message: "Record not found" }, { status: 404 });
+  }
+
+  if (resource === "colleges") {
+    try {
+      await indexCollegeInAlgolia(updated as Record<string, unknown>);
+    } catch (error) {
+      console.warn("Failed to sync updated college to Algolia:", error);
+    }
+  }
+
+  return NextResponse.json({ success: true, data: updated });
 }
 
 export async function DELETE(request: NextRequest) {
@@ -161,6 +218,14 @@ export async function DELETE(request: NextRequest) {
 
   if (!deleted) {
     return NextResponse.json({ success: false, message: "Record not found" }, { status: 404 });
+  }
+
+  if (resource === "colleges") {
+    try {
+      await removeCollegeFromAlgolia(id);
+    } catch (error) {
+      console.warn("Failed to remove college from Algolia:", error);
+    }
   }
 
   return NextResponse.json({ success: true, data: deleted });
