@@ -805,6 +805,26 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const switchCollegeSearchProvider = async (provider: "algolia" | "database") => {
+    try {
+      await fetchJson("/api/admin/website-management", {
+        method: "PATCH",
+        body: JSON.stringify({
+          action: "updateSettings",
+          payload: {
+            collegeSearchProvider: provider,
+          },
+        }),
+      });
+
+      setWebsiteSettings((previous) => ({ ...previous, collegeSearchProvider: provider }));
+      showSuccessToast("Search technique switched", `College search is now using ${provider}.`);
+    } catch {
+      setError("Could not switch search technique.");
+      showErrorToast("Could not switch college search technique.");
+    }
+  };
+
   const addAnnouncement = async () => {
     const text = announcementInput.trim();
     if (!text) {
@@ -1259,6 +1279,7 @@ export default function AdminDashboardPage() {
             askConfirmation={askConfirmation}
             removeAnnouncement={removeAnnouncement}
             reindexCollegesSearch={reindexCollegesSearch}
+            switchCollegeSearchProvider={switchCollegeSearchProvider}
             saveWebsiteManagement={saveWebsiteManagement}
           />
         )}

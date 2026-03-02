@@ -84,6 +84,7 @@ type WebsiteManagementTabProps = {
   }) => void;
   removeAnnouncement: (id: string) => Promise<void>;
   reindexCollegesSearch: () => Promise<void>;
+  switchCollegeSearchProvider: (provider: "algolia" | "database") => Promise<void>;
   saveWebsiteManagement: () => Promise<void>;
 };
 
@@ -104,6 +105,7 @@ export function WebsiteManagementTab({
   askConfirmation,
   removeAnnouncement,
   reindexCollegesSearch,
+  switchCollegeSearchProvider,
   saveWebsiteManagement,
 }: WebsiteManagementTabProps) {
   const toLines = (items: string[]) => items.join("\n");
@@ -277,6 +279,21 @@ export function WebsiteManagementTab({
               <p className="text-xs text-slate-500 mt-1">
                 Ek time par ek hi engine active rahega. Algolia issue ho to yahin se Database Search pe switch karein.
               </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => switchCollegeSearchProvider("algolia")}
+                className={`rounded-lg px-3 py-2 text-sm border transition-colors ${websiteSettings.collegeSearchProvider === "algolia" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
+              >
+                Use Algolia Now
+              </button>
+              <button
+                onClick={() => switchCollegeSearchProvider("database")}
+                className={`rounded-lg px-3 py-2 text-sm border transition-colors ${websiteSettings.collegeSearchProvider === "database" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
+              >
+                Use Database Now
+              </button>
             </div>
 
             <button
