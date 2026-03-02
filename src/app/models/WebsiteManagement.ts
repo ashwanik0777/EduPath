@@ -216,7 +216,6 @@ const WebsiteManagementSchema = new Schema<IWebsiteManagement>(
   { timestamps: true },
 )
 
-WebsiteManagementSchema.index({ singletonKey: 1 }, { unique: true })
 WebsiteManagementSchema.index({ "pages.route": 1 })
 
 export default mongoose.models.WebsiteManagement ||
