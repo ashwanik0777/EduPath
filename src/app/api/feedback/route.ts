@@ -14,15 +14,6 @@ cloudinary.v2.config({
 });
 
 
-export const config = {
-  api: {
-    bodyParser: false, // For file uploads (multipart)
-  },
-};
-
-
-
-
 export async function POST(req: NextRequest) {
   await dbConnect();
   let userId = undefined;
