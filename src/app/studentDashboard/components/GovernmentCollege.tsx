@@ -84,8 +84,8 @@ export default function GovernmentCollege() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-100 p-0 md:p-6">
       {/* Header */}
       <div className="max-w-5xl mx-auto py-8 px-4 md:px-0">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2 text-center">Explore Government Schools & Colleges Across India</h1>
-        <div className="text-center text-zinc-600 mb-6 text-base md:text-lg">Based on your profile, we’ve listed relevant institutions from across India.</div>
+        <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-900 mb-2 text-center">Explore Government & Private Colleges Across India</h1>
+        <div className="text-center text-zinc-600 mb-6 text-base md:text-lg">Based on your profile, we list relevant institutions from across India including quality government and private options.</div>
 
         {/* Filters (to be redesigned in next step) */}
         <div className="flex flex-wrap gap-4 justify-center mb-6">

@@ -382,7 +382,16 @@ export default function AdminDashboardPage() {
     websiteNotifications: false,
   });
 
-  const [collegeForm, setCollegeForm] = useState({ name: "", type: "government", category: "engineering", city: "", state: "" });
+  const [collegeForm, setCollegeForm] = useState({
+    name: "",
+    type: "government",
+    category: "engineering",
+    city: "",
+    state: "",
+    isRecommended: true,
+    recommendationScore: 85,
+    recommendationNote: "Strong academics and placements",
+  });
   const [careerForm, setCareerForm] = useState({ title: "", stream: "", salary_range: "", career_nature: "" });
   const [examForm, setExamForm] = useState({ name: "", type: "", eligibility: "", exam_date: "", state: "" });
   const [scholarshipForm, setScholarshipForm] = useState({ name: "", provider: "", amount: "", deadline: "" });
@@ -1003,7 +1012,7 @@ export default function AdminDashboardPage() {
     profile: { title: "Admin Profile", subtitle: "Update your profile and contact settings" },
     progressTracker: { title: "Progress Tracker", subtitle: "Track engagement and student progression KPIs" },
     psychometricTest: { title: "Psychometric Tests", subtitle: "Monitor assessments, results, and activation status" },
-    govCollege: { title: "Government College", subtitle: "Manage college catalog records" },
+    govCollege: { title: "Colleges (Gov + Private)", subtitle: "Manage government, private, and deemed college recommendations" },
     shortListedColleges: { title: "Short Listed College", subtitle: "Analyze shortlist trends and adoption" },
     carrerOption: { title: "Career Option", subtitle: "Manage career roadmap content" },
     counselingBooking: { title: "Counseling Booking", subtitle: "Control counseling schedules and session states" },

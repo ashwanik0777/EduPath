@@ -91,6 +91,9 @@ export async function POST(request: NextRequest) {
       facilities: [],
       placement: {},
       contact: {},
+      isRecommended: Boolean(payload.isRecommended),
+      recommendationScore: Number(payload.recommendationScore || 0),
+      recommendationNote: payload.recommendationNote || "",
       isActive: true,
     };
   }

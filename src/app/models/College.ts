@@ -49,6 +49,9 @@ export interface ICollege extends Document {
     address: string
   }
   images: string[]
+  isRecommended?: boolean
+  recommendationScore?: number
+  recommendationNote?: string
   isActive: boolean
   createdAt: Date
   updatedAt: Date
@@ -175,6 +178,22 @@ const CollegeSchema = new Schema<ICollege>(
       address: String,
     },
     images: [String],
+    isRecommended: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    recommendationScore: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0,
+    },
+    recommendationNote: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     isActive: {
       type: Boolean,
       default: true,

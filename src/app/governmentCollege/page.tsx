@@ -11,8 +11,8 @@ export default function CollegesPage() {
   return (
     <main>
       <HeroSection 
-        title="Government Colleges in India"
-        subtitle="Explore top government colleges across India. Find courses, admissions, and campus details."
+        title="Top Colleges in India"
+        subtitle="Explore top government and private colleges across India. Find courses, admissions, and campus details."
         bgTheme={6}
       />  
       <FilterColleges onFilter={setFilter} />
