@@ -252,11 +252,9 @@ export default function PricingPage() {
           <Sparkles className="w-4 h-4" />
           Flexible Plans for Every Student
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold text-slate-900">Pricing & Subscription Plans</h1>
+        <h1 className="text-3xl py-4 md:text-5xl font-bold text-slate-900">Pricing & Subscription Plans</h1>
         
-        <div className="inline-flex items-center rounded-full bg-amber-100 border border-amber-200 text-amber-800 px-4 py-1.5 text-sm font-semibold">
-          First Subscription Offer: {firstSubscriptionDiscount}% OFF on all paid plans
-        </div>
+        
         <div className="flex justify-center">
           <div className="inline-flex items-center rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
             {([
@@ -270,7 +268,7 @@ export default function PricingPage() {
                 <button
                   key={item.code}
                   onClick={() => setCurrency(item.code)}
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`inline-flex items-center gap-1.5 rounded-lg px-8 py-1.5 text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-slate-900 text-white"
                       : "text-slate-600 hover:bg-slate-100"

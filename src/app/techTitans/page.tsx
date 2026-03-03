@@ -117,7 +117,7 @@ export default function TechTitansPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="text-center mb-14">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-3xl mb-6 shadow-xl shadow-indigo-300/40">
-            <Code className="w-10 h-10 text-blue-800" />
+            <Code className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 via-indigo-700 to-cyan-700 mb-5 tracking-tight">
             Tech Titans
