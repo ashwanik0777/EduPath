@@ -1162,9 +1162,9 @@ export default function AdminDashboardPage() {
 
           <div className="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 text-white flex items-center justify-center shadow-md shrink-0">
+              {/* <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 text-white flex items-center justify-center shadow-md shrink-0">
                 <WandSparkles className="w-6 h-6" />
-              </div>
+              </div> */}
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-[11px] font-semibold tracking-wide text-indigo-700 mb-2">
                   <ShieldCheck className="w-3.5 h-3.5" />

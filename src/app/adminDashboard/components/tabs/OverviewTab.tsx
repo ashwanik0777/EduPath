@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
 import {
   Sparkles,
   Activity,
@@ -15,6 +19,39 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
+
+function AutoScrollList({ children, itemCount }: { children: ReactNode[]; itemCount: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(false);
+
+  useEffect(() => {
+    if (itemCount === 0) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const interval = setInterval(() => {
+      if (pausedRef.current) return;
+      el.scrollTop += 1;
+      if (el.scrollTop >= el.scrollHeight / 2) {
+        el.scrollTop = 0;
+      }
+    }, 30);
+    return () => clearInterval(interval);
+  }, [itemCount]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="overflow-hidden h-44"
+      onMouseEnter={() => { pausedRef.current = true; }}
+      onMouseLeave={() => { pausedRef.current = false; }}
+    >
+      <div className="space-y-2 pb-2">
+        {children}
+        {children}
+      </div>
+    </div>
+  );
+}
 
 type AdminUser = {
   _id: string;
@@ -205,40 +242,61 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className={`${panelClass} p-5`}>
-          <h3 className="font-semibold text-slate-900 mb-3">Recent Users</h3>
-          <div className="space-y-2">
-            {(overview?.recentUsers || []).length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">No recent users available.</div>
-            ) : (overview?.recentUsers || []).map((user) => (
-              <div key={user._id} className="border border-slate-200 rounded-lg p-3">
-                <p className="font-medium text-slate-800">{user.name}</p>
-                <p className="text-xs text-slate-500">{user.email}</p>
-                <div className="mt-1 flex items-center justify-between text-xs">
-                  <span className="px-2 py-1 rounded bg-slate-100 text-slate-700">{user.role}</span>
-                  <span className={user.isActive ? "text-emerald-600" : "text-rose-600"}>
-                    {user.isActive ? "Active" : "Inactive"}
-                  </span>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+            <Users className="w-4 h-4 text-indigo-500" /> Recent Users
+          </h3>
+          {(overview?.recentUsers || []).length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">No recent users available.</div>
+          ) : (
+            <AutoScrollList itemCount={(overview?.recentUsers || []).length}>
+              {(overview?.recentUsers || []).map((user) => (
+                <div key={user._id} className="border border-slate-200 rounded-lg p-3 bg-white/70">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm shrink-0">
+                      {user.name?.[0]?.toUpperCase() ?? "?"}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-800 text-sm truncate">{user.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                    </div>
+                    <div className="ml-auto flex flex-col items-end gap-1 shrink-0">
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{user.role}</span>
+                      <span className={`text-[11px] font-semibold ${user.isActive ? "text-emerald-600" : "text-rose-500"}`}>
+                        {user.isActive ? "● Active" : "● Inactive"}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </AutoScrollList>
+          )}
         </div>
 
         <div className={`${panelClass} p-5`}>
-          <h3 className="font-semibold text-slate-900 mb-3">Recent Feedback</h3>
-          <div className="space-y-2">
-            {(overview?.recentFeedbacks || []).length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">No recent feedback found.</div>
-            ) : (overview?.recentFeedbacks || []).map((item) => (
-              <div key={item._id} className="border border-slate-200 rounded-lg p-3">
-                <p className="text-sm text-slate-700 line-clamp-2">{item.message || "No message"}</p>
-                <div className="mt-1 flex items-center justify-between text-xs">
-                  <span>{item.type || "General"}</span>
-                  <span className="px-2 py-1 rounded bg-slate-100">{item.status}</span>
+          <h3 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-amber-500" /> Recent Feedback
+          </h3>
+          {(overview?.recentFeedbacks || []).length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">No recent feedback found.</div>
+          ) : (
+            <AutoScrollList itemCount={(overview?.recentFeedbacks || []).length}>
+              {(overview?.recentFeedbacks || []).map((item) => (
+                <div key={item._id} className="border border-slate-200 rounded-lg p-3 bg-white/70">
+                  <p className="text-sm text-slate-700 line-clamp-2 mb-2">{item.message || "No message"}</p>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-medium">
+                      {item.type || "General"}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-full font-semibold border ${
+                      item.status === "Pending" ? "bg-rose-50 text-rose-600 border-rose-200" :
+                      item.status === "Reviewed" ? "bg-sky-50 text-sky-600 border-sky-200" :
+                      "bg-emerald-50 text-emerald-600 border-emerald-200"
+                    }`}>{item.status}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </AutoScrollList>
+          )}
         </div>
       </div>
 

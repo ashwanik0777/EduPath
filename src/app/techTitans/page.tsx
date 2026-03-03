@@ -117,7 +117,7 @@ export default function TechTitansPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="text-center mb-14">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 to-cyan-500 rounded-3xl mb-6 shadow-xl shadow-indigo-300/40">
-            <Code className="w-10 h-10 text-white" />
+            <Code className="w-10 h-10 text-blue-800" />
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 via-indigo-700 to-cyan-700 mb-5 tracking-tight">
             Tech Titans
@@ -125,10 +125,7 @@ export default function TechTitansPage() {
           <p className="text-lg md:text-xl text-slate-700 max-w-3xl mx-auto mb-2 font-medium">
             Meet the engineers, builders, and contributors shaping EduPath every day.
           </p>
-          <p className="text-sm md:text-base text-slate-600 max-w-2xl mx-auto flex items-center justify-center gap-2">
-            <Globe2 className="w-4 h-4 text-indigo-600" />
-            Database-driven profiles for production-ready team showcase
-          </p>
+          
         </div>
 
         <div className="bg-white/70 backdrop-blur-xl rounded-3xl border border-white/60 shadow-xl shadow-indigo-200/30 p-6 md:p-8 mb-12">
