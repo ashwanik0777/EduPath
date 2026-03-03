@@ -153,9 +153,9 @@ const Footer = () => {
         <div>
           <p>
             Designed and developed by{" "}
-            <a href="#" className="hover:text-white font-semibold cursor-pointer">
+            <Link href="/techTitans" className="hover:text-white font-semibold cursor-pointer">
               Tech Titans 
-            </a>{" "}
+            </Link>{" "}
            
             {/* and supported by{" "}
             <Link href="#" className="hover:text-white font-semibold">

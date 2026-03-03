@@ -63,6 +63,7 @@ import { ScholarshipsTab } from "./components/tabs/ScholarshipsTab";
 import { WebsiteManagementTab } from "./components/tabs/WebsiteManagementTab";
 import { WebsiteStatisticsTab } from "./components/tabs/WebsiteStatisticsTab";
 import { WebsitePageDetailsTab } from "./components/tabs/WebsitePageDetailsTab";
+import { TechTitansTab } from "./components/tabs/TechTitansTab";
 
 type OverviewResponse = {
   success: boolean;
@@ -144,7 +145,8 @@ type PlaceholderTabKey =
   | "websiteCareerAssessment"
   | "websiteGovernmentCollege"
   | "websiteStudyResources"
-  | "websiteNotifications";
+  | "websiteNotifications"
+  | "techTitans";
 type TabKey = BaseTabKey | PlaceholderTabKey;
 
 type ContentResource = "colleges" | "careers" | "exams" | "scholarships";
@@ -381,6 +383,7 @@ export default function AdminDashboardPage() {
     websiteGovernmentCollege: false,
     websiteStudyResources: false,
     websiteNotifications: false,
+    techTitans: false,
   });
 
   const [collegeForm, setCollegeForm] = useState({
@@ -467,6 +470,20 @@ export default function AdminDashboardPage() {
   const [announcementInput, setAnnouncementInput] = useState("");
   const [websiteAnnouncements, setWebsiteAnnouncements] = useState<WebsiteAnnouncement[]>([]);
   const [websitePages, setWebsitePages] = useState<WebsitePage[]>([]);
+  const [techTitans, setTechTitans] = useState<ContentResponse["data"]>([]);
+  const [techTitansSearch, setTechTitansSearch] = useState("");
+  const [techTitanForm, setTechTitanForm] = useState({
+    name: "",
+    role: "",
+    specialization: "",
+    bio: "",
+    imageUrl: "",
+    linkedinUrl: "",
+    githubUrl: "",
+    portfolioUrl: "",
+    yearsOfExperience: 0,
+    isActive: true,
+  });
 
   const [adminInfo, setAdminInfo] = useState<{ name: string; role: string; profileImage?: string }>({
     name: "Admin",
@@ -778,6 +795,52 @@ export default function AdminDashboardPage() {
     setWebsitePages(result.data.pages || []);
   };
 
+  const loadTechTitans = async (query?: string) => {
+    const q = query?.trim() ? `?q=${encodeURIComponent(query.trim())}` : "";
+    const result = await fetchJson<ContentResponse>(`/api/admin/tech-titans${q}`);
+    setTechTitans(result.data || []);
+  };
+
+  const createTechTitan = async (payload: Record<string, unknown>) => {
+    try {
+      await fetchJson("/api/admin/tech-titans", {
+        method: "POST",
+        body: JSON.stringify({ payload }),
+      });
+      await loadTechTitans(techTitansSearch);
+      setTechTitanForm({
+        name: "",
+        role: "",
+        specialization: "",
+        bio: "",
+        imageUrl: "",
+        linkedinUrl: "",
+        githubUrl: "",
+        portfolioUrl: "",
+        yearsOfExperience: 0,
+        isActive: true,
+      });
+      showSuccessToast("Member added", "Tech Titan profile created successfully.");
+    } catch {
+      setError("Could not create Tech Titan member.");
+      showErrorToast("Could not create Tech Titan member.");
+    }
+  };
+
+  const deleteTechTitan = async (id: string) => {
+    try {
+      await fetchJson("/api/admin/tech-titans", {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+      });
+      await loadTechTitans(techTitansSearch);
+      showSuccessToast("Member deleted", "Tech Titan profile removed successfully.");
+    } catch {
+      setError("Could not delete Tech Titan member.");
+      showErrorToast("Could not delete Tech Titan member.");
+    }
+  };
+
   const saveWebsiteManagement = async () => {
     try {
       await fetchJson("/api/admin/website-management", {
@@ -956,6 +1019,8 @@ export default function AdminDashboardPage() {
           if (activeTab === "websiteStatistics") {
             await Promise.all([loadOverview(), loadAnalytics()]);
           }
+        } else if (activeTab === "techTitans") {
+          await loadTechTitans(techTitansSearch);
         } else {
           const resource = tabToResource[activeTab];
           if (resource) {
@@ -1079,12 +1144,25 @@ export default function AdminDashboardPage() {
     websiteGovernmentCollege: { title: "Government College Page", subtitle: "Manage Government College page details" },
     websiteStudyResources: { title: "Study Resources Page", subtitle: "Manage Study Resources page details" },
     websiteNotifications: { title: "Notifications Page", subtitle: "Manage Notifications page details" },
+    techTitans: {
+      title: "Tech Titans",
+      subtitle: "Create and manage developer profiles powering the EduPath experience"
+    },
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-indigo-50 to-cyan-50 flex items-center justify-center px-4">
+        <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white/90 backdrop-blur p-8 shadow-lg">
+          <div className="flex items-center justify-center mb-5">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 text-white flex items-center justify-center shadow-md">
+              <WandSparkles className="w-6 h-6" />
+            </div>
+          </div>
+          <div className="w-10 h-10 mx-auto border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" />
+          <p className="mt-5 text-center text-sm font-medium text-slate-700">Preparing the Admin Command Center...</p>
+          <p className="mt-1 text-center text-xs text-slate-500">Loading modules and dashboard intelligence</p>
+        </div>
       </div>
     );
   }
@@ -1103,36 +1181,72 @@ export default function AdminDashboardPage() {
       </div>
 
       <main className="flex-1 h-screen min-h-screen overflow-y-auto p-4 md:p-8">
-        <div className="rounded-2xl border border-slate-200 bg-white/90 backdrop-blur shadow-sm p-5 mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-600 text-white flex items-center justify-center shadow-md">
-              <WandSparkles className="w-5 h-5" />
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/95 backdrop-blur shadow-md p-5 md:p-7 mb-6">
+          <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-indigo-100/60 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 -left-16 h-48 w-48 rounded-full bg-cyan-100/60 blur-3xl" />
+
+          <div className="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 text-white flex items-center justify-center shadow-md shrink-0">
+                <WandSparkles className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-[11px] font-semibold tracking-wide text-indigo-700 mb-2">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  ADMIN CONTROL PANEL
+                </span>
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-900">{moduleHeader[activeTab].title}</h2>
+                <p className="text-slate-600 mt-1">{moduleHeader[activeTab].subtitle}</p>
+              </div>
             </div>
-            <div>
-            <h2 className="text-2xl font-bold text-slate-900">{moduleHeader[activeTab].title}</h2>
-            <p className="text-slate-600">{moduleHeader[activeTab].subtitle}</p>
+
+            <div className="flex flex-col items-start lg:items-end gap-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <Activity className="w-3.5 h-3.5" />
+                  System Live
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                  <UserCheck className="w-3.5 h-3.5" />
+                  {adminInfo.role}
+                </span>
+                <span className="inline-flex items-center text-xs px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+                  {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button onClick={refreshAll} className={secondaryButtonClass}>
+                  <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+                  Refresh
+                </button>
+                <Link href="/techTitans" className="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-3.5 py-2 text-sm font-medium hover:bg-slate-800 transition-colors">
+                  <Sparkles className="w-4 h-4" />
+                  View Tech Titans
+                </Link>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden md:inline-flex text-xs px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
-              {new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
-            </span>
-            <button onClick={refreshAll} className={secondaryButtonClass}>
-              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
-              Refresh
-            </button>
           </div>
         </div>
 
         {error ? (
-          <div className="mb-6 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700 text-sm">{error}</div>
+          <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50/90 px-4 py-3.5 text-rose-800 text-sm flex items-start gap-2.5 shadow-sm">
+            <Bell className="w-4 h-4 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-semibold">Action Needed</p>
+              <p className="text-rose-700">{error}</p>
+            </div>
+          </div>
         ) : null}
 
         {tabLoading ? (
-          <div className="mb-6 bg-white rounded-xl border border-slate-200 p-8 flex items-center justify-center">
+          <div className="mb-6 bg-white/95 rounded-2xl border border-slate-200 p-8 flex flex-col items-center justify-center gap-3 shadow-sm">
             <div className="w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full animate-spin" />
+            <p className="text-sm text-slate-600">Loading module data...</p>
           </div>
         ) : null}
+
+        <div className="rounded-3xl border border-slate-200 bg-white/80 backdrop-blur-sm p-3 md:p-4 shadow-sm">
 
         {activeTab === "overview" && (
           <OverviewTab
@@ -1293,6 +1407,20 @@ export default function AdminDashboardPage() {
           />
         )}
 
+        {activeTab === "techTitans" && (
+          <TechTitansTab
+            techTitanForm={techTitanForm}
+            setTechTitanForm={setTechTitanForm}
+            techTitans={techTitans}
+            techTitansSearch={techTitansSearch}
+            setTechTitansSearch={setTechTitansSearch}
+            loadTechTitans={loadTechTitans}
+            createTechTitan={createTechTitan}
+            deleteTechTitan={deleteTechTitan}
+            askConfirmation={askConfirmation}
+          />
+        )}
+
         {(activeTab === "websiteHome" ||
           activeTab === "websiteAbout" ||
           activeTab === "websiteCareerAssessment" ||
@@ -1308,6 +1436,7 @@ export default function AdminDashboardPage() {
             saveWebsitePage={saveWebsitePage}
           />
         )}
+        </div>
 
         <AlertDialog open={confirmation.open} onOpenChange={(open) => !open && closeConfirmation()}>
           <AlertDialogContent>
