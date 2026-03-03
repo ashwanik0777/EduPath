@@ -4,7 +4,36 @@ import { useState } from "react"
 import { Trash2, Pencil, Plus, X, Search, Github, Linkedin, Globe, Twitter, Instagram, Facebook, Mail } from "lucide-react"
 import Image from "next/image"
 
-type Item = Record<string, unknown> & { _id: string }
+type Item = {
+  _id: string
+  name?: string
+  role?: string
+  roleType?: string
+  specialization?: string
+  bio?: string
+  image?: string
+  imageUrl?: string
+  email?: string
+  github?: string
+  githubUrl?: string
+  linkedin?: string
+  linkedinUrl?: string
+  website?: string
+  portfolioUrl?: string
+  twitter?: string
+  instagram?: string
+  facebook?: string
+  rollNumber?: string
+  batch?: string
+  program?: string
+  school?: string
+  department?: string
+  yearsOfExperience?: number | string
+  responsibilities?: string[] | string
+  technologies?: string[] | string
+  contributions?: string[] | string
+  isActive?: boolean
+}
 
 type TechTitansTabProps = {
   techTitans: Item[]
@@ -59,13 +88,13 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-400 mb-1">{label}</label>
+      <label className="block text-xs font-semibold text-slate-600 mb-1">{label}</label>
       <input
         type={type ?? "text"}
         placeholder={placeholder ?? label}
         value={form[fieldKey] as string}
         onChange={e => setForm({ [fieldKey]: e.target.value })}
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+        className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
       />
     </div>
   )
@@ -79,13 +108,13 @@ function TextArea({
 }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-400 mb-1">{label}</label>
+      <label className="block text-xs font-semibold text-slate-600 mb-1">{label}</label>
       <textarea
         rows={rows ?? 3}
         placeholder={placeholder ?? label}
         value={form[fieldKey] as string}
         onChange={e => setForm({ [fieldKey]: e.target.value })}
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 resize-none"
+        className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none"
       />
     </div>
   )
@@ -202,7 +231,7 @@ export function TechTitansTab({
   }
 
   const roleColors: Record<string, string> = {
-    Lead: "bg-yellow-500/20 text-yellow-300 border border-yellow-500/40",
+    Lead: "bg-yellow-500/20 text-yellow-800 border border-yellow-500/40",
     Member: "bg-blue-500/20 text-blue-300 border border-blue-500/40",
     Thread: "bg-purple-500/20 text-purple-300 border border-purple-500/40",
     Advisor: "bg-green-500/20 text-green-300 border border-green-500/40",
@@ -214,12 +243,12 @@ export function TechTitansTab({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white">Tech Titans</h2>
-          <p className="text-slate-400 text-sm mt-0.5">Manage developer team profiles</p>
+          <h2 className="text-xl font-bold text-slate-900">Tech Titans</h2>
+          <p className="text-slate-600 text-sm mt-0.5">Manage developer team profiles</p>
         </div>
         <button
-          onClick={view === "list" ? openAdd : () => setView("list")}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors"
+          onClick={view === "list" ? openAdd : () => { setView("list"); setEditingId(null); setFormRaw(EMPTY_FORM) }}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors shadow-sm"
         >
           {view === "list" ? <><Plus size={15} /> Add Member</> : <><X size={15} /> Cancel</>}
         </button>
@@ -227,8 +256,8 @@ export function TechTitansTab({
 
       {/* FORM VIEW */}
       {view === "form" && (
-        <div className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-6 space-y-6">
-          <h3 className="text-lg font-bold text-white border-b border-slate-700 pb-3">
+        <div className="bg-gradient-to-br from-white to-slate-50 border border-slate-200 rounded-2xl p-6 space-y-6 shadow-sm">
+          <h3 className="text-lg font-bold text-slate-900 border-b border-slate-200 pb-3">
             {editingId ? "Edit Member" : "Add New Member"}
           </h3>
 
@@ -239,11 +268,11 @@ export function TechTitansTab({
               <Field label="Full Name" fieldKey="name" form={form} setForm={setForm} />
               <Field label="Role / Title" fieldKey="role" form={form} setForm={setForm} placeholder="e.g. Full Stack Developer" />
               <div>
-                <label className="block text-xs font-semibold text-slate-400 mb-1">Role Type</label>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Role Type</label>
                 <select
                   value={form.roleType}
                   onChange={e => setForm({ roleType: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 >
                   {["Lead", "Member", "Thread", "Advisor", "Contributor"].map(r => (
                     <option key={r} value={r}>{r}</option>
@@ -260,7 +289,7 @@ export function TechTitansTab({
                   id="isActive"
                   className="w-4 h-4 accent-blue-500"
                 />
-                <label htmlFor="isActive" className="text-sm text-slate-300 font-medium">Active (visible publicly)</label>
+                <label htmlFor="isActive" className="text-sm text-slate-700 font-medium">Active (visible publicly)</label>
               </div>
             </div>
             <div className="mt-4">
@@ -309,14 +338,14 @@ export function TechTitansTab({
           <div className="flex justify-end gap-3 pt-2">
             <button
               onClick={() => { setView("list"); setEditingId(null); setFormRaw(EMPTY_FORM) }}
-              className="px-5 py-2 rounded-lg border border-slate-600 text-slate-300 text-sm hover:bg-slate-800 transition-colors"
+              className="px-5 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm hover:bg-slate-100 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={saving || !form.name.trim()}
-              className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-semibold transition-colors"
+              className="px-6 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-semibold transition-colors"
             >
               {saving ? "Saving..." : editingId ? "Update Member" : "Add Member"}
             </button>
@@ -328,7 +357,7 @@ export function TechTitansTab({
       {view === "list" && (
         <>
           <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
             <input
               type="text"
               placeholder="Search by name, role, school..."
@@ -337,7 +366,7 @@ export function TechTitansTab({
                 setTechTitansSearch(e.target.value)
                 loadTechTitans(e.target.value)
               }}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             />
           </div>
 
@@ -351,21 +380,27 @@ export function TechTitansTab({
               {techTitans.map(item => {
                 const src = imgSrc(item)
                 const techList = chips(item.technologies)
-                const roleType = (item.roleType as string) || "Member"
+                const roleType = item.roleType || "Member"
+                const memberName = item.name || "Unknown"
+                const memberRole = item.role || "-"
+                const meta = [item.batch, item.program, item.department].filter((part): part is string => Boolean(part && String(part).trim()))
+                const githubLink = item.github || item.githubUrl || ""
+                const linkedinLink = item.linkedin || item.linkedinUrl || ""
+                const websiteLink = item.website || item.portfolioUrl || ""
                 return (
                   <div
                     key={item._id}
-                    className="bg-slate-900/60 border border-slate-700/50 rounded-2xl p-5 hover:border-slate-600 transition-colors"
+                    className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-indigo-300 hover:shadow-md transition-all"
                   >
                     <div className="flex gap-4">
                       <div className="shrink-0">
                         {src ? (
-                          <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-700">
-                            <Image src={src} alt={item.name as string} fill className="object-cover" unoptimized />
+                          <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-200">
+                            <Image src={src} alt={memberName} fill className="object-cover" unoptimized />
                           </div>
                         ) : (
-                          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xl font-bold border border-slate-700">
-                            {(item.name as string)?.[0]?.toUpperCase() ?? "?"}
+                          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-600 to-cyan-600 flex items-center justify-center text-white text-xl font-bold border border-slate-200">
+                            {memberName?.[0]?.toUpperCase() ?? "?"}
                           </div>
                         )}
                       </div>
@@ -373,24 +408,24 @@ export function TechTitansTab({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <p className="font-bold text-white truncate">{item.name as string}</p>
-                            <p className="text-slate-400 text-xs truncate">{item.role as string}</p>
+                            <p className="font-bold text-slate-900 truncate">{memberName}</p>
+                            <p className="text-slate-500 text-xs truncate">{memberRole}</p>
                           </div>
                           <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-semibold ${roleColors[roleType] ?? roleColors.Member}`}>
                             {roleType}
                           </span>
                         </div>
 
-                        {(item.batch || item.program) && (
+                        {meta.length > 0 && (
                           <p className="text-xs text-slate-500 mt-1 truncate">
-                            {[item.batch, item.program, item.department].filter(Boolean).join(" · ")}
+                            {meta.join(" · ")}
                           </p>
                         )}
 
                         {techList.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
                             {techList.slice(0, 5).map(t => (
-                              <span key={t} className="text-[10px] bg-blue-500/10 text-blue-300 border border-blue-500/20 px-2 py-0.5 rounded-full">
+                              <span key={t} className="text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded-full">
                                 {t}
                               </span>
                             ))}
@@ -401,24 +436,24 @@ export function TechTitansTab({
                         )}
 
                         <div className="flex gap-2 mt-3 flex-wrap">
-                          {(item.email as string) && <a href={`mailto:${item.email}`} className="text-slate-400 hover:text-blue-400 transition-colors"><Mail size={14} /></a>}
-                          {(item.github || item.githubUrl) && <a href={(item.github || item.githubUrl) as string} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition-colors"><Github size={14} /></a>}
-                          {(item.linkedin || item.linkedinUrl) && <a href={(item.linkedin || item.linkedinUrl) as string} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-blue-400 transition-colors"><Linkedin size={14} /></a>}
-                          {(item.website || item.portfolioUrl) && <a href={(item.website || item.portfolioUrl) as string} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-green-400 transition-colors"><Globe size={14} /></a>}
-                          {(item.twitter as string) && <a href={item.twitter as string} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-sky-400 transition-colors"><Twitter size={14} /></a>}
-                          {(item.instagram as string) && <a href={item.instagram as string} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-pink-400 transition-colors"><Instagram size={14} /></a>}
-                          {(item.facebook as string) && <a href={item.facebook as string} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-blue-500 transition-colors"><Facebook size={14} /></a>}
+                          {item.email && <a href={`mailto:${item.email}`} className="text-slate-500 hover:text-blue-500 transition-colors"><Mail size={14} /></a>}
+                          {githubLink && <a href={githubLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-slate-900 transition-colors"><Github size={14} /></a>}
+                          {linkedinLink && <a href={linkedinLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-blue-600 transition-colors"><Linkedin size={14} /></a>}
+                          {websiteLink && <a href={websiteLink} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-600 transition-colors"><Globe size={14} /></a>}
+                          {item.twitter && <a href={item.twitter} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-sky-500 transition-colors"><Twitter size={14} /></a>}
+                          {item.instagram && <a href={item.instagram} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-pink-500 transition-colors"><Instagram size={14} /></a>}
+                          {item.facebook && <a href={item.facebook} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-blue-600 transition-colors"><Facebook size={14} /></a>}
                           {item.isActive === false && (
-                            <span className="text-[10px] text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full ml-1">Inactive</span>
+                            <span className="text-[10px] text-red-600 border border-red-300 px-2 py-0.5 rounded-full ml-1">Inactive</span>
                           )}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex gap-2 mt-4 pt-3 border-t border-slate-800">
+                    <div className="flex gap-2 mt-4 pt-3 border-t border-slate-200">
                       <button
                         onClick={() => openEdit(item)}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-slate-800 hover:border-blue-500 hover:text-blue-400 transition-colors"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-100 hover:border-indigo-400 hover:text-indigo-700 transition-colors"
                       >
                         <Pencil size={13} /> Edit
                       </button>

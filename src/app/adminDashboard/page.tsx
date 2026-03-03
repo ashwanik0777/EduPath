@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import {
   LayoutDashboard,
   Users,
@@ -1195,10 +1194,13 @@ export default function AdminDashboardPage() {
                   <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
                   Refresh
                 </button>
-                <Link href="/techTitans" className="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-3.5 py-2 text-sm font-medium hover:bg-slate-800 transition-colors">
+                <button
+                  onClick={() => setActiveTab("techTitans")}
+                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-3.5 py-2 text-sm font-medium hover:bg-slate-800 transition-colors"
+                >
                   <Sparkles className="w-4 h-4" />
-                  View Tech Titans
-                </Link>
+                  Update Tech Titans
+                </button>
               </div>
             </div>
           </div>

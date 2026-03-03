@@ -221,22 +221,35 @@ export function OverviewTab({ panelClass, adminName, metricCards, overview, anal
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Users className="w-4 h-4 text-indigo-600" /> User Base</div>
           <p className="text-2xl font-bold text-slate-900">{users}</p>
-          <p className="text-xs text-slate-500 mt-1">Students: {students} • Counselors: {counselors} • Admins: {admins}</p>
+          <div className="text-xs text-slate-500 mt-2 space-y-1">
+            <p>Students: {students}</p>
+            <p>Counselors: {counselors}</p>
+            <p>Admins: {admins}</p>
+          </div>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><Target className="w-4 h-4 text-violet-600" /> Student Coverage</div>
           <p className="text-2xl font-bold text-slate-900">{studentAssessmentCoverage}%</p>
-          <p className="text-xs text-slate-500 mt-1">Assessment coverage • Session coverage: {studentSessionCoverage}%</p>
+          <div className="text-xs text-slate-500 mt-2 space-y-1">
+            <p>Assessment coverage: {studentAssessmentCoverage}%</p>
+            <p>Session coverage: {studentSessionCoverage}%</p>
+          </div>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><LineChart className="w-4 h-4 text-cyan-600" /> Counseling Completion</div>
           <p className="text-2xl font-bold text-slate-900">{counselingCompletionRate}%</p>
-          <p className="text-xs text-slate-500 mt-1">Completed {analytics?.counseling.completedSessions ?? 0} / {analytics?.counseling.totalSessions ?? 0} total sessions</p>
+          <div className="text-xs text-slate-500 mt-2 space-y-1">
+            <p>Completed: {analytics?.counseling.completedSessions ?? 0}</p>
+            <p>Total sessions: {analytics?.counseling.totalSessions ?? 0}</p>
+          </div>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-4">
           <div className="flex items-center gap-2 text-slate-700 font-semibold mb-2"><MessageSquare className="w-4 h-4 text-amber-600" /> Feedback Queue</div>
           <p className="text-2xl font-bold text-slate-900">{overview?.counters.pendingFeedbacks ?? 0}</p>
-          <p className="text-xs text-slate-500 mt-1">Total feedback: {overview?.counters.feedbacks ?? 0}</p>
+          <div className="text-xs text-slate-500 mt-2 space-y-1">
+            <p>Pending feedback: {overview?.counters.pendingFeedbacks ?? 0}</p>
+            <p>Total feedback: {overview?.counters.feedbacks ?? 0}</p>
+          </div>
         </div>
       </div>
 
