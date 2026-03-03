@@ -3,176 +3,158 @@ import Link from "next/link";
 import {
   Facebook,
   Instagram,
-  Camera,
   Linkedin,
   Youtube,
-} from 'lucide-react';
+  Twitter,
+  Mail,
+  Phone,
+  MapPin,
+  GraduationCap,
+  ArrowUpRight,
+} from "lucide-react";
+
+const exploreLinks = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Career Assessment", href: "/careerAssessment" },
+  { label: "Government Colleges", href: "/governmentCollege" },
+  { label: "Study Resources", href: "/studyResources" },
+  { label: "Competitive Exams", href: "/competitiveExams" },
+  { label: "Pricing", href: "/pricing" },
+];
+
+const studentLinks = [
+  { label: "Student Dashboard", href: "/studentDashboard" },
+  { label: "Notifications", href: "/notifications" },
+  { label: "Quiz Corner", href: "/quiz" },
+  { label: "Tech Titans", href: "/techTitans" },
+  { label: "Register", href: "/register" },
+  { label: "Login", href: "/login" },
+];
+
+const socialLinks = [
+  { icon: Facebook, href: "#", label: "Facebook", color: "hover:text-blue-400" },
+  { icon: Instagram, href: "#", label: "Instagram", color: "hover:text-pink-400" },
+  { icon: Twitter, href: "#", label: "Twitter", color: "hover:text-sky-400" },
+  { icon: Linkedin, href: "#", label: "LinkedIn", color: "hover:text-blue-500" },
+  { icon: Youtube, href: "#", label: "YouTube", color: "hover:text-red-500" },
+];
 
 const Footer = () => {
   return (
-    <footer
-      className="bg-[#0e1626] text-white px-6 md:px-20 py-10"
-      role="contentinfo"
-      aria-label="Footer"
-    >
-      <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-        {/* Logo and About */}
-        <div>
-          <div className="flex space-x-4">
-          <Link href="/" className="flex items-center" aria-label="GBU Home">
-              <img
-                src="/EdupathLogo.png"
-                alt="EduPath Logo"
-                className="h-14 w-auto rounded-full py-1 px-1"
-              />
+    <footer className="bg-[#0b1120] text-white" role="contentinfo" aria-label="Site footer">
+      <div className="max-w-screen-xl mx-auto px-6 md:px-12 lg:px-16 pt-14 pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          {/* Brand + Social */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <Link href="/" className="inline-flex items-center gap-2 mb-4" aria-label="EduPath Home">
+              <img src="/EdupathLogo.png" alt="EduPath Logo" className="h-12 w-auto rounded-full" />
+              <span className="text-lg font-bold tracking-tight text-white">EduPath</span>
             </Link>
+            <p className="text-gray-400 text-sm leading-relaxed mb-5">
+              EduPath empowers students across India with personalized career guidance, college discovery, psychometric assessments, and expert counseling — all in one platform.
+            </p>
+            <div className="flex gap-3" aria-label="Social media links">
+              {socialLinks.map(({ icon: Icon, href, label, color }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className={`w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 transition-colors ${color} hover:bg-white/10`}
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
-          <p className="text-gray-400 text-sm mt-4">
-            EduPath is a leading educational platform dedicated to providing high-quality Counseling resources and courses to students worldwide. Our mission is to empower learners with the skills and knowledge they need to succeed in their academic and professional journeys.
-          </p>
-         <div
-      className="flex gap-4 mt-4 text-xl"
-      aria-label="Social media links"
-    >
-      <Facebook className="w-6 h-6 text-blue-600 hover:text-blue-800" />
-
-        <Instagram className="w-6 h-6 text-pink-500 hover:text-pink-700 transition-colors" />
-        <Camera className="w-6 h-6 text-gray-600 hover:text-black transition-colors" />
-        <Linkedin className="w-6 h-6 text-blue-700 hover:text-blue-900 transition-colors" />
-        <Youtube className="w-6 h-6 text-red-600 hover:text-red-800 transition-colors" />
-    </div>
-        </div>
-
-        {/* Quick Links */}
-        <nav aria-label="Quick links">
-          <h3 className="font-semibold text-lg mb-3">Quick Links</h3>
-          <ul className="space-y-2 text-gray-300 text-sm">
-            {[
-              "About GBU",
-              "Admissions",
-              "Academic Programs",
-              "Research",
-              "Campus Life",
-              "Placements",
-            ].map((link) => (
-              <li key={link}>
-                <a
-                  href="#"
-                  className="hover:text-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded"
-                >
-                  {link}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Important Links */}
-        <nav aria-label="Important links">
-          <h3 className="font-semibold text-lg mb-3">Important Links</h3>
-          <ul className="space-y-2 text-gray-300 text-sm">
-            {[
-              "Student Portal",
-              "Faculty Portal",
-              "Online Fee Payment",
-              "Library",
-              "Examination",
-              "Alumni",
-            ].map((link) => (
-              <li key={link}>
-                <a
-                  href="#"
-                  className="hover:text-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded"
-                >
-                  {link}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* Contact */}
-        <section aria-label="Contact information">
-          <h3 className="font-semibold text-lg mb-3">Contact Us</h3>
-          {/* <address className="not-italic text-gray-300 text-sm">
-            <strong>Address:</strong>
-            <br />
-            EduPath
-            <br />
-            Greater Noida, Uttar Pradesh
-            <br />
-            PIN: 201312
-          </address> */}
-          <p className="mt-2 text-sm text-gray-300">
-            <strong>Phone:</strong>{" "}
-            <a
-              href="tel:+911202344000"
-              className="hover:text-orange-500"
-            >
-              +91-120-234-4000
-            </a>
-            <br />
-            <strong>Email:</strong>{" "}
-            <a
-              href="mailto:info@gbu.ac.in"
-              className="hover:text-orange-500"
-            >
-              eduPath@edu.in
-            </a>
-          </p>
-          <div className="mt-4">
-            <label
-              htmlFor="newsletter-email"
-              className="font-semibold text-sm block mb-1"
-            >
-              Subscribe to Newsletter
-            </label>
-            {/* <form className="flex" onSubmit={(e) => e.preventDefault()}>
-              <input
-                id="newsletter-email"
-                type="email"
-                placeholder="Your email"
-                className="w-full px-3 py-2 text-white bg-[#1a202c] rounded-l-md outline-none focus:ring-2 focus:ring-orange-500"
-                required
-                aria-label="Email address"
-              />
-              <button
-                type="submit"
-                className="bg-orange-600 text-white px-4 rounded-r-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                Subscribe
-              </button>
-            </form> */}
           </div>
-        </section>
-      </div>
 
-      {/* Bottom Line */}
-      <div className="mt-6 border-t border-gray-700 pt-4 text-sm text-gray-400 flex flex-col md:flex-row justify-between">
-        <p>© 2025 EduPath. All rights reserved.</p>
-        <div>
-          <p>
-            Designed and developed by{" "}
-            <Link href="/techTitans" className="hover:text-white font-semibold cursor-pointer">
-              Tech Titans 
-            </Link>{" "}
-           
-            {/* and supported by{" "}
-            <Link href="#" className="hover:text-white font-semibold">
-              CCC
-            </Link> */}
-          </p>
+          {/* Explore */}
+          <nav aria-label="Explore EduPath">
+            <h3 className="font-semibold text-white text-sm uppercase tracking-widest mb-4">Explore</h3>
+            <ul className="space-y-2.5">
+              {exploreLinks.map(({ label, href }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    className="text-sm text-gray-400 hover:text-indigo-400 transition-colors flex items-center gap-1 group"
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 -ml-0.5 transition-opacity" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Student & Tools */}
+          <nav aria-label="Student links">
+            <h3 className="font-semibold text-white text-sm uppercase tracking-widest mb-4">Students</h3>
+            <ul className="space-y-2.5">
+              {studentLinks.map(({ label, href }) => (
+                <li key={label}>
+                  <Link
+                    href={href}
+                    className="text-sm text-gray-400 hover:text-indigo-400 transition-colors flex items-center gap-1 group"
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 -ml-0.5 transition-opacity" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Contact */}
+          <section aria-label="Contact information">
+            <h3 className="font-semibold text-white text-sm uppercase tracking-widest mb-4">Get In Touch</h3>
+            <ul className="space-y-3 text-sm text-gray-400">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                <span>Greater Noida, Uttar Pradesh, India</span>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-4 h-4 text-indigo-400 shrink-0" />
+                <a href="tel:+911202344000" className="hover:text-indigo-400 transition-colors">
+                  +91-120-234-4000
+                </a>
+              </li>
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-indigo-400 shrink-0" />
+                <a href="mailto:support@edupath.in" className="hover:text-indigo-400 transition-colors">
+                  support@edupath.in
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <GraduationCap className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                <span>Career Guidance Platform for Students across India</span>
+              </li>
+            </ul>
+          </section>
         </div>
-        <div className="flex gap-4 mt-2 md:mt-0">
-          {["Privacy Policy", "Terms of Use", "Sitemap"].map((link) => (
-            <a
-              key={link}
-              href="#"
-              className="hover:text-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 rounded"
-            >
-              {link}
-            </a>
-          ))}
+
+        {/* Divider */}
+        <div className="mt-10 border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+          <p>© {new Date().getFullYear()} EduPath. All rights reserved.</p>
+
+          <p>
+            Designed &amp; built by{" "}
+            <Link href="/techTitans" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+              Tech Titans
+            </Link>
+          </p>
+
+          <div className="flex items-center gap-5">
+            <Link href="/privacy-policy" className="hover:text-indigo-400 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-of-use" className="hover:text-indigo-400 transition-colors">
+              Terms of Use
+            </Link>
+            <Link href="/sitemap" className="hover:text-indigo-400 transition-colors">
+              Sitemap
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
