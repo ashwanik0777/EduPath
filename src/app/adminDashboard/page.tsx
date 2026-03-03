@@ -65,6 +65,7 @@ import { WebsiteStatisticsTab } from "./components/tabs/WebsiteStatisticsTab";
 import { WebsitePageDetailsTab } from "./components/tabs/WebsitePageDetailsTab";
 import { TechTitansTab } from "./components/tabs/TechTitansTab";
 import { PricingManagementTab } from "./components/tabs/PricingManagementTab";
+import { DEFAULT_PRICING, type WebsitePricing } from "@/app/lib/pricingDefaults";
 
 type OverviewResponse = {
   success: boolean;
@@ -249,59 +250,7 @@ type WebsiteSettings = {
   footerText: string;
   seoTitle: string;
   seoDescription: string;
-  pricing: {
-    freeTier: {
-      enabled: boolean;
-      durationDays: number;
-      maxAssessments: number;
-      maxCounselingSessions: number;
-      features: string[];
-      alwaysFreeFeatures: string[];
-    };
-    monthlyPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      features: string[];
-    };
-    yearlyPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      features: string[];
-    };
-    singleCounselingPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      durationMinutes: number;
-      features: string[];
-    };
-    firstSubscriptionDiscount: number;
-    comparisonRows: {
-      label: string;
-      monthlyPlanValue: string;
-      yearlyPlanValue: string;
-      singleCounselingPlanValue: string;
-    }[];
-    testimonials: {
-      name: string;
-      planName: string;
-      quote: string;
-    }[];
-  };
+  pricing: WebsitePricing;
 };
 
 type WebsiteAnnouncement = {
@@ -436,100 +385,7 @@ export default function AdminDashboardPage() {
     footerText: "© 2026 EduPath. All rights reserved.",
     seoTitle: "EduPath - Career Guidance Platform",
     seoDescription: "Career planning and counseling platform for students.",
-    pricing: {
-      freeTier: {
-        enabled: true,
-        durationDays: 7,
-        maxAssessments: 1,
-        maxCounselingSessions: 1,
-        features: [
-          "Career discovery starter assessment",
-          "1 counseling session with mentor",
-          "Basic progress dashboard",
-        ],
-        alwaysFreeFeatures: [
-          "Study resources access",
-          "Government college listings",
-          "Scholarship and exam notifications",
-        ],
-      },
-      monthlyPlan: {
-        name: "Pro Monthly",
-        description: "For active students who need ongoing mentor and planning support.",
-        benefitLine: "Perfect for active students who want structured monthly guidance.",
-        popularTag: "Student Favorite",
-        ctaLabel: "Get Started",
-        priceINR: 1999,
-        priceUSD: 29,
-        features: [
-          "Unlimited assessment attempts",
-          "4 counseling sessions / month",
-          "Personalized roadmap + reminders",
-        ],
-      },
-      yearlyPlan: {
-        name: "Pro Yearly",
-        description: "Best value plan for complete yearly guidance and admissions prep.",
-        benefitLine: "Best for long-term planning and admission preparation.",
-        popularTag: "Best Value",
-        ctaLabel: "Subscribe Now",
-        priceINR: 14999,
-        priceUSD: 199,
-        features: [
-          "Everything in Monthly",
-          "Priority counselor booking",
-          "Admission strategy guidance",
-        ],
-      },
-      singleCounselingPlan: {
-        name: "Single Counseling Session",
-        description: "One focused session for stream/career/college decision support.",
-        benefitLine: "Great for quick clarity before a major academic decision.",
-        popularTag: "Most Popular",
-        ctaLabel: "Book Session",
-        priceINR: 799,
-        priceUSD: 12,
-        durationMinutes: 45,
-        features: [
-          "1:1 live counseling",
-          "Session summary notes",
-          "Next-step action checklist",
-        ],
-      },
-      firstSubscriptionDiscount: 50,
-      comparisonRows: [
-        {
-          label: "Counseling Access",
-          monthlyPlanValue: "4 sessions/month",
-          yearlyPlanValue: "Priority yearly access",
-          singleCounselingPlanValue: "1 focused session",
-        },
-        {
-          label: "Assessment Support",
-          monthlyPlanValue: "Unlimited attempts",
-          yearlyPlanValue: "Unlimited + yearly roadmap",
-          singleCounselingPlanValue: "Not included",
-        },
-        {
-          label: "Best For",
-          monthlyPlanValue: "Monthly momentum",
-          yearlyPlanValue: "Long-term planning",
-          singleCounselingPlanValue: "One-time guidance",
-        },
-      ],
-      testimonials: [
-        {
-          name: "Riya Sharma",
-          planName: "Pro Monthly",
-          quote: "Monthly sessions helped me stay consistent and improve my exam strategy.",
-        },
-        {
-          name: "Ankit Verma",
-          planName: "Pro Yearly",
-          quote: "Yearly plan gave me a full roadmap from stream selection to admissions.",
-        },
-      ],
-    },
+    pricing: DEFAULT_PRICING,
   });
   const [announcementInput, setAnnouncementInput] = useState("");
   const [websiteAnnouncements, setWebsiteAnnouncements] = useState<WebsiteAnnouncement[]>([]);

@@ -22,48 +22,16 @@ import {
   Eye,
   TrendingUp,
   Zap,
+  Sparkles,
   Shield,
   Phone,
 } from "lucide-react";
+import { type WebsitePricing } from "@/app/lib/pricingDefaults";
 
-type PricingPlan = {
-  name: string;
-  description: string;
-  benefitLine: string;
-  popularTag: string;
-  ctaLabel: string;
-  priceINR: number;
-  priceUSD: number;
-  features: string[];
-};
-
-type SingleCounselingPlan = PricingPlan & { durationMinutes: number };
-
-type PricingSettings = {
-  freeTier: {
-    enabled: boolean;
-    durationDays: number;
-    maxAssessments: number;
-    maxCounselingSessions: number;
-    features: string[];
-    alwaysFreeFeatures: string[];
-  };
-  monthlyPlan: PricingPlan;
-  yearlyPlan: PricingPlan;
-  singleCounselingPlan: SingleCounselingPlan;
-  firstSubscriptionDiscount: number;
-  comparisonRows: {
-    label: string;
-    monthlyPlanValue: string;
-    yearlyPlanValue: string;
-    singleCounselingPlanValue: string;
-  }[];
-  testimonials: {
-    name: string;
-    planName: string;
-    quote: string;
-  }[];
-};
+type PricingPlan = WebsitePricing["monthlyPlan"];
+type SingleCounselingPlan = WebsitePricing["singleCounselingPlan"];
+type AdditionalPricingPlan = WebsitePricing["additionalPlans"][number];
+type PricingSettings = WebsitePricing;
 
 type PricingManagementTabProps = {
   pricing: PricingSettings;
@@ -145,6 +113,18 @@ export function PricingManagementTab({
     setPricing((prev) => ({
       ...prev,
       [planKey]: { ...prev[planKey], [field]: value },
+    }));
+
+  const setAdditionalPlanField = (
+    index: number,
+    field: keyof AdditionalPricingPlan,
+    value: unknown,
+  ) =>
+    setPricing((prev) => ({
+      ...prev,
+      additionalPlans: prev.additionalPlans.map((plan, planIndex) =>
+        planIndex === index ? { ...plan, [field]: value } : plan,
+      ),
     }));
 
   const handleSave = async () => {
@@ -648,6 +628,103 @@ export function PricingManagementTab({
               </SectionCard>
             );
           })}
+
+          <SectionCard>
+            <SectionHeader
+              icon={Sparkles}
+              iconColor="text-cyan-600"
+              title="Additional Smart Plans"
+              subtitle="These plans are shown in the 'More Smart Plans' section on the public pricing page"
+            />
+            <div className="p-5 space-y-4">
+              {pricing.additionalPlans.map((plan, planIndex) => (
+                <div key={`additional-plan-${planIndex}`} className="rounded-xl border border-slate-200 p-4 bg-slate-50/60 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <label className="text-xs font-medium text-slate-600">Plan Name</label>
+                      <input
+                        value={plan.name}
+                        onChange={(e) => setAdditionalPlanField(planIndex, "name", e.target.value)}
+                        className={`mt-1.5 ${inputClass}`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-slate-600">Tag</label>
+                      <input
+                        value={plan.tag}
+                        onChange={(e) => setAdditionalPlanField(planIndex, "tag", e.target.value)}
+                        className={`mt-1.5 ${inputClass}`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-slate-600">CTA Label</label>
+                      <input
+                        value={plan.ctaLabel}
+                        onChange={(e) => setAdditionalPlanField(planIndex, "ctaLabel", e.target.value)}
+                        className={`mt-1.5 ${inputClass}`}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-600">Benefit Line</label>
+                    <input
+                      value={plan.benefitLine}
+                      onChange={(e) => setAdditionalPlanField(planIndex, "benefitLine", e.target.value)}
+                      className={`mt-1.5 ${inputClass}`}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-600">Description</label>
+                    <textarea
+                      value={plan.description}
+                      onChange={(e) => setAdditionalPlanField(planIndex, "description", e.target.value)}
+                      className={`mt-1.5 min-h-[72px] ${inputClass}`}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-slate-600 flex items-center gap-1">
+                        <IndianRupee className="w-3 h-3" /> Price (INR ₹)
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={plan.priceINR}
+                        onChange={(e) => setAdditionalPlanField(planIndex, "priceINR", Number(e.target.value) || 0)}
+                        className={`mt-1.5 ${inputClass}`}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-600 flex items-center gap-1">
+                        <DollarSign className="w-3 h-3" /> Price (USD $)
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={plan.priceUSD}
+                        onChange={(e) => setAdditionalPlanField(planIndex, "priceUSD", Number(e.target.value) || 0)}
+                        className={`mt-1.5 ${inputClass}`}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-medium text-slate-700 mb-1.5 block">
+                      Features <span className="text-slate-400">(one per line)</span>
+                    </label>
+                    <textarea
+                      value={toLines(plan.features)}
+                      onChange={(e) => setAdditionalPlanField(planIndex, "features", fromLines(e.target.value))}
+                      className={`min-h-[90px] ${inputClass}`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
         </div>
       )}
 
@@ -864,6 +941,129 @@ export function PricingManagementTab({
                 ))}
               </div>
             )}
+
+            <div className="pt-2 border-t border-slate-200">
+              <p className="text-sm font-semibold text-slate-800">Full Comparison Matrix</p>
+              <p className="text-xs text-slate-500 mt-1">
+                This controls the large comparison table shown on the public pricing page.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50 overflow-x-auto">
+              <div className="min-w-[1200px]">
+                <div className="grid grid-cols-9 gap-2 px-4 py-2.5 text-[11px] font-semibold text-slate-500 uppercase tracking-wide border-b border-slate-200">
+                  <span>Label</span>
+                  <span>Category</span>
+                  <span>Booster</span>
+                  <span>Single</span>
+                  <span>Monthly</span>
+                  <span>Quarterly</span>
+                  <span>Sprint</span>
+                  <span>Yearly</span>
+                  <span>Action</span>
+                </div>
+
+                <div className="divide-y divide-slate-100">
+                  {pricing.fullComparisonRows.map((row, rowIndex) => (
+                    <div key={`full-comparison-${rowIndex}`} className="grid grid-cols-9 gap-2 px-4 py-2 items-center bg-white even:bg-slate-50/70">
+                      <input
+                        value={row.label}
+                        onChange={(e) =>
+                          setPricing((prev) => ({
+                            ...prev,
+                            fullComparisonRows: prev.fullComparisonRows.map((item, index) =>
+                              index === rowIndex ? { ...item, label: e.target.value } : item,
+                            ),
+                          }))
+                        }
+                        className={`text-sm ${inputClass}`}
+                        placeholder="Section or feature label"
+                      />
+
+                      <label className="inline-flex items-center gap-2 text-xs text-slate-600">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(row.category)}
+                          onChange={(e) =>
+                            setPricing((prev) => ({
+                              ...prev,
+                              fullComparisonRows: prev.fullComparisonRows.map((item, index) =>
+                                index === rowIndex
+                                  ? { ...item, category: e.target.checked, values: e.target.checked ? [] : ["", "", "", "", "", ""] }
+                                  : item,
+                              ),
+                            }))
+                          }
+                        />
+                        Category
+                      </label>
+
+                      {[0, 1, 2, 3, 4, 5].map((columnIndex) => (
+                        <input
+                          key={`row-${rowIndex}-col-${columnIndex}`}
+                          value={row.values?.[columnIndex] || ""}
+                          disabled={Boolean(row.category)}
+                          onChange={(e) =>
+                            setPricing((prev) => ({
+                              ...prev,
+                              fullComparisonRows: prev.fullComparisonRows.map((item, index) => {
+                                if (index !== rowIndex) return item;
+                                const nextValues = [...(item.values || []), "", "", "", "", "", ""].slice(0, 6);
+                                nextValues[columnIndex] = e.target.value;
+                                return { ...item, values: nextValues };
+                              }),
+                            }))
+                          }
+                          className={`text-sm ${inputClass} ${row.category ? "opacity-50" : ""}`}
+                          placeholder={row.category ? "—" : "Value"}
+                        />
+                      ))}
+
+                      <button
+                        onClick={() =>
+                          setPricing((prev) => ({
+                            ...prev,
+                            fullComparisonRows: prev.fullComparisonRows.filter((_, index) => index !== rowIndex),
+                          }))
+                        }
+                        className="text-rose-500 hover:text-rose-700 shrink-0"
+                        title="Remove row"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() =>
+                  setPricing((prev) => ({
+                    ...prev,
+                    fullComparisonRows: [...prev.fullComparisonRows, { label: "", values: ["", "", "", "", "", ""] }],
+                  }))
+                }
+                className="inline-flex items-center gap-2 text-sm text-sky-700 border border-sky-300 bg-sky-50 rounded-xl px-4 py-2 hover:bg-sky-100 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add Feature Row
+              </button>
+
+              <button
+                onClick={() =>
+                  setPricing((prev) => ({
+                    ...prev,
+                    fullComparisonRows: [...prev.fullComparisonRows, { label: "", category: true, values: [] }],
+                  }))
+                }
+                className="inline-flex items-center gap-2 text-sm text-indigo-700 border border-indigo-300 bg-indigo-50 rounded-xl px-4 py-2 hover:bg-indigo-100 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                Add Category Row
+              </button>
+            </div>
           </div>
         </SectionCard>
       )}

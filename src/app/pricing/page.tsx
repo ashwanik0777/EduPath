@@ -2,64 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { BadgeCheck, Gift, Sparkles, ShieldCheck, IndianRupee, DollarSign, Euro, CalendarClock, Check, X, Star, Quote } from "lucide-react";
+import { type WebsitePricing } from "@/app/lib/pricingDefaults";
 
 type CurrencyCode = "INR" | "USD" | "EUR";
 
 type PricingResponse = {
   success: boolean;
-  pricing: {
-    freeTier: {
-      enabled: boolean;
-      durationDays: number;
-      maxAssessments: number;
-      maxCounselingSessions: number;
-      features: string[];
-      alwaysFreeFeatures: string[];
-    };
-    monthlyPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      features: string[];
-    };
-    yearlyPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      features: string[];
-    };
-    singleCounselingPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      durationMinutes: number;
-      features: string[];
-    };
-    firstSubscriptionDiscount: number;
-    comparisonRows: {
-      label: string;
-      monthlyPlanValue: string;
-      yearlyPlanValue: string;
-      singleCounselingPlanValue: string;
-    }[];
-    testimonials: {
-      name: string;
-      planName: string;
-      quote: string;
-    }[];
-  };
+  pricing: WebsitePricing;
 };
 
 export default function PricingPage() {
@@ -342,14 +291,8 @@ export default function PricingPage() {
     },
   ];
 
-  const additionalPlans = [
+  const additionalPlanStyles = [
     {
-      name: "Quarterly Mentorship",
-      tag: "3-Month Plan",
-      description: "3-month focused mentorship for board + entrance readiness.",
-      benefitLine: "Stay consistent with weekly check-ins and milestone reviews.",
-      priceINR: 4999,
-      priceUSD: 74,
       headerBg: "bg-gradient-to-br from-sky-50 to-cyan-50",
       topBorder: "border-t-4 border-sky-400",
       badgeClass: "bg-sky-100 text-sky-700 border-sky-200",
@@ -357,20 +300,8 @@ export default function PricingPage() {
       priceColor: "text-sky-700",
       ctaBg: "bg-sky-600 hover:bg-sky-700",
       discountBadge: "bg-sky-100 text-sky-700",
-      cta: "Start Mentorship",
-      features: [
-        "12 counseling sessions (3 months)",
-        "Weekly milestone tracker",
-        "Parent progress summary",
-      ],
     },
     {
-      name: "Assessment Booster Pack",
-      tag: "One-Time",
-      description: "One-time deep career profiling and action map package.",
-      benefitLine: "Discover your true strengths with a detailed career profile.",
-      priceINR: 1499,
-      priceUSD: 19,
       headerBg: "bg-gradient-to-br from-amber-50 to-orange-50",
       topBorder: "border-t-4 border-amber-400",
       badgeClass: "bg-amber-100 text-amber-700 border-amber-200",
@@ -378,20 +309,8 @@ export default function PricingPage() {
       priceColor: "text-amber-700",
       ctaBg: "bg-orange-500 hover:bg-orange-600",
       discountBadge: "bg-amber-100 text-amber-700",
-      cta: "Boost Now",
-      features: [
-        "Advanced psychometric report",
-        "Career fit percentile insights",
-        "Recommended stream + college path",
-      ],
     },
     {
-      name: "Admission Sprint Bundle",
-      tag: "Premium",
-      description: "End-to-end application and admissions guidance bundle.",
-      benefitLine: "Everything you need to land your dream college.",
-      priceINR: 8999,
-      priceUSD: 129,
       headerBg: "bg-gradient-to-br from-teal-50 to-cyan-50",
       topBorder: "border-t-4 border-teal-400",
       badgeClass: "bg-teal-100 text-teal-700 border-teal-200",
@@ -399,14 +318,13 @@ export default function PricingPage() {
       priceColor: "text-teal-700",
       ctaBg: "bg-teal-600 hover:bg-teal-700",
       discountBadge: "bg-teal-100 text-teal-700",
-      cta: "Get Bundle",
-      features: [
-        "Application strategy planning",
-        "SOP / profile review support",
-        "Interview prep sessions",
-      ],
     },
-  ];
+  ] as const;
+
+  const additionalPlans = pricing.additionalPlans.map((plan, index) => ({
+    ...plan,
+    ...additionalPlanStyles[index % additionalPlanStyles.length],
+  }));
 
   return (
     <main className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20 space-y-20">
@@ -519,7 +437,7 @@ export default function PricingPage() {
                   <p className={`text-3xl font-extrabold mt-0.5 ${plan.priceColor}`}>
                     {formatCurrency(disc99, currency)}
                   </p>
-                  <span className={`inline-block mt-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${plan.discountBadge}`}>50% OFF — First subscription</span>
+                  <span className={`inline-block mt-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${plan.discountBadge}`}>{firstSubscriptionDiscount}% OFF — First subscription</span>
                   {plan.key === "single" ? (
                     <p className="flex items-center gap-1 text-xs text-slate-500 mt-2">
                       <CalendarClock className="w-3.5 h-3.5" />
@@ -578,7 +496,7 @@ export default function PricingPage() {
                   <div className="mt-4">
                     <p className="text-xs text-slate-400 line-through">{formatCurrency(orig99, currency)}</p>
                     <p className={`text-3xl font-extrabold mt-0.5 ${plan.priceColor}`}>{formatCurrency(disc99, currency)}</p>
-                    <span className={`inline-block mt-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${plan.discountBadge}`}>50% OFF — First subscription</span>
+                    <span className={`inline-block mt-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${plan.discountBadge}`}>{firstSubscriptionDiscount}% OFF — First subscription</span>
                   </div>
                 </div>
                 <div className="border-t border-slate-100" />
@@ -592,7 +510,7 @@ export default function PricingPage() {
                     ))}
                   </ul>
                   <button className={`mt-6 w-full rounded-full border ${plan.badgeClass} py-2.5 text-sm font-semibold transition-all shadow-sm hover:shadow-md`}>
-                    {plan.cta}
+                    {plan.ctaLabel || "Get Started"}
                   </button>
                 </div>
               </div>
@@ -628,22 +546,25 @@ export default function PricingPage() {
             popularTag?: string;
           };
 
-          // colPlans ordered by price (cheapest → most expensive), Yearly Pro last
+          const quarterlyPlan = pricing.additionalPlans[0];
+          const boosterPlan = pricing.additionalPlans[1];
+          const sprintPlan = pricing.additionalPlans[2];
+
           // index: 0=booster, 1=single, 2=monthly, 3=quarterly, 4=sprint, 5=yearly
           const colPlans: ColPlan[] = [
             {
               key: "booster",
-              name: "Assessment Booster",
-              tag: "One-Time",
-              priceINR: 1499,
-              priceUSD: 19,
+              name: boosterPlan.name,
+              tag: boosterPlan.tag,
+              priceINR: boosterPlan.priceINR,
+              priceUSD: boosterPlan.priceUSD,
               headerBg: "bg-gradient-to-b from-amber-50 to-white",
               topBorder: "border-t-4 border-amber-400",
               badgeClass: "bg-amber-100 text-amber-700 border-amber-200",
               checkBg: "bg-amber-50 border-amber-200",
               checkText: "text-amber-600",
               ctaBg: "bg-orange-500 hover:bg-orange-600",
-              ctaLabel: "Boost Now",
+              ctaLabel: boosterPlan.ctaLabel || "Boost Now",
             },
             {
               key: "single",
@@ -677,31 +598,31 @@ export default function PricingPage() {
             },
             {
               key: "quarterly",
-              name: "Quarterly Mentorship",
-              tag: "3-Month",
-              priceINR: 4999,
-              priceUSD: 74,
+              name: quarterlyPlan.name,
+              tag: quarterlyPlan.tag,
+              priceINR: quarterlyPlan.priceINR,
+              priceUSD: quarterlyPlan.priceUSD,
               headerBg: "bg-gradient-to-b from-sky-50 to-white",
               topBorder: "border-t-4 border-sky-400",
               badgeClass: "bg-sky-100 text-sky-700 border-sky-200",
               checkBg: "bg-sky-50 border-sky-200",
               checkText: "text-sky-600",
               ctaBg: "bg-sky-600 hover:bg-sky-700",
-              ctaLabel: "Start Mentorship",
+              ctaLabel: quarterlyPlan.ctaLabel || "Start Mentorship",
             },
             {
               key: "sprint",
-              name: "Admission Sprint Bundle",
-              tag: "Premium",
-              priceINR: 8999,
-              priceUSD: 129,
+              name: sprintPlan.name,
+              tag: sprintPlan.tag,
+              priceINR: sprintPlan.priceINR,
+              priceUSD: sprintPlan.priceUSD,
               headerBg: "bg-gradient-to-b from-teal-100 to-teal-50",
               topBorder: "border-t-4 border-teal-500",
               badgeClass: "bg-teal-100 text-teal-700 border-teal-300",
               checkBg: "bg-teal-50 border-teal-200",
               checkText: "text-teal-600",
               ctaBg: "bg-teal-600 hover:bg-teal-700",
-              ctaLabel: "Get Bundle",
+              ctaLabel: sprintPlan.ctaLabel || "Get Bundle",
             },
             {
               key: "yearly",
@@ -720,34 +641,7 @@ export default function PricingPage() {
             },
           ];
 
-          type FeatureRow = { label: string; category?: boolean; values: string[] };
-          // values index: 0=booster, 1=single, 2=monthly, 3=quarterly, 4=sprint, 5=yearly(last)
-          const featureRows: FeatureRow[] = [
-            { label: "Pricing & Access", category: true, values: [] },
-            { label: "Plan Type",             values: ["One-Time",  "Per Session", "Monthly",   "3-Month",    "Bundle",   "Yearly"] },
-            { label: "Counseling Sessions",   values: ["-",         "1 Session",   "Unlimited",  "12 Sessions","Included", "Unlimited"] },
-            { label: "Career Assessment", category: true, values: [] },
-            { label: "Psychometric Assessment",    values: ["Advanced",  "-",           "Basic",      "-",           "-",         "Full Report"] },
-            { label: "Career Fit Profile",         values: ["Detailed",  "-",           "Basic",      "-",           "-",         "In-Depth"] },
-            { label: "Career Percentile Insights", values: ["Included",  "-",           "-",          "-",           "-",         "Included"] },
-            { label: "Stream Recommendation",      values: ["Included",  "-",           "Included",   "-",           "Included",  "Included"] },
-            { label: "Guidance & Mentoring", category: true, values: [] },
-            { label: "Study Resources Access",     values: ["-",         "-",           "Included",   "Included",    "-",         "Included"] },
-            { label: "Progress Dashboard",         values: ["-",         "-",           "Included",   "Included",    "-",         "Included"] },
-            { label: "Competitive Exam Guidance",  values: ["-",         "-",           "Included",   "Included",    "-",         "Included"] },
-            { label: "Weekly Check-ins",           values: ["-",         "-",           "-",          "Included",    "-",         "Included"] },
-            { label: "Milestone Tracker",          values: ["-",         "-",           "-",          "Included",    "-",         "Included"] },
-            { label: "Parent Progress Summary",    values: ["-",         "-",           "-",          "Included",    "-",         "Included"] },
-            { label: "Admissions Support", category: true, values: [] },
-            { label: "College Shortlisting",       values: ["-",         "Included",    "Included",   "-",           "Included",  "Included"] },
-            { label: "Application Strategy",       values: ["-",         "-",           "-",          "-",           "Included",  "-"] },
-            { label: "SOP / Profile Review",        values: ["-",         "-",           "-",          "-",           "Included",  "-"] },
-            { label: "Interview Prep Sessions",    values: ["-",         "-",           "-",          "-",           "Included",  "Included"] },
-            { label: "Support", category: true, values: [] },
-            { label: "Priority Support",           values: ["-",         "-",           "-",          "-",           "Included",  "Included"] },
-            { label: "Email & Chat Support",       values: ["Included",  "Included",    "Included",   "Included",    "Included",  "Included"] },
-            { label: "Validity",                  values: ["Lifetime",  "One-Time",    "1 Month",    "3 Months",    "Ongoing",   "12 Months"] },
-          ];
+          const featureRows = pricing.fullComparisonRows;
 
           const isNeg = (v: string) => !v || v.trim() === "-" || v.trim() === "";
           const highlightCol = 5; // yearly = last column (index 5)

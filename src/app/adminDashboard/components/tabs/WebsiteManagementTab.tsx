@@ -1,4 +1,5 @@
 import { MonitorSmartphone, Settings2, Megaphone, Trash2, Palette, Globe, Save } from "lucide-react";
+import { type WebsitePricing } from "@/app/lib/pricingDefaults";
 
 type WebsiteAnnouncement = {
   id: string;
@@ -26,59 +27,7 @@ type WebsiteSettings = {
   footerText: string;
   seoTitle: string;
   seoDescription: string;
-  pricing: {
-    freeTier: {
-      enabled: boolean;
-      durationDays: number;
-      maxAssessments: number;
-      maxCounselingSessions: number;
-      features: string[];
-      alwaysFreeFeatures: string[];
-    };
-    monthlyPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      features: string[];
-    };
-    yearlyPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      features: string[];
-    };
-    singleCounselingPlan: {
-      name: string;
-      description: string;
-      benefitLine: string;
-      popularTag: string;
-      ctaLabel: string;
-      priceINR: number;
-      priceUSD: number;
-      durationMinutes: number;
-      features: string[];
-    };
-    firstSubscriptionDiscount: number;
-    comparisonRows: {
-      label: string;
-      monthlyPlanValue: string;
-      yearlyPlanValue: string;
-      singleCounselingPlanValue: string;
-    }[];
-    testimonials: {
-      name: string;
-      planName: string;
-      quote: string;
-    }[];
-  };
+  pricing: WebsitePricing;
 };
 
 type WebsiteManagementTabProps = {
