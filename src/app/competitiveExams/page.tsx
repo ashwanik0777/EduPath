@@ -14,12 +14,7 @@ export default function CompetitiveExamsPage() {
           className="w-full max-w-xl mx-auto px-4 py-3 rounded-xl border border-blue-200 shadow focus:outline-none focus:ring-2 focus:ring-blue-300 text-lg"
         />
       </div>
-      {/* Filters, Exam List, Details, Suggestions, etc. will go here */}
       <div className="max-w-5xl mx-auto">
-        {/* TODO: Filters Section */}
-        {/* TODO: Exam List Section */}
-        {/* TODO: Exam Details Modal */}
-        {/* TODO: Smart Suggestions & Upcoming Exams */}
       </div>
     </div>
   );

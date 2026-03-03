@@ -25,9 +25,25 @@ export interface IWebsiteAnnouncement {
 export interface IPricingPlan {
   name: string
   description: string
+  benefitLine: string
+  popularTag: string
+  ctaLabel: string
   priceINR: number
   priceUSD: number
   features: string[]
+}
+
+export interface IPlanComparisonRow {
+  label: string
+  monthlyPlanValue: string
+  yearlyPlanValue: string
+  singleCounselingPlanValue: string
+}
+
+export interface IPlanTestimonial {
+  name: string
+  planName: string
+  quote: string
 }
 
 export interface IFreeTier {
@@ -47,6 +63,8 @@ export interface IWebsitePricing {
     durationMinutes: number
   }
   firstSubscriptionDiscount: number
+  comparisonRows: IPlanComparisonRow[]
+  testimonials: IPlanTestimonial[]
 }
 
 export interface IWebsiteManagement extends Document {
@@ -97,9 +115,31 @@ const PricingPlanSchema = new Schema<IPricingPlan>(
   {
     name: { type: String, required: true, trim: true },
     description: { type: String, default: "" },
+    benefitLine: { type: String, default: "" },
+    popularTag: { type: String, default: "" },
+    ctaLabel: { type: String, default: "Get Started" },
     priceINR: { type: Number, default: 0, min: 0 },
     priceUSD: { type: Number, default: 0, min: 0 },
     features: { type: [String], default: [] },
+  },
+  { _id: false },
+)
+
+const PlanComparisonRowSchema = new Schema<IPlanComparisonRow>(
+  {
+    label: { type: String, required: true, trim: true },
+    monthlyPlanValue: { type: String, default: "" },
+    yearlyPlanValue: { type: String, default: "" },
+    singleCounselingPlanValue: { type: String, default: "" },
+  },
+  { _id: false },
+)
+
+const PlanTestimonialSchema = new Schema<IPlanTestimonial>(
+  {
+    name: { type: String, required: true, trim: true },
+    planName: { type: String, default: "" },
+    quote: { type: String, default: "" },
   },
   { _id: false },
 )
@@ -142,6 +182,9 @@ const WebsitePricingSchema = new Schema<IWebsitePricing>(
       default: {
         name: "Pro Monthly",
         description: "For active students who need ongoing mentor and planning support.",
+        benefitLine: "Perfect for active students who want structured monthly guidance.",
+        popularTag: "Student Favorite",
+        ctaLabel: "Get Started",
         priceINR: 1999,
         priceUSD: 29,
         features: [
@@ -156,6 +199,9 @@ const WebsitePricingSchema = new Schema<IWebsitePricing>(
       default: {
         name: "Pro Yearly",
         description: "Best value plan for complete yearly guidance and admissions prep.",
+        benefitLine: "Best for long-term planning and admission preparation.",
+        popularTag: "Best Value",
+        ctaLabel: "Subscribe Now",
         priceINR: 14999,
         priceUSD: 199,
         features: [
@@ -176,6 +222,9 @@ const WebsitePricingSchema = new Schema<IWebsitePricing>(
       default: {
         name: "Single Counseling Session",
         description: "One focused session for stream/career/college decision support.",
+        benefitLine: "Great for quick clarity before a major academic decision.",
+        popularTag: "Most Popular",
+        ctaLabel: "Book Session",
         priceINR: 799,
         priceUSD: 12,
         durationMinutes: 45,
@@ -187,6 +236,44 @@ const WebsitePricingSchema = new Schema<IWebsitePricing>(
       },
     },
     firstSubscriptionDiscount: { type: Number, default: 50, min: 0, max: 100 },
+    comparisonRows: {
+      type: [PlanComparisonRowSchema],
+      default: [
+        {
+          label: "Counseling Access",
+          monthlyPlanValue: "4 sessions/month",
+          yearlyPlanValue: "Priority yearly access",
+          singleCounselingPlanValue: "1 focused session",
+        },
+        {
+          label: "Assessment Support",
+          monthlyPlanValue: "Unlimited attempts",
+          yearlyPlanValue: "Unlimited + yearly roadmap",
+          singleCounselingPlanValue: "Not included",
+        },
+        {
+          label: "Best For",
+          monthlyPlanValue: "Monthly momentum",
+          yearlyPlanValue: "Long-term planning",
+          singleCounselingPlanValue: "One-time guidance",
+        },
+      ],
+    },
+    testimonials: {
+      type: [PlanTestimonialSchema],
+      default: [
+        {
+          name: "Riya Sharma",
+          planName: "Pro Monthly",
+          quote: "Monthly sessions helped me stay consistent and improve my exam strategy.",
+        },
+        {
+          name: "Ankit Verma",
+          planName: "Pro Yearly",
+          quote: "Yearly plan gave me a full roadmap from stream selection to admissions.",
+        },
+      ],
+    },
   },
   { _id: false },
 )

@@ -78,8 +78,8 @@ export default function CompetitiveExamsPage() {
   return (
   <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 p-0 md:p-8 relative overflow-x-hidden">
       {/* Header Section */}
-      <header className="sticky top-0 z-30 bg-gradient-to-r from-blue-50/80 to-white/80 backdrop-blur-md shadow-sm py-6 mb-6">
-        <div className="max-w-4xl mx-auto text-center">
+      <header className="sticky top-0 z-30 bg-gradient-to-r from-blue-50/80 to-white/80 backdrop-blur-md shadow-sm py-6 mb-6">                
+        <div className="max-w-4xl mx-auto text-center rounded-2xl">
           <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-500 to-indigo-600 mb-2 drop-shadow-lg">Explore Competitive Exams</h1>
           <p className="text-lg md:text-xl text-blue-700 mb-6 font-medium">Find government and entrance exams that match your goal and qualification.</p>
           <div className="flex justify-center items-center gap-2">

@@ -38,6 +38,9 @@ type WebsiteSettings = {
     monthlyPlan: {
       name: string;
       description: string;
+      benefitLine: string;
+      popularTag: string;
+      ctaLabel: string;
       priceINR: number;
       priceUSD: number;
       features: string[];
@@ -45,6 +48,9 @@ type WebsiteSettings = {
     yearlyPlan: {
       name: string;
       description: string;
+      benefitLine: string;
+      popularTag: string;
+      ctaLabel: string;
       priceINR: number;
       priceUSD: number;
       features: string[];
@@ -52,12 +58,26 @@ type WebsiteSettings = {
     singleCounselingPlan: {
       name: string;
       description: string;
+      benefitLine: string;
+      popularTag: string;
+      ctaLabel: string;
       priceINR: number;
       priceUSD: number;
       durationMinutes: number;
       features: string[];
     };
     firstSubscriptionDiscount: number;
+    comparisonRows: {
+      label: string;
+      monthlyPlanValue: string;
+      yearlyPlanValue: string;
+      singleCounselingPlanValue: string;
+    }[];
+    testimonials: {
+      name: string;
+      planName: string;
+      quote: string;
+    }[];
   };
 };
 
@@ -114,6 +134,30 @@ export function WebsiteManagementTab({
       .split("\n")
       .map((line) => line.trim())
       .filter(Boolean);
+  const comparisonRowsToLines = (items: WebsiteSettings["pricing"]["comparisonRows"]) =>
+    items.map((item) => `${item.label} | ${item.monthlyPlanValue} | ${item.yearlyPlanValue} | ${item.singleCounselingPlanValue}`).join("\n");
+  const comparisonRowsFromLines = (value: string): WebsiteSettings["pricing"]["comparisonRows"] =>
+    value
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const [label = "", monthlyPlanValue = "", yearlyPlanValue = "", singleCounselingPlanValue = ""] = line.split("|").map((part) => part.trim());
+        return { label, monthlyPlanValue, yearlyPlanValue, singleCounselingPlanValue };
+      })
+      .filter((item) => item.label);
+  const testimonialsToLines = (items: WebsiteSettings["pricing"]["testimonials"]) =>
+    items.map((item) => `${item.name} | ${item.planName} | ${item.quote}`).join("\n");
+  const testimonialsFromLines = (value: string): WebsiteSettings["pricing"]["testimonials"] =>
+    value
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => {
+        const [name = "", planName = "", quote = ""] = line.split("|").map((part) => part.trim());
+        return { name, planName, quote };
+      })
+      .filter((item) => item.name && item.quote);
 
   return (
     <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
@@ -554,6 +598,67 @@ export function WebsiteManagementTab({
                     className={`mt-1 min-h-[80px] ${inputClass}`}
                   />
                 </div>
+                <div>
+                  <label className="text-sm text-slate-600">One-line Benefit</label>
+                  <input
+                    value={plan.benefitLine}
+                    onChange={(event) =>
+                      setWebsiteSettings((previous) => ({
+                        ...previous,
+                        pricing: {
+                          ...previous.pricing,
+                          [planItem.key]: {
+                            ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                            benefitLine: event.target.value,
+                          },
+                        },
+                      }))
+                    }
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-slate-600">Popular Tag</label>
+                    <input
+                      value={plan.popularTag}
+                      onChange={(event) =>
+                        setWebsiteSettings((previous) => ({
+                          ...previous,
+                          pricing: {
+                            ...previous.pricing,
+                            [planItem.key]: {
+                              ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                              popularTag: event.target.value,
+                            },
+                          },
+                        }))
+                      }
+                      placeholder="Most Popular / Best Value"
+                      className={`mt-1 ${inputClass}`}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-slate-600">CTA Button Label</label>
+                    <input
+                      value={plan.ctaLabel}
+                      onChange={(event) =>
+                        setWebsiteSettings((previous) => ({
+                          ...previous,
+                          pricing: {
+                            ...previous.pricing,
+                            [planItem.key]: {
+                              ...previous.pricing[planItem.key as "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan"],
+                              ctaLabel: event.target.value,
+                            },
+                          },
+                        }))
+                      }
+                      placeholder="Get Started / Subscribe"
+                      className={`mt-1 ${inputClass}`}
+                    />
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm text-slate-600">Price (₹)</label>
@@ -652,6 +757,44 @@ export function WebsiteManagementTab({
          
           <div className="mt-3 inline-flex items-center rounded-full bg-white border border-amber-200 text-amber-800 px-3 py-1 text-sm font-semibold">
             {websiteSettings.pricing.firstSubscriptionDiscount}% OFF (Fixed)
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-slate-200 p-4 bg-slate-50/60">
+            <p className="text-sm font-medium text-slate-900">Comparison Table Rows</p>
+            <p className="text-xs text-slate-500 mt-1">Format: Feature | Monthly | Yearly | Single Counseling</p>
+            <textarea
+              value={comparisonRowsToLines(websiteSettings.pricing.comparisonRows)}
+              onChange={(event) =>
+                setWebsiteSettings((previous) => ({
+                  ...previous,
+                  pricing: {
+                    ...previous.pricing,
+                    comparisonRows: comparisonRowsFromLines(event.target.value),
+                  },
+                }))
+              }
+              className={`mt-2 min-h-[140px] ${inputClass}`}
+            />
+          </div>
+
+          <div className="rounded-xl border border-slate-200 p-4 bg-slate-50/60">
+            <p className="text-sm font-medium text-slate-900">Plan Testimonials</p>
+            <p className="text-xs text-slate-500 mt-1">Format: Name | Plan | Benefit/Quote</p>
+            <textarea
+              value={testimonialsToLines(websiteSettings.pricing.testimonials)}
+              onChange={(event) =>
+                setWebsiteSettings((previous) => ({
+                  ...previous,
+                  pricing: {
+                    ...previous.pricing,
+                    testimonials: testimonialsFromLines(event.target.value),
+                  },
+                }))
+              }
+              className={`mt-2 min-h-[140px] ${inputClass}`}
+            />
           </div>
         </div>
       </div>
