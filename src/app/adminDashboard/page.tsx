@@ -472,18 +472,6 @@ export default function AdminDashboardPage() {
   const [websitePages, setWebsitePages] = useState<WebsitePage[]>([]);
   const [techTitans, setTechTitans] = useState<ContentResponse["data"]>([]);
   const [techTitansSearch, setTechTitansSearch] = useState("");
-  const [techTitanForm, setTechTitanForm] = useState({
-    name: "",
-    role: "",
-    specialization: "",
-    bio: "",
-    imageUrl: "",
-    linkedinUrl: "",
-    githubUrl: "",
-    portfolioUrl: "",
-    yearsOfExperience: 0,
-    isActive: true,
-  });
 
   const [adminInfo, setAdminInfo] = useState<{ name: string; role: string; profileImage?: string }>({
     name: "Admin",
@@ -802,43 +790,30 @@ export default function AdminDashboardPage() {
   };
 
   const createTechTitan = async (payload: Record<string, unknown>) => {
-    try {
-      await fetchJson("/api/admin/tech-titans", {
-        method: "POST",
-        body: JSON.stringify({ payload }),
-      });
-      await loadTechTitans(techTitansSearch);
-      setTechTitanForm({
-        name: "",
-        role: "",
-        specialization: "",
-        bio: "",
-        imageUrl: "",
-        linkedinUrl: "",
-        githubUrl: "",
-        portfolioUrl: "",
-        yearsOfExperience: 0,
-        isActive: true,
-      });
-      showSuccessToast("Member added", "Tech Titan profile created successfully.");
-    } catch {
-      setError("Could not create Tech Titan member.");
-      showErrorToast("Could not create Tech Titan member.");
-    }
+    await fetchJson("/api/admin/tech-titans", {
+      method: "POST",
+      body: JSON.stringify({ payload }),
+    });
+    await loadTechTitans(techTitansSearch);
+    showSuccessToast("Member added", "Tech Titan profile created successfully.");
+  };
+
+  const updateTechTitan = async (id: string, payload: Record<string, unknown>) => {
+    await fetchJson("/api/admin/tech-titans", {
+      method: "PATCH",
+      body: JSON.stringify({ id, payload }),
+    });
+    await loadTechTitans(techTitansSearch);
+    showSuccessToast("Member updated", "Tech Titan profile updated successfully.");
   };
 
   const deleteTechTitan = async (id: string) => {
-    try {
-      await fetchJson("/api/admin/tech-titans", {
-        method: "DELETE",
-        body: JSON.stringify({ id }),
-      });
-      await loadTechTitans(techTitansSearch);
-      showSuccessToast("Member deleted", "Tech Titan profile removed successfully.");
-    } catch {
-      setError("Could not delete Tech Titan member.");
-      showErrorToast("Could not delete Tech Titan member.");
-    }
+    await fetchJson("/api/admin/tech-titans", {
+      method: "DELETE",
+      body: JSON.stringify({ id }),
+    });
+    await loadTechTitans(techTitansSearch);
+    showSuccessToast("Member deleted", "Tech Titan profile removed successfully.");
   };
 
   const saveWebsiteManagement = async () => {
@@ -1409,13 +1384,12 @@ export default function AdminDashboardPage() {
 
         {activeTab === "techTitans" && (
           <TechTitansTab
-            techTitanForm={techTitanForm}
-            setTechTitanForm={setTechTitanForm}
             techTitans={techTitans}
             techTitansSearch={techTitansSearch}
             setTechTitansSearch={setTechTitansSearch}
             loadTechTitans={loadTechTitans}
             createTechTitan={createTechTitan}
+            updateTechTitan={updateTechTitan}
             deleteTechTitan={deleteTechTitan}
             askConfirmation={askConfirmation}
           />
