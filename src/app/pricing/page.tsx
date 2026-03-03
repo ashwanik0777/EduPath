@@ -86,10 +86,173 @@ export default function PricingPage() {
 
   if (loading) {
     return (
-      <main className="max-w-7xl mx-auto px-4 md:px-6 py-16">
-        <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-600">
-          Loading pricing plans...
-        </div>
+      <main className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20 space-y-16">
+        {/* Hero skeleton */}
+        <section className="flex flex-col items-center gap-5">
+          <div className="h-7 w-56 rounded-full bg-slate-200 animate-pulse" />
+          <div className="h-10 w-96 max-w-full rounded-xl bg-slate-200 animate-pulse" />
+          <div className="h-4 w-72 rounded-lg bg-slate-100 animate-pulse" />
+          <div className="h-10 w-60 rounded-xl bg-slate-200 animate-pulse mt-2" />
+        </section>
+
+        {/* Free tier cards skeleton */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[0, 1].map((i) => (
+            <div key={i} className="rounded-2xl border border-slate-200 bg-white p-6 space-y-4 shadow-sm">
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-5 rounded-full bg-slate-200 animate-pulse" />
+                <div className="h-5 w-40 rounded-lg bg-slate-200 animate-pulse" />
+              </div>
+              <div className="h-4 w-full rounded bg-slate-100 animate-pulse" />
+              <div className="h-4 w-5/6 rounded bg-slate-100 animate-pulse" />
+              <div className="space-y-2">
+                {[0, 1, 2].map((j) => (
+                  <div key={j} className="flex items-center gap-2">
+                    <div className="h-4 w-4 rounded-full bg-slate-200 animate-pulse shrink-0" />
+                    <div className="h-4 rounded bg-slate-100 animate-pulse" style={{ width: `${70 + j * 8}%` }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* Core plans skeleton */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+              <div className="border-t-4 border-slate-200 bg-slate-50 p-6 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="h-5 w-32 rounded-lg bg-slate-200 animate-pulse" />
+                  <div className="h-6 w-20 rounded-full bg-slate-200 animate-pulse" />
+                </div>
+                <div className="h-3 w-48 rounded bg-slate-100 animate-pulse" />
+                <div className="pt-2 space-y-1.5">
+                  <div className="h-3 w-16 rounded bg-slate-200 animate-pulse" />
+                  <div className="h-8 w-28 rounded-lg bg-slate-200 animate-pulse" />
+                  <div className="h-5 w-36 rounded-full bg-slate-100 animate-pulse" />
+                </div>
+              </div>
+              <div className="border-t border-slate-100" />
+              <div className="p-6 flex flex-col flex-1 space-y-3">
+                {[0, 1, 2, 3].map((j) => (
+                  <div key={j} className="flex items-center gap-2">
+                    <div className="h-4 w-4 rounded-full bg-slate-200 animate-pulse shrink-0" />
+                    <div className="h-3.5 rounded bg-slate-100 animate-pulse" style={{ width: `${65 + j * 5}%` }} />
+                  </div>
+                ))}
+                <div className="h-10 w-full rounded-xl bg-slate-200 animate-pulse mt-4" />
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* Additional plans section skeleton */}
+        <section className="space-y-6">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-7 w-40 rounded-full bg-slate-200 animate-pulse" />
+            <div className="h-8 w-64 rounded-xl bg-slate-200 animate-pulse" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+                <div className="border-t-4 border-slate-200 bg-slate-50 p-6 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="h-5 w-36 rounded-lg bg-slate-200 animate-pulse" />
+                    <div className="h-5 w-16 rounded-full bg-slate-200 animate-pulse" />
+                  </div>
+                  <div className="h-3 w-44 rounded bg-slate-100 animate-pulse" />
+                  <div className="pt-2 space-y-1.5">
+                    <div className="h-3 w-16 rounded bg-slate-200 animate-pulse" />
+                    <div className="h-8 w-24 rounded-lg bg-slate-200 animate-pulse" />
+                    <div className="h-5 w-32 rounded-full bg-slate-100 animate-pulse" />
+                  </div>
+                </div>
+                <div className="border-t border-slate-100" />
+                <div className="p-6 flex flex-col flex-1 space-y-3">
+                  {[0, 1, 2].map((j) => (
+                    <div key={j} className="flex items-center gap-2">
+                      <div className="h-4 w-4 rounded-full bg-slate-200 animate-pulse shrink-0" />
+                      <div className="h-3.5 rounded bg-slate-100 animate-pulse" style={{ width: `${60 + j * 8}%` }} />
+                    </div>
+                  ))}
+                  <div className="h-10 w-full rounded-xl bg-slate-200 animate-pulse mt-4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Comparison table skeleton */}
+        <section className="space-y-6">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-7 w-48 rounded-full bg-slate-200 animate-pulse" />
+            <div className="h-8 w-52 rounded-xl bg-slate-200 animate-pulse" />
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-lg">
+            <div className="overflow-x-auto">
+              <div className="min-w-[700px] p-6 space-y-3">
+                {/* Table header row */}
+                <div className="grid grid-cols-7 gap-3 pb-4 border-b border-slate-100">
+                  <div className="h-8 rounded bg-slate-100 animate-pulse" />
+                  {[0, 1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="flex flex-col items-center gap-2">
+                      <div className="h-4 w-14 rounded-full bg-slate-200 animate-pulse" />
+                      <div className="h-5 w-16 rounded-lg bg-slate-200 animate-pulse" />
+                      <div className="h-6 w-12 rounded-lg bg-slate-200 animate-pulse" />
+                      <div className="h-4 w-10 rounded-full bg-slate-100 animate-pulse" />
+                    </div>
+                  ))}
+                </div>
+                {/* Table body rows */}
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+                  <div key={i} className={`grid grid-cols-7 gap-3 py-2 ${i % 2 === 0 ? "bg-white" : "bg-slate-50/50"} rounded`}>
+                    <div className="h-4 w-28 rounded bg-slate-100 animate-pulse" />
+                    {[0, 1, 2, 3, 4, 5].map((j) => (
+                      <div key={j} className="flex justify-center">
+                        <div className="h-6 w-6 rounded-full bg-slate-200 animate-pulse" />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials skeleton */}
+        <section className="space-y-6">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-7 w-36 rounded-full bg-slate-200 animate-pulse" />
+            <div className="h-8 w-56 rounded-xl bg-slate-200 animate-pulse" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="rounded-3xl border border-slate-200 bg-white p-6 space-y-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-0.5">
+                    {[0, 1, 2, 3, 4].map((s) => (
+                      <div key={s} className="h-3.5 w-3.5 rounded-sm bg-slate-200 animate-pulse" />
+                    ))}
+                  </div>
+                  <div className="h-7 w-7 rounded bg-slate-100 animate-pulse" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 w-full rounded bg-slate-100 animate-pulse" />
+                  <div className="h-4 w-full rounded bg-slate-100 animate-pulse" />
+                  <div className="h-4 w-3/4 rounded bg-slate-100 animate-pulse" />
+                </div>
+                <div className="border-t border-slate-100 pt-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-slate-200 animate-pulse shrink-0" />
+                  <div className="space-y-1.5">
+                    <div className="h-4 w-24 rounded bg-slate-200 animate-pulse" />
+                    <div className="h-3.5 w-20 rounded-full bg-slate-100 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
     );
   }
@@ -246,13 +409,14 @@ export default function PricingPage() {
   ];
 
   return (
-    <main className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 space-y-10">
-      <section className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 px-4 py-1 text-sm font-medium">
+    <main className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20 space-y-20">
+      <section className="text-center space-y-5">
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 px-5 py-1.5 text-sm font-semibold shadow-sm">
           <Sparkles className="w-4 h-4" />
           Flexible Plans for Every Student
         </div>
-        <h1 className="text-3xl py-4 md:text-5xl font-bold text-slate-900">Pricing & Subscription Plans</h1>
+        <h1 className="text-4xl py-2 md:text-5xl font-extrabold text-slate-900 tracking-tight">Pricing & Subscription Plans</h1>
+       
         
         
         <div className="flex justify-center">
@@ -284,7 +448,7 @@ export default function PricingPage() {
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 space-y-3">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-7 space-y-4 shadow-sm">
           <div className="flex items-center gap-2 text-emerald-700 font-semibold">
             <Gift className="w-5 h-5" />
             Limited-Time Free Tier
@@ -304,7 +468,7 @@ export default function PricingPage() {
           </ul>
         </div>
 
-        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-6 space-y-3">
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-7 space-y-4 shadow-sm">
           <div className="flex items-center gap-2 text-blue-700 font-semibold">
             <ShieldCheck className="w-5 h-5" />
             Always Free Features
@@ -321,14 +485,22 @@ export default function PricingPage() {
       </section>
 
       {/* Core Plans */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {corePlans.map((plan) => {
+      <section className="space-y-8">
+        <div className="text-center space-y-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 px-5 py-1.5 text-sm font-semibold shadow-sm">
+            <Sparkles className="w-4 h-4 text-blue-500" />
+            Core Subscription Plans
+          </span>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Pick Your Perfect Plan</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {corePlans.map((plan) => {
           const original = toCurrencyValue(plan.priceINR, plan.priceUSD, currency);
           const discounted = applyDiscount(original);
           const orig99 = toEnding99(original, currency);
           const disc99 = toEnding99(discounted, currency);
-          return (
-            <div key={plan.key} className={`rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col ${plan.topBorder}`}>
+            return (
+            <div key={plan.key} className={`rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden flex flex-col ${plan.topBorder}`}>
               {/* Soft header */}
               <div className={`${plan.headerBg} px-6 pt-5 pb-5`}>
                 <div className="flex items-start justify-between gap-2">
@@ -376,18 +548,18 @@ export default function PricingPage() {
               </div>
             </div>
           );
-        })}
+          })}
+        </div>
       </section>
 
       {/* Additional Smart Plans */}
-      <section className="space-y-5">
+      <section className="space-y-8">
         <div className="text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 px-4 py-1 text-sm font-medium">
             <Sparkles className="w-4 h-4 text-amber-500" />
             More Smart Plans
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-3">Power Packs for Every Goal</h2>
-         
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-2">Power Packs for Every Goal</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {additionalPlans.map((plan) => {
@@ -429,13 +601,13 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="space-y-6">
-        <div className="text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 px-4 py-1 text-sm font-medium">
+      <section className="space-y-8">
+        <div className="text-center space-y-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 px-5 py-1.5 text-sm font-semibold shadow-sm">
             <Sparkles className="w-4 h-4 text-amber-500" />
             Side-by-Side Comparison
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-3">Compare All Plans</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Compare All Plans</h2>
           
         </div>
 
@@ -738,7 +910,7 @@ export default function PricingPage() {
         })()}
       </section>
 
-      <section className="space-y-8">
+      <section className="space-y-10">
         <style>{`
           @keyframes testimonial-scroll {
             0%   { transform: translateX(0); }
@@ -760,9 +932,7 @@ export default function PricingPage() {
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
             Student Reviews
           </span>
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-3">What Students Say</h2>
-          
-
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mt-2">What Students Say</h2>
           
         </div>
 
