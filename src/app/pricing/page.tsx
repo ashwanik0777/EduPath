@@ -542,7 +542,7 @@ export default function PricingPage() {
                     </li>
                   ))}
                 </ul>
-                <button className={`mt-6 w-full rounded-xl ${plan.ctaBg} text-white py-2.5 text-sm font-semibold transition-colors shadow-sm`}>
+                <button className={`mt-6 w-full rounded-full border ${plan.badgeClass} py-2.5 text-sm font-semibold transition-all shadow-sm hover:shadow-md`}>
                   {plan.ctaLabel || "Get Started"}
                 </button>
               </div>
@@ -591,7 +591,7 @@ export default function PricingPage() {
                       </li>
                     ))}
                   </ul>
-                  <button className={`mt-6 w-full rounded-xl ${plan.ctaBg} text-white py-2.5 text-sm font-semibold transition-colors shadow-sm`}>
+                  <button className={`mt-6 w-full rounded-full border ${plan.badgeClass} py-2.5 text-sm font-semibold transition-all shadow-sm hover:shadow-md`}>
                     {plan.cta}
                   </button>
                 </div>
@@ -892,8 +892,8 @@ export default function PricingPage() {
                             }`}
                           >
                             <button
-                              className={`rounded-lg text-white text-xs font-semibold px-4 py-2 transition-colors shadow-sm ${
-                                plan.ctaBg
+                              className={`rounded-full border text-xs font-semibold px-4 py-2 transition-all shadow-sm hover:shadow-md ${
+                                plan.badgeClass
                               }`}
                             >
                               {plan.ctaLabel}
