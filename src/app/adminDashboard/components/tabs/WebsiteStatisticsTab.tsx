@@ -250,7 +250,7 @@ export function WebsiteStatisticsTab({ focusedWebsitePages, websiteSettings, ove
 
   return (
     <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
-      <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 text-white p-6 shadow-lg">
+      <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-blue-500  to-indigo-500 text-white p-6 shadow-lg">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-wide text-indigo-100">Advanced Analytics Suite</p>

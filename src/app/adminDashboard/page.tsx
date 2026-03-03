@@ -32,6 +32,7 @@ import {
   MonitorSmartphone,
   Megaphone,
   Palette,
+  BadgeDollarSign,
 } from "lucide-react";
 import { Sidebar, MenuItem } from "@/app/components/Sidebar";
 import { useToast } from "@/app/hooks/use-toast";
@@ -63,6 +64,7 @@ import { WebsiteManagementTab } from "./components/tabs/WebsiteManagementTab";
 import { WebsiteStatisticsTab } from "./components/tabs/WebsiteStatisticsTab";
 import { WebsitePageDetailsTab } from "./components/tabs/WebsitePageDetailsTab";
 import { TechTitansTab } from "./components/tabs/TechTitansTab";
+import { PricingManagementTab } from "./components/tabs/PricingManagementTab";
 
 type OverviewResponse = {
   success: boolean;
@@ -145,7 +147,8 @@ type PlaceholderTabKey =
   | "websiteGovernmentCollege"
   | "websiteStudyResources"
   | "websiteNotifications"
-  | "techTitans";
+  | "techTitans"
+  | "pricingManagement";
 type TabKey = BaseTabKey | PlaceholderTabKey;
 
 type ContentResource = "colleges" | "careers" | "exams" | "scholarships";
@@ -403,6 +406,7 @@ export default function AdminDashboardPage() {
     websiteStudyResources: false,
     websiteNotifications: false,
     techTitans: false,
+    pricingManagement: false,
   });
 
   const [collegeForm, setCollegeForm] = useState({
@@ -1040,6 +1044,8 @@ export default function AdminDashboardPage() {
           await Promise.all([loadAnalytics(), loadAssessments()]);
         } else if (activeTab === "counselingBooking") {
           await Promise.all([loadCounseling(), loadAnalytics()]);
+        } else if (activeTab === "pricingManagement") {
+          await loadWebsiteManagement();
         } else if (
           activeTab === "websiteManagement" ||
           activeTab === "websiteStatistics" ||
@@ -1114,6 +1120,7 @@ export default function AdminDashboardPage() {
       color: "text-emerald-500",
       children: [
         { id: "websiteManagement", label: "Website Controls", icon: Settings2, color: "text-indigo-500" },
+        { id: "pricingManagement", label: "Pricing Management", icon: BadgeDollarSign, color: "text-emerald-600" },
         { id: "websiteStatistics", label: "Website Statistics", icon: LineChart, color: "text-cyan-500" },
         { id: "websiteHome", label: "Home", icon: Globe, color: "text-blue-500" },
         { id: "websiteAbout", label: "About", icon: FileCog, color: "text-violet-500" },
@@ -1179,6 +1186,7 @@ export default function AdminDashboardPage() {
     websiteGovernmentCollege: { title: "Government College Page", subtitle: "Manage Government College page details" },
     websiteStudyResources: { title: "Study Resources Page", subtitle: "Manage Study Resources page details" },
     websiteNotifications: { title: "Notifications Page", subtitle: "Manage Notifications page details" },
+    pricingManagement: { title: "Pricing Management", subtitle: "Manage all subscription plans, free tier, discounts, comparison table, and testimonials" },
     techTitans: {
       title: "Tech Titans",
       subtitle: "Create and manage developer profiles powering the EduPath experience"
@@ -1189,14 +1197,8 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-100 via-indigo-50 to-cyan-50 flex items-center justify-center px-4">
         <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white/90 backdrop-blur p-8 shadow-lg">
-          <div className="flex items-center justify-center mb-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-cyan-600 text-white flex items-center justify-center shadow-md">
-              <WandSparkles className="w-6 h-6" />
-            </div>
-          </div>
           <div className="w-10 h-10 mx-auto border-4 border-slate-300 border-t-slate-800 rounded-full animate-spin" />
           <p className="mt-5 text-center text-sm font-medium text-slate-700">Preparing the Admin Command Center...</p>
-          <p className="mt-1 text-center text-xs text-slate-500">Loading modules and dashboard intelligence</p>
         </div>
       </div>
     );
@@ -1442,6 +1444,18 @@ export default function AdminDashboardPage() {
             websiteSettings={websiteSettings}
             overview={overview}
             analytics={analytics}
+          />
+        )}
+
+        {activeTab === "pricingManagement" && (
+          <PricingManagementTab
+            pricing={websiteSettings.pricing}
+            setPricing={(updater) =>
+              setWebsiteSettings((prev) => ({ ...prev, pricing: updater(prev.pricing) }))
+            }
+            inputClass={inputClass}
+            primaryButtonClass={primaryButtonClass}
+            saveWebsiteManagement={saveWebsiteManagement}
           />
         )}
 
