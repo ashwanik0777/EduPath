@@ -24,8 +24,11 @@ type TechTitan = {
   roleType?: DeveloperRoleType
   specialization: string
   bio: string
+  image?: string
   imageUrl?: string
+  linkedin?: string
   linkedinUrl?: string
+  github?: string
   githubUrl?: string
   portfolioUrl?: string
   website?: string
@@ -171,53 +174,77 @@ export default function TechTitansPage() {
               const technologies = parseList(member.technologies)
               const contributions = parseList(member.contributions)
               const roleType = member.roleType || "Member"
+              const profileImage = member.image || member.imageUrl || "/EdupathLogo.png"
+              const socialGithub = member.github || member.githubUrl
+              const socialLinkedin = member.linkedin || member.linkedinUrl
 
               return (
                 <article
                   key={member._id}
                   className="group bg-white/75 backdrop-blur-xl rounded-3xl border border-white/70 shadow-xl shadow-indigo-200/20 p-6 hover:shadow-2xl hover:shadow-indigo-200/40 transition-all duration-300"
                 >
-                  <div className="w-24 h-24 mx-auto rounded-full p-1 bg-gradient-to-br from-indigo-200 via-cyan-200 to-sky-200 mb-5">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center">
-                      <img
-                        src={member.imageUrl || "/EdupathLogo.png"}
-                        alt={member.name}
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="relative mb-5">
+                    <div className="relative h-28 rounded-2xl bg-gradient-to-r from-indigo-500/90 via-violet-500/85 to-cyan-500/85 overflow-hidden border border-indigo-200/50 shadow-lg shadow-indigo-200/40">
+                      <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-white/20" />
+                      <div className="absolute -bottom-7 -left-5 w-24 h-24 rounded-full bg-white/15" />
+                      <div className="absolute inset-x-4 top-3 flex justify-end">
+                        <span className={`inline-flex rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-wider bg-white/90 ${roleColorMap[roleType]}`}>
+                          {roleType}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="absolute left-1/2 -translate-x-1/2 -bottom-10 w-24 h-24 rounded-full p-1 bg-white shadow-lg shadow-indigo-200/60">
+                      <div className="w-full h-full rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border border-white/80">
+                        <img
+                          src={profileImage}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="text-center mb-4">
+                  <div className="text-center pt-9 mb-4">
                     <h2 className="text-xl font-bold text-slate-900">{member.name}</h2>
                     <p className="text-sm text-indigo-700 font-semibold">{member.role}</p>
-                    <span
-                      className={`inline-flex mt-2 rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${roleColorMap[roleType]}`}
-                    >
-                      {roleType}
-                    </span>
+                    {member.bio ? <p className="text-sm text-slate-600 leading-relaxed mt-2 line-clamp-2">{member.bio}</p> : null}
                   </div>
 
-                  <div className="space-y-2 text-sm mb-5">
-                    <p className="text-slate-700">
-                      <span className="font-semibold text-slate-900">Specialization:</span> {member.specialization}
-                    </p>
-                    {member.yearsOfExperience ? (
-                      <p className="text-slate-700">
-                        <span className="font-semibold text-slate-900">Experience:</span> {member.yearsOfExperience}+ years
-                      </p>
-                    ) : null}
-                    {member.bio ? <p className="text-slate-600 leading-relaxed">{member.bio}</p> : null}
-                  </div>
-
-                  {(member.school || member.department || member.program || member.batch || member.rollNumber) && (
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-xs text-slate-700 space-y-1.5 mb-4">
-                      {member.school ? <div><span className="text-slate-500">School:</span> <span className="font-semibold">{member.school}</span></div> : null}
-                      {member.department ? <div><span className="text-slate-500">Department:</span> <span className="font-semibold">{member.department}</span></div> : null}
-                      {member.program ? <div><span className="text-slate-500">Program:</span> <span className="font-semibold">{member.program}</span></div> : null}
-                      {member.batch ? <div><span className="text-slate-500">Batch:</span> <span className="font-semibold">{member.batch}</span></div> : null}
-                      {member.rollNumber ? <div><span className="text-slate-500">Roll No:</span> <span className="font-semibold">{member.rollNumber}</span></div> : null}
+                  <div className="mb-4 space-y-3">
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {member.specialization ? (
+                        <span className="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                          {member.specialization}
+                        </span>
+                      ) : null}
+                      {member.yearsOfExperience ? (
+                        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                          {member.yearsOfExperience}+ yrs exp
+                        </span>
+                      ) : null}
+                      {member.program ? (
+                        <span className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">
+                          {member.program}
+                        </span>
+                      ) : null}
                     </div>
-                  )}
+
+                    {(member.school || member.department || member.batch || member.rollNumber) && (
+                      <details className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3">
+                        <summary className="cursor-pointer list-none text-xs font-semibold text-slate-700 flex items-center justify-between">
+                          Academic Details
+                          <span className="text-[11px] text-slate-500">Tap to view</span>
+                        </summary>
+                        <div className="mt-2 pt-2 border-t border-slate-200 text-xs text-slate-700 space-y-1.5">
+                          {member.school ? <div><span className="text-slate-500">School:</span> <span className="font-semibold">{member.school}</span></div> : null}
+                          {member.department ? <div><span className="text-slate-500">Department:</span> <span className="font-semibold">{member.department}</span></div> : null}
+                          {member.batch ? <div><span className="text-slate-500">Batch:</span> <span className="font-semibold">{member.batch}</span></div> : null}
+                          {member.rollNumber ? <div><span className="text-slate-500">Roll No:</span> <span className="font-semibold">{member.rollNumber}</span></div> : null}
+                        </div>
+                      </details>
+                    )}
+                  </div>
 
                   <div className="flex flex-wrap items-center justify-center gap-2 pt-4 border-t border-slate-200">
                     {member.email ? (
@@ -225,13 +252,13 @@ export default function TechTitansPage() {
                         <Mail className="w-4 h-4" />
                       </a>
                     ) : null}
-                    {member.githubUrl ? (
-                      <a href={member.githubUrl} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors" title="GitHub">
+                    {socialGithub ? (
+                      <a href={socialGithub} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors" title="GitHub">
                         <Github className="w-4 h-4" />
                       </a>
                     ) : null}
-                    {member.linkedinUrl ? (
-                      <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-blue-700 flex items-center justify-center transition-colors" title="LinkedIn">
+                    {socialLinkedin ? (
+                      <a href={socialLinkedin} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-blue-700 flex items-center justify-center transition-colors" title="LinkedIn">
                         <Linkedin className="w-4 h-4" />
                       </a>
                     ) : null}
