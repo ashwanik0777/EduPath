@@ -25,6 +25,8 @@ import {
   Sparkles,
   Shield,
   Phone,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { type WebsitePricing } from "@/app/lib/pricingDefaults";
 
@@ -105,6 +107,14 @@ export function PricingManagementTab({
       .map((l) => l.trim())
       .filter(Boolean);
 
+  const moveArrayItem = <T,>(items: T[], fromIndex: number, toIndex: number) => {
+    if (toIndex < 0 || toIndex >= items.length) return items;
+    const next = [...items];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    return next;
+  };
+
   const setPlanField = <K extends "monthlyPlan" | "yearlyPlan" | "singleCounselingPlan">(
     planKey: K,
     field: keyof PricingSettings[K],
@@ -124,6 +134,26 @@ export function PricingManagementTab({
       ...prev,
       additionalPlans: prev.additionalPlans.map((plan, planIndex) =>
         planIndex === index ? { ...plan, [field]: value } : plan,
+      ),
+    }));
+
+  const moveAdditionalPlan = (index: number, direction: "up" | "down") =>
+    setPricing((prev) => ({
+      ...prev,
+      additionalPlans: moveArrayItem(
+        prev.additionalPlans,
+        index,
+        direction === "up" ? index - 1 : index + 1,
+      ),
+    }));
+
+  const moveFullComparisonRow = (index: number, direction: "up" | "down") =>
+    setPricing((prev) => ({
+      ...prev,
+      fullComparisonRows: moveArrayItem(
+        prev.fullComparisonRows,
+        index,
+        direction === "up" ? index - 1 : index + 1,
       ),
     }));
 
@@ -227,6 +257,21 @@ export function PricingManagementTab({
             {section.label}
           </button>
         ))}
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600">
+          Additional plans: {pricing.additionalPlans.length}
+        </span>
+        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600">
+          Comparison rows: {pricing.comparisonRows.length}
+        </span>
+        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600">
+          Full matrix rows: {pricing.fullComparisonRows.length}
+        </span>
+        <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600">
+          Testimonials: {pricing.testimonials.length}
+        </span>
       </div>
 
       {/* ========================== OVERVIEW ========================== */}
@@ -639,6 +684,30 @@ export function PricingManagementTab({
             <div className="p-5 space-y-4">
               {pricing.additionalPlans.map((plan, planIndex) => (
                 <div key={`additional-plan-${planIndex}`} className="rounded-xl border border-slate-200 p-4 bg-slate-50/60 space-y-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-semibold text-slate-700">Additional Plan #{planIndex + 1}</p>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => moveAdditionalPlan(planIndex, "up")}
+                        disabled={planIndex === 0}
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-md border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                        title="Move up"
+                      >
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveAdditionalPlan(planIndex, "down")}
+                        disabled={planIndex === pricing.additionalPlans.length - 1}
+                        className="inline-flex items-center justify-center w-7 h-7 rounded-md border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                        title="Move down"
+                      >
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                       <label className="text-xs font-medium text-slate-600">Plan Name</label>
@@ -1020,6 +1089,26 @@ export function PricingManagementTab({
                       ))}
 
                       <button
+                        type="button"
+                        onClick={() => moveFullComparisonRow(rowIndex, "up")}
+                        disabled={rowIndex === 0}
+                        className="text-slate-500 hover:text-slate-700 shrink-0"
+                        title="Move row up"
+                      >
+                        <ArrowUp className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveFullComparisonRow(rowIndex, "down")}
+                        disabled={rowIndex === pricing.fullComparisonRows.length - 1}
+                        className="text-slate-500 hover:text-slate-700 shrink-0"
+                        title="Move row down"
+                      >
+                        <ArrowDown className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        type="button"
                         onClick={() =>
                           setPricing((prev) => ({
                             ...prev,
@@ -1194,7 +1283,7 @@ export function PricingManagementTab({
       )}
 
       {/* ========================== SAVE BUTTON ========================== */}
-      <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+      <div className="sticky bottom-3 z-20 flex items-center justify-between rounded-2xl border border-slate-200 bg-white/95 backdrop-blur px-5 py-4 shadow-lg">
         <p className="text-sm text-slate-600">
           Changes are saved globally and immediately reflected on the public pricing page.
         </p>
