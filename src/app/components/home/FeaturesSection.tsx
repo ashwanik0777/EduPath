@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
 import { Brain, Target, BookOpen, Users, TrendingUp, Award, CheckCircle2, Sparkles } from "lucide-react"
 
 const features = [
@@ -58,13 +61,87 @@ const features = [
 ]
 
 const stats = [
-  { value: "50,000+", label: "Students Guided" },
-  { value: "500+", label: "Partner Colleges" },
-  { value: "98%", label: "Satisfaction Rate" },
-  { value: "200+", label: "Expert Counsellors" },
+  { target: 500, suffix: "+", label: "Partner Colleges", color: "from-violet-600 to-purple-600" },
+  { target: 98, suffix: "%", label: "Satisfaction Rate", color: "from-rose-500 to-pink-600" },
+  { target: 300, suffix: "+", label: "Career Paths Mapped", color: "from-emerald-500 to-teal-600" },
+  { target: 15, suffix: "+", label: "Years of Excellence", color: "from-amber-500 to-orange-600" },
 ]
 
+function useCountUp(target: number, duration: number, started: boolean) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!started) return
+    let startTime: number | null = null
+    let frame: number
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / duration, 1)
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(eased * target))
+      if (progress < 1) {
+        frame = requestAnimationFrame(step)
+      } else {
+        setCount(target)
+      }
+    }
+
+    frame = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frame)
+  }, [started, target, duration])
+
+  return count
+}
+
+function StatCard({
+  stat,
+  started,
+  index,
+}: {
+  stat: (typeof stats)[number]
+  started: boolean
+  index: number
+}) {
+  const count = useCountUp(stat.target, 1800 + index * 200, started)
+
+  return (
+    <div className="group text-center p-7 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <div
+        className={`text-4xl font-black bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-1 tabular-nums`}
+      >
+        {count}
+        {stat.suffix}
+      </div>
+      <div className="w-8 h-0.5 bg-gradient-to-r from-transparent via-slate-300 to-transparent mx-auto my-2" />
+      <div className="text-slate-500 text-sm font-medium">{stat.label}</div>
+    </div>
+  )
+}
+
 export default function FeaturesSection() {
+  const statsRef = useRef<HTMLDivElement>(null)
+  const [started, setStarted] = useState(false)
+
+  useEffect(() => {
+    const el = statsRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.3 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden">
       {/* Background blobs */}
@@ -89,18 +166,10 @@ export default function FeaturesSection() {
           
         </div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+        {/* Stats Row — scroll-triggered counter */}
+        <div ref={statsRef} className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           {stats.map((stat, i) => (
-            <div
-              key={i}
-              className="text-center p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300"
-            >
-              <div className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-1">
-                {stat.value}
-              </div>
-              <div className="text-slate-500 text-sm font-medium">{stat.label}</div>
-            </div>
+            <StatCard key={i} stat={stat} started={started} index={i} />
           ))}
         </div>
 

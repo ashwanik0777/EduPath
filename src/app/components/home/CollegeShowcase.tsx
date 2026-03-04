@@ -57,9 +57,7 @@ export default function CollegeShowcase() {
             Featured Institutions
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-4 mb-3">Top Government Colleges in India</h2>
-          <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-            Popular and trusted government colleges, curated in a clean and quick-compare format.
-          </p>
+          
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
