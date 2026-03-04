@@ -159,14 +159,14 @@ export default function ModernHero() {
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href="/careerAssessment"
-                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 text-white px-5 py-3 font-semibold hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-indigo-300 bg-indigo-50 text-indigo-700 px-5 py-3 font-semibold hover:bg-indigo-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
               >
                 Start Assessment
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/studyResources"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white text-slate-800 px-5 py-3 font-semibold hover:bg-slate-50 hover:border-slate-400 hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-slate-300 bg-slate-50 text-slate-700 px-5 py-3 font-semibold hover:bg-slate-100 hover:border-slate-400 hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200"
               >
                 Explore Resources
                 <Compass className="w-4 h-4" />

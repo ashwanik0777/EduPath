@@ -9,6 +9,7 @@ const counsellors = [
     students: "5,000+",
     gradient: "from-violet-500 to-purple-600",
     initials: "SD",
+    btnClass: "border-2 border-violet-300 bg-violet-50 text-violet-700 hover:bg-violet-100",
   },
   {
     name: "Adnan Buland",
@@ -18,6 +19,7 @@ const counsellors = [
     students: "8,000+",
     gradient: "from-blue-500 to-cyan-600",
     initials: "AB",
+    btnClass: "border-2 border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100",
   },
   {
     name: "Pranav Bhatia",
@@ -27,6 +29,7 @@ const counsellors = [
     students: "6,500+",
     gradient: "from-emerald-500 to-teal-600",
     initials: "PB",
+    btnClass: "border-2 border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
   },
   {
     name: "Deepti Sharma",
@@ -36,6 +39,7 @@ const counsellors = [
     students: "4,200+",
     gradient: "from-rose-500 to-pink-600",
     initials: "DS",
+    btnClass: "border-2 border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100",
   },
 ]
 
@@ -100,7 +104,7 @@ export default function Counsellors() {
               </div>
 
               {/* CTA */}
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-violet-300 hover:text-violet-700 hover:bg-violet-50 transition-all duration-200">
+              <button className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl ${c.btnClass} font-semibold hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200`}>
                 <MessageCircle className="w-4 h-4" />
                 Book Session
               </button>
@@ -110,7 +114,7 @@ export default function Counsellors() {
 
         {/* View All CTA */}
         <div className="text-center mt-12">
-          <button className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200">
+          <button className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl border-2 border-indigo-300 bg-indigo-50 text-indigo-700 font-semibold hover:bg-indigo-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
             View All Counsellors
             <ArrowRight className="w-4 h-4" />
           </button>

@@ -101,7 +101,7 @@ export default function CollegeShowcase() {
                     <span className="text-[11px] text-gray-500">Annual Fees</span>
                     <div className="text-base font-bold text-emerald-600">{college.fees}</div>
                   </div>
-                  <button className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-xs font-medium">
+                  <button className="px-3 py-1.5 border border-indigo-300 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-all duration-200 text-xs font-semibold">
                     Details
                   </button>
                 </div>
@@ -111,7 +111,7 @@ export default function CollegeShowcase() {
         </div>
 
         <div className="text-center">
-          <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 font-medium text-lg shadow-lg hover:shadow-xl">
+          <button className="px-8 py-3 border-2 border-indigo-300 bg-indigo-50 text-indigo-700 rounded-xl hover:bg-indigo-100 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 font-semibold text-base">
             Explore All Colleges
           </button>
         </div>

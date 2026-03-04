@@ -14,6 +14,7 @@ const services = [
     bgGradient: "from-violet-50 to-purple-50",
     border: "border-violet-200",
     badgeBg: "bg-violet-600",
+    btnClass: "border-2 border-violet-300 bg-violet-50 text-violet-700 hover:bg-violet-100",
   },
   {
     icon: BookOpen,
@@ -28,6 +29,7 @@ const services = [
     bgGradient: "from-blue-50 to-cyan-50",
     border: "border-blue-200",
     badgeBg: "bg-blue-600",
+    btnClass: "border-2 border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100",
   },
   {
     icon: Briefcase,
@@ -42,6 +44,7 @@ const services = [
     bgGradient: "from-emerald-50 to-teal-50",
     border: "border-emerald-200",
     badgeBg: "bg-emerald-600",
+    btnClass: "border-2 border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
   },
 ]
 
@@ -114,7 +117,7 @@ export default function Services() {
 
                 {/* CTA */}
                 <button
-                  className={`w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-gradient-to-r ${s.gradient} text-white font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-100 transition-all duration-200`}
+                  className={`w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl ${s.btnClass} font-semibold hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99] transition-all duration-200`}
                 >
                   Enroll Now
                   <ArrowRight className="w-4 h-4" />

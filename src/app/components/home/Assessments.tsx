@@ -15,6 +15,7 @@ const tests = [
     bgGradient: "from-violet-50 to-purple-50",
     border: "border-violet-200",
     tagBg: "bg-violet-600",
+    btnClass: "border-2 border-violet-300 bg-violet-50 text-violet-700 hover:bg-violet-100",
   },
   {
     icon: BarChart3,
@@ -30,6 +31,7 @@ const tests = [
     bgGradient: "from-blue-50 to-cyan-50",
     border: "border-blue-200",
     tagBg: "bg-blue-600",
+    btnClass: "border-2 border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100",
   },
   {
     icon: Zap,
@@ -45,6 +47,7 @@ const tests = [
     bgGradient: "from-emerald-50 to-teal-50",
     border: "border-emerald-200",
     tagBg: "bg-emerald-600",
+    btnClass: "border-2 border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
   },
 ]
 
@@ -134,7 +137,7 @@ export default function Assessments() {
 
                 {/* CTA */}
                 <button
-                  className={`w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-gradient-to-r ${t.gradient} text-white font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-100 transition-all duration-200`}
+                  className={`w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl ${t.btnClass} font-semibold hover:-translate-y-0.5 hover:shadow-md active:scale-[0.99] transition-all duration-200`}
                 >
                   Take Test
                   <ArrowRight className="w-4 h-4" />
