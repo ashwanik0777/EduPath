@@ -250,18 +250,56 @@ export function WebsiteStatisticsTab({ focusedWebsitePages, websiteSettings, ove
 
   return (
     <div className="space-y-6 animate-in fade-in-0 slide-in-from-bottom-1 duration-300">
-      <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-blue-500  to-indigo-500 text-white p-6 shadow-lg">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-wide text-indigo-100">Advanced Analytics Suite</p>
-            <h2 className="text-2xl font-bold mt-1">Student, Counselor & Website Intelligence</h2>
-            <p className="text-indigo-100 mt-2 text-sm">Unified command view for engagement funnel, counseling efficiency, psychometric outcomes, and content operations.</p>
+      {/* ── Hero Banner ── */}
+      <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ background: "linear-gradient(160deg, #0f172a 0%, #1e1b4b 45%, #312e81 100%)" }}>
+        {/* soft mesh blobs */}
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-0 right-0 w-[420px] h-[280px] opacity-30" style={{ background: "radial-gradient(ellipse at top right, #818cf8, transparent 65%)" }} />
+          <div className="absolute bottom-0 left-0 w-[320px] h-[220px] opacity-20" style={{ background: "radial-gradient(ellipse at bottom left, #6d28d9, transparent 60%)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] opacity-10" style={{ background: "radial-gradient(ellipse, #a5b4fc, transparent 70%)" }} />
+        </div>
+
+        {/* subtle grid lines */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
+        />
+
+        <div className="relative px-6 py-7 flex flex-col lg:flex-row lg:items-center gap-7">
+          {/* left: text */}
+          <div className="flex-1 min-w-0">
+            <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full border border-indigo-400/30 bg-indigo-500/10 backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-300 animate-pulse" />
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-indigo-300">Advanced Analytics Suite</span>
+            </div>
+            <h2 className="text-[1.65rem] font-bold text-white leading-tight tracking-tight">
+              Student, Counselor &amp;{" "}
+              <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #a5b4fc, #c4b5fd)" }}>
+                Website Intelligence
+              </span>
+            </h2>
+            <p className="mt-2.5 text-sm text-slate-400 max-w-lg leading-relaxed">
+              Unified command view for engagement funnel, counseling efficiency, psychometric outcomes, and content operations.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm min-w-[280px]">
-            <div className="rounded-xl bg-white/15 px-3 py-2">Total users: <span className="font-semibold">{formatNumber(dashboardOverview.totalUsers)}</span></div>
-            <div className="rounded-xl bg-white/15 px-3 py-2">Assessment coverage: <span className="font-semibold">{dashboardOverview.assessmentCoverage}%</span></div>
-            <div className="rounded-xl bg-white/15 px-3 py-2">Counseling coverage: <span className="font-semibold">{dashboardOverview.counselingCoverage}%</span></div>
-            <div className="rounded-xl bg-white/15 px-3 py-2">Shortlist conversion: <span className="font-semibold">{dashboardOverview.shortlistConversionRate}%</span></div>
+
+          {/* right: stat chips */}
+          <div className="grid grid-cols-2 gap-2.5 flex-shrink-0 lg:min-w-[270px]">
+            {[
+              { label: "Total Users",          value: formatNumber(dashboardOverview.totalUsers),              accent: "#818cf8" },
+              { label: "Assessment Coverage",  value: `${dashboardOverview.assessmentCoverage}%`,             accent: "#34d399" },
+              { label: "Counseling Coverage",  value: `${dashboardOverview.counselingCoverage}%`,             accent: "#38bdf8" },
+              { label: "Shortlist Conversion", value: `${dashboardOverview.shortlistConversionRate}%`,        accent: "#fb923c" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-xl px-3.5 py-3 flex flex-col gap-1 border border-white/10"
+                style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(10px)" }}
+              >
+                <span className="text-[10px] uppercase tracking-widest font-medium" style={{ color: stat.accent }}>{stat.label}</span>
+                <span className="text-xl font-bold text-white">{stat.value}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

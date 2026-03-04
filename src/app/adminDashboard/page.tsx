@@ -977,7 +977,6 @@ export default function AdminDashboardPage() {
       children: [
         { id: "websiteManagement", label: "Website Controls", icon: Settings2, color: "text-indigo-500" },
         { id: "pricingManagement", label: "Pricing Management", icon: BadgeDollarSign, color: "text-emerald-600" },
-        { id: "websiteStatistics", label: "Website Statistics", icon: LineChart, color: "text-cyan-500" },
         { id: "websiteHome", label: "Home", icon: Globe, color: "text-blue-500" },
         { id: "websiteAbout", label: "About", icon: FileCog, color: "text-violet-500" },
         { id: "websiteCareerAssessment", label: "Career Assessment", icon: Target, color: "text-purple-500" },
@@ -985,6 +984,7 @@ export default function AdminDashboardPage() {
         { id: "websiteStudyResources", label: "Study Resources", icon: BookOpen, color: "text-amber-500" },
         { id: "websiteNotifications", label: "Notifications", icon: Bell, color: "text-pink-500" },
         { id: "content", label: "Content Center", icon: FileCog, color: "text-emerald-500" },
+        { id: "websiteStatistics", label: "Website Statistics", icon: LineChart, color: "text-cyan-500" },
       ],
     },
   ];
