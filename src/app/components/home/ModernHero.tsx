@@ -20,44 +20,40 @@ const dashboardStats = [
     target: 10,
     suffix: "k+",
     icon: GraduationCap,
-    iconColor: "text-indigo-600",
+    iconGradient: "from-indigo-500 to-blue-600",
     bg: "from-indigo-50 to-blue-50",
     border: "border-indigo-100",
     labelColor: "text-indigo-700",
-    iconBg: "bg-indigo-100",
   },
   {
     label: "Expert Counselors",
     target: 250,
     suffix: "+",
     icon: Users,
-    iconColor: "text-cyan-600",
+    iconGradient: "from-cyan-500 to-teal-600",
     bg: "from-cyan-50 to-teal-50",
     border: "border-cyan-100",
     labelColor: "text-cyan-700",
-    iconBg: "bg-cyan-100",
   },
   {
     label: "Assessments Taken",
     target: 50,
     suffix: "k+",
     icon: Brain,
-    iconColor: "text-emerald-600",
+    iconGradient: "from-emerald-500 to-green-600",
     bg: "from-emerald-50 to-green-50",
     border: "border-emerald-100",
     labelColor: "text-emerald-700",
-    iconBg: "bg-emerald-100",
   },
   {
     label: "Success Pathways",
     target: 95,
     suffix: "%",
     icon: Trophy,
-    iconColor: "text-violet-600",
+    iconGradient: "from-violet-500 to-purple-600",
     bg: "from-violet-50 to-purple-50",
     border: "border-violet-100",
     labelColor: "text-violet-700",
-    iconBg: "bg-violet-100",
   },
 ];
 
@@ -102,22 +98,22 @@ function StatCard({
 
   return (
     <div
-      className={`group relative rounded-2xl bg-gradient-to-br ${stat.bg} border ${stat.border} p-4 md:p-5 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 overflow-hidden`}
+      className={`group relative rounded-2xl bg-gradient-to-br ${stat.bg} border ${stat.border} p-4 md:p-5 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden`}
     >
       {/* subtle corner glow */}
-      <div className="absolute -top-4 -right-4 w-14 h-14 rounded-full bg-white/40 blur-xl pointer-events-none" />
+      <div className="absolute -top-4 -right-4 w-14 h-14 rounded-full bg-white/50 blur-xl pointer-events-none" />
 
-      <div className="flex items-center gap-3 mb-2">
-        <span className={`w-8 h-8 rounded-lg ${stat.iconBg} flex items-center justify-center flex-shrink-0`}>
-          <Icon className={`w-4 h-4 ${stat.iconColor}`} strokeWidth={2} />
-        </span>
-        <p className={`text-xs font-semibold ${stat.labelColor} leading-tight`}>{stat.label}</p>
+      {/* Gradient icon box — pricing card accent style */}
+      <div
+        className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.iconGradient} flex items-center justify-center mb-3 shadow-md group-hover:scale-110 transition-transform duration-300`}
+      >
+        <Icon className="w-5 h-5 text-white" strokeWidth={2} />
       </div>
 
-      <p className="text-2xl md:text-3xl font-black text-slate-900 tabular-nums tracking-tight">
-        {count}
-        {stat.suffix}
+      <p className="text-2xl md:text-3xl font-black text-slate-900 tabular-nums tracking-tight leading-none">
+        {count}{stat.suffix}
       </p>
+      <p className={`text-xs font-semibold ${stat.labelColor} mt-1.5 leading-tight`}>{stat.label}</p>
     </div>
   );
 }
@@ -150,7 +146,7 @@ export default function ModernHero() {
               Future-ready Career Intelligence
             </span>
 
-            <h1 className="mt-5 text-4xl md:text-6xl font-black text-slate-900 leading-[1.05]">
+            <h1 className="mt-5 text-4xl md:text-5xl font-black text-slate-900 leading-[1.05]">
               Design your career path with
               <span className="text-indigo-700"> confidence</span>.
             </h1>

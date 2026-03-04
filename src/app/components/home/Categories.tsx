@@ -19,98 +19,134 @@ const categories = [
   {
     name: "Engineering & Technology",
     icon: Cpu,
-    gradient: "from-indigo-500 to-blue-600",
-    bg: "from-indigo-50 to-blue-50",
-    border: "border-indigo-100",
-    text: "text-indigo-700",
+    iconColor: "text-indigo-600",
+    iconBg: "bg-indigo-50",
+    border: "border-indigo-200",
+    hoverBg: "hover:bg-indigo-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-indigo-700",
+    arrowColor: "text-indigo-500",
   },
   {
     name: "Management & Marketing",
     icon: BarChart2,
-    gradient: "from-violet-500 to-purple-600",
-    bg: "from-violet-50 to-purple-50",
-    border: "border-violet-100",
-    text: "text-violet-700",
+    iconColor: "text-violet-600",
+    iconBg: "bg-violet-50",
+    border: "border-violet-200",
+    hoverBg: "hover:bg-violet-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-violet-700",
+    arrowColor: "text-violet-500",
   },
   {
     name: "Healthcare",
     icon: HeartPulse,
-    gradient: "from-rose-500 to-pink-600",
-    bg: "from-rose-50 to-pink-50",
-    border: "border-rose-100",
-    text: "text-rose-700",
+    iconColor: "text-rose-500",
+    iconBg: "bg-rose-50",
+    border: "border-rose-200",
+    hoverBg: "hover:bg-rose-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-rose-600",
+    arrowColor: "text-rose-500",
   },
   {
     name: "Creativity & Art",
     icon: Paintbrush2,
-    gradient: "from-amber-500 to-orange-500",
-    bg: "from-amber-50 to-orange-50",
-    border: "border-amber-100",
-    text: "text-amber-700",
+    iconColor: "text-amber-500",
+    iconBg: "bg-amber-50",
+    border: "border-amber-200",
+    hoverBg: "hover:bg-amber-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-amber-700",
+    arrowColor: "text-amber-500",
   },
   {
     name: "Science & Research",
     icon: FlaskConical,
-    gradient: "from-emerald-500 to-teal-600",
-    bg: "from-emerald-50 to-teal-50",
-    border: "border-emerald-100",
-    text: "text-emerald-700",
+    iconColor: "text-emerald-600",
+    iconBg: "bg-emerald-50",
+    border: "border-emerald-200",
+    hoverBg: "hover:bg-emerald-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-emerald-700",
+    arrowColor: "text-emerald-500",
   },
   {
     name: "Law & Order",
     icon: Scale,
-    gradient: "from-slate-600 to-slate-700",
-    bg: "from-slate-50 to-gray-100",
-    border: "border-slate-200",
+    iconColor: "text-slate-600",
+    iconBg: "bg-slate-100",
+    border: "border-slate-300",
+    hoverBg: "hover:bg-slate-50/80",
     text: "text-slate-700",
+    hoverText: "group-hover:text-slate-800",
+    arrowColor: "text-slate-500",
   },
   {
     name: "Commerce & Finance",
     icon: Landmark,
-    gradient: "from-cyan-500 to-blue-500",
-    bg: "from-cyan-50 to-blue-50",
-    border: "border-cyan-100",
-    text: "text-cyan-700",
+    iconColor: "text-cyan-600",
+    iconBg: "bg-cyan-50",
+    border: "border-cyan-200",
+    hoverBg: "hover:bg-cyan-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-cyan-700",
+    arrowColor: "text-cyan-500",
   },
   {
     name: "Media & Communication",
     icon: Tv2,
-    gradient: "from-fuchsia-500 to-pink-500",
-    bg: "from-fuchsia-50 to-pink-50",
-    border: "border-fuchsia-100",
-    text: "text-fuchsia-700",
+    iconColor: "text-fuchsia-600",
+    iconBg: "bg-fuchsia-50",
+    border: "border-fuchsia-200",
+    hoverBg: "hover:bg-fuchsia-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-fuchsia-700",
+    arrowColor: "text-fuchsia-500",
   },
   {
     name: "Fashion & Design",
     icon: Shirt,
-    gradient: "from-pink-500 to-rose-500",
-    bg: "from-pink-50 to-rose-50",
-    border: "border-pink-100",
-    text: "text-pink-700",
+    iconColor: "text-pink-500",
+    iconBg: "bg-pink-50",
+    border: "border-pink-200",
+    hoverBg: "hover:bg-pink-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-pink-700",
+    arrowColor: "text-pink-500",
   },
   {
     name: "Sports & Fitness",
     icon: Dumbbell,
-    gradient: "from-orange-500 to-red-500",
-    bg: "from-orange-50 to-red-50",
-    border: "border-orange-100",
-    text: "text-orange-700",
+    iconColor: "text-orange-500",
+    iconBg: "bg-orange-50",
+    border: "border-orange-200",
+    hoverBg: "hover:bg-orange-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-orange-700",
+    arrowColor: "text-orange-500",
   },
   {
     name: "Agriculture & Environment",
     icon: Sprout,
-    gradient: "from-lime-500 to-green-600",
-    bg: "from-lime-50 to-green-50",
-    border: "border-lime-100",
-    text: "text-lime-700",
+    iconColor: "text-lime-600",
+    iconBg: "bg-lime-50",
+    border: "border-lime-200",
+    hoverBg: "hover:bg-lime-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-lime-700",
+    arrowColor: "text-lime-600",
   },
   {
     name: "Education & Teaching",
     icon: BookOpen,
-    gradient: "from-blue-500 to-indigo-600",
-    bg: "from-blue-50 to-indigo-50",
-    border: "border-blue-100",
-    text: "text-blue-700",
+    iconColor: "text-blue-600",
+    iconBg: "bg-blue-50",
+    border: "border-blue-200",
+    hoverBg: "hover:bg-blue-50/60",
+    text: "text-slate-700",
+    hoverText: "group-hover:text-blue-700",
+    arrowColor: "text-blue-500",
   },
 ]
 
@@ -136,9 +172,7 @@ export default function Categories() {
               Categories
             </span>
           </h2>
-          <p className="text-slate-500 text-lg">
-            Explore diverse career fields and find the path that ignites your passion.
-          </p>
+         
         </div>
 
         {/* Grid */}
@@ -148,23 +182,22 @@ export default function Categories() {
             return (
               <div
                 key={i}
-                className={`group relative flex flex-col items-center text-center p-5 rounded-2xl bg-gradient-to-br ${c.bg} border ${c.border} cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 overflow-hidden`}
+                className={`group relative flex flex-col items-center text-center p-5 rounded-2xl bg-white border-2 ${c.border} cursor-pointer ${c.hoverBg} hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300`}
                 aria-label={c.name}
               >
-                {/* Subtle inner glow on hover */}
-                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${c.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`} />
-
-                {/* Icon box */}
+                {/* Icon — colored, light bg pill */}
                 <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${c.gradient} flex items-center justify-center mb-4 shadow-md group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}
+                  className={`w-14 h-14 rounded-2xl ${c.iconBg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
                 >
-                  <Icon className="w-7 h-7 text-white" strokeWidth={1.8} />
+                  <Icon className={`w-7 h-7 ${c.iconColor}`} strokeWidth={1.8} />
                 </div>
 
-                <span className={`text-sm font-semibold ${c.text} leading-snug`}>{c.name}</span>
+                <span className={`text-sm font-semibold ${c.text} ${c.hoverText} leading-snug transition-colors duration-200`}>
+                  {c.name}
+                </span>
 
                 {/* Arrow appears on hover */}
-                <span className={`mt-2 inline-flex items-center gap-0.5 text-xs font-medium ${c.text} opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200`}>
+                <span className={`mt-2 inline-flex items-center gap-0.5 text-xs font-medium ${c.arrowColor} opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200`}>
                   Explore <ArrowRight className="w-3 h-3" />
                 </span>
               </div>
