@@ -1,74 +1,128 @@
-import { Card, CardContent } from "@/app/components/ui/card"
-import { User } from "lucide-react"
+import { GraduationCap, BookOpen, Briefcase, CheckCircle2, ArrowRight, Sparkles } from "lucide-react"
 
 const services = [
   {
+    icon: GraduationCap,
+    badge: "Most Popular",
     title: "Master Counsellor Bundle",
-    desc: "8 Course Bundle · Become Pro Counsellor",
-    price: "₹50,500 ₹27,000",
+    desc: "8 Course Bundle · Become a Pro Counsellor",
+    originalPrice: "₹50,500",
+    price: "₹27,000",
     audience: "For Educationists & Teachers",
-    features: ["Lifetime Access", "4 Certificates", "Doubt Clearing Sessions"]
+    features: ["Lifetime Access", "4 Certificates", "Doubt Clearing Sessions"],
+    gradient: "from-violet-600 to-purple-700",
+    bgGradient: "from-violet-50 to-purple-50",
+    border: "border-violet-200",
+    badgeBg: "bg-violet-600",
   },
   {
+    icon: BookOpen,
+    badge: "For Students",
     title: "Certification for Students",
     desc: "16 Modules · Guide School Students",
-    price: "₹15,000 ₹10,000",
-    audience: "For Students (Class 8th-12th)",
-    features: ["Practical Training", "Peer Community", "Career Roadmap"]
+    originalPrice: "₹15,000",
+    price: "₹10,000",
+    audience: "For Students (Class 8th–12th)",
+    features: ["Practical Training", "Peer Community", "Career Roadmap"],
+    gradient: "from-blue-600 to-cyan-600",
+    bgGradient: "from-blue-50 to-cyan-50",
+    border: "border-blue-200",
+    badgeBg: "bg-blue-600",
   },
   {
+    icon: Briefcase,
+    badge: "Best Value",
     title: "Job Readiness Toolkit",
     desc: "17+ Modules · 30+ Hours Training",
-    price: "₹5,000 ₹2,000",
+    originalPrice: "₹5,000",
+    price: "₹2,000",
     audience: "For Graduates & Job Seekers",
-    features: ["Expert Mentorship", "Interview Prep", "Resume Templates"]
+    features: ["Expert Mentorship", "Interview Prep", "Resume Templates"],
+    gradient: "from-emerald-600 to-teal-600",
+    bgGradient: "from-emerald-50 to-teal-50",
+    border: "border-emerald-200",
+    badgeBg: "bg-emerald-600",
   },
 ]
 
 export default function Services() {
   return (
-    <section className="py-16 bg-[#F5F7FA]">
-      <h2 className="text-3xl font-bold text-center mb-10 text-[#2E358B] tracking-tight drop-shadow-sm">
-        Our Counselling Services
-      </h2>
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 px-5">
-        {services.map((s, i) => (
-          <Card
-            key={i}
-            className="rounded-2xl bg-white shadow-lg border border-[#ECE6F9]
-              flex flex-col hover:shadow-2xl hover:-translate-y-2
-              transition-all duration-300 relative overflow-visible"
-          >
-            <CardContent className="p-8 flex flex-col">
-              {/* Lucide user icon avatar */}
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#EDF1F7] shadow border border-[#E0D7F8] mb-3 mx-auto">
-                <User className="w-9 h-9 text-[#BDBBD9]" strokeWidth={1.5} />
-              </div>
-              <h3 className="font-bold text-[#2E358B] text-lg mb-1 text-center">{s.title}</h3>
-              <p className="text-sm text-gray-700 text-center mb-2">{s.desc}</p>
-              <div className="flex justify-center items-baseline mb-1">
-                {/* <span className="text-[#C62862] text-base font-bold">{s.price.split(" ")}</span> */}
-                <span className="ml-2 text-[#2E969A] text-xl font-bold">{s.price.split(" ")[4]}</span>
-              </div>
-              <span className="block text-xs text-[#2E358B] mb-3 text-center">{s.audience}</span>
-              <ul className="flex flex-wrap gap-2 justify-center mb-5 text-xs">
-                {s.features.map((feature, fi) => (
-                  <li key={fi} className="px-2 py-1 bg-[#F3F5FB] text-[#4365BF] rounded-md border border-[#E5E7EB]">
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <button
-                className="mt-auto px-4 py-2 rounded-xl bg-[#2E358B] text-white font-semibold shadow-sm
-                  hover:bg-[#222967] hover:shadow-lg hover:scale-105
-                  focus:outline-none focus:ring-2 focus:ring-[#2E358B]/30 focus:ring-offset-2
-                  transition-all duration-200"
+    <section className="py-24 bg-white relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="absolute top-0 right-0 w-72 h-72 bg-violet-50 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-50 rounded-full translate-y-1/2 -translate-x-1/3 blur-3xl pointer-events-none" />
+
+      <div className="container mx-auto px-4 relative">
+        {/* Header */}
+        <div className="text-center mb-16 max-w-2xl mx-auto">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-100 text-violet-700 text-sm font-semibold mb-4">
+            <Sparkles className="w-4 h-4" />
+            Our Services
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+            Our Counselling{" "}
+            <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
+              Services
+            </span>
+          </h2>
+          
+        </div>
+
+        {/* Cards */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((s, i) => {
+            const Icon = s.icon
+            return (
+              <div
+                key={i}
+                className={`group relative rounded-3xl bg-gradient-to-br ${s.bgGradient} border ${s.border} p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col`}
               >
-                Enroll Now
-              </button>
-            </CardContent>
-          </Card>
-        ))}
+                {/* Badge */}
+                <span
+                  className={`absolute top-5 right-5 ${s.badgeBg} text-white text-xs font-bold px-3 py-1 rounded-full`}
+                >
+                  {s.badge}
+                </span>
+
+                {/* Icon */}
+                <div
+                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <Icon className="w-7 h-7 text-white" strokeWidth={2} />
+                </div>
+
+                {/* Title & desc */}
+                <h3 className="text-xl font-bold text-slate-800 mb-1">{s.title}</h3>
+                <p className="text-sm text-slate-500 mb-4">{s.desc}</p>
+
+                {/* Pricing */}
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="text-slate-400 text-sm line-through">{s.originalPrice}</span>
+                  <span className="text-2xl font-bold text-slate-800">{s.price}</span>
+                </div>
+                <span className="text-xs text-slate-500 mb-5">{s.audience}</span>
+
+                {/* Features */}
+                <ul className="space-y-2 mb-6 flex-1">
+                  {s.features.map((feature, fi) => (
+                    <li key={fi} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  className={`w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-gradient-to-r ${s.gradient} text-white font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-100 transition-all duration-200`}
+                >
+                  Enroll Now
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

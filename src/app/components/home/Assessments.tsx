@@ -1,61 +1,148 @@
-import { Card, CardContent } from "@/app/components/ui/card"
-import { User } from "lucide-react"
+import { Brain, Clock, HelpCircle, Users2, ArrowRight, Sparkles, CheckCircle2, BarChart3, Zap } from "lucide-react"
 
 const tests = [
   {
-    name: "PSYCHOMETRIC IDEAL CAREER TEST™",
-    details: "180 Questions · 45 Minutes",
-    price: "₹2000 ₹1000",
+    icon: Brain,
+    tag: "Most Popular",
+    name: "Psychometric Ideal Career Test™",
+    details: "180 Questions",
+    duration: "45 Minutes",
     target: "For All Age Groups",
+    price: "₹2,000",
+    discountedPrice: "₹1,000",
+    features: ["Career Mapping", "Personality Analysis", "Detailed Report"],
+    gradient: "from-violet-600 to-purple-600",
+    bgGradient: "from-violet-50 to-purple-50",
+    border: "border-violet-200",
+    tagBg: "bg-violet-600",
   },
   {
-    name: "STREAM SELECTOR™",
-    details: "76 Questions · 40 Minutes",
-    price: "₹2000 ₹1000",
+    icon: BarChart3,
+    tag: "Class 10th",
+    name: "Stream Selector™",
+    details: "76 Questions",
+    duration: "40 Minutes",
     target: "For Class 10th",
+    price: "₹2,000",
+    discountedPrice: "₹1,000",
+    features: ["Stream Recommendations", "Aptitude Analysis", "Counsellor Review"],
+    gradient: "from-blue-600 to-cyan-600",
+    bgGradient: "from-blue-50 to-cyan-50",
+    border: "border-blue-200",
+    tagBg: "bg-blue-600",
   },
   {
-    name: "ENGINEERING SELECTOR",
-    details: "100 Questions · 60 Minutes",
-    price: "₹2000 ₹1000",
-    target: "11th & 12th",
+    icon: Zap,
+    tag: "11th & 12th",
+    name: "Engineering Selector",
+    details: "100 Questions",
+    duration: "60 Minutes",
+    target: "11th & 12th Students",
+    price: "₹2,000",
+    discountedPrice: "₹1,000",
+    features: ["Branch Guidance", "College Shortlisting", "Expert Insights"],
+    gradient: "from-emerald-600 to-teal-600",
+    bgGradient: "from-emerald-50 to-teal-50",
+    border: "border-emerald-200",
+    tagBg: "bg-emerald-600",
   },
 ]
 
 export default function Assessments() {
   return (
-    <section className="py-16 bg-[#F9F6FF]">
-      <h2 className="text-3xl font-bold text-center mb-10 text-[#2E358B] tracking-tight drop-shadow-sm">
-        Psychometric Assessments
-      </h2>
-      <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3 px-5">
-        {tests.map((t, i) => (
-          <Card
-            key={i}
-            className="rounded-2xl bg-white shadow-lg border border-[#ECE6F9]
-              flex flex-col hover:shadow-2xl hover:-translate-y-2
-              transition-all duration-300 relative overflow-visible"
-          >
-            <CardContent className="p-7 flex flex-col">
-              {/* Lucide user icon as a composed cover image */}
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#F2F1FA] shadow border border-[#E0D7F8] mb-4 mx-auto">
-                <User className="w-9 h-9 text-[#C3BAD9]" strokeWidth={1.5} />
-              </div>
-              <h3 className="font-semibold text-[#2E358B] text-lg mb-1 text-center">{t.name}</h3>
-              <p className="text-gray-600 text-center mb-1">{t.details}</p>
-              {/* <p className="text-[#CD3A99] font-bold text-center mb-1">{t.price}</p> */}
-              <span className="block text-xs text-gray-500 mb-5 text-center">{t.target}</span>
-              <button
-                className="mt-auto px-4 py-2 rounded-xl bg-[#2E358B] text-white font-semibold shadow-sm
-                  hover:bg-[#222966] hover:shadow-lg hover:scale-105
-                  focus:outline-none focus:ring-2 focus:ring-[#704DC6]/40 focus:ring-offset-2
-                  transition-all duration-200"
+    <section className="py-24 bg-gradient-to-br from-slate-50 via-violet-50/30 to-slate-50 relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-0 w-80 h-80 bg-violet-100/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-100/30 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-4 relative">
+        {/* Header */}
+        <div className="text-center mb-16 max-w-2xl mx-auto">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-100 text-violet-700 text-sm font-semibold mb-4">
+            <Sparkles className="w-4 h-4" />
+            Assessments
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+            Psychometric{" "}
+            <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
+              Assessments
+            </span>
+          </h2>
+         
+        </div>
+
+        {/* Cards */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {tests.map((t, i) => {
+            const Icon = t.icon
+            return (
+              <div
+                key={i}
+                className={`group relative rounded-3xl bg-gradient-to-br ${t.bgGradient} border ${t.border} p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col`}
               >
-                Take Test
-              </button>
-            </CardContent>
-          </Card>
-        ))}
+                {/* Tag */}
+                <span
+                  className={`absolute top-5 right-5 ${t.tagBg} text-white text-xs font-bold px-3 py-1 rounded-full`}
+                >
+                  {t.tag}
+                </span>
+
+                {/* Icon */}
+                <div
+                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${t.gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <Icon className="w-7 h-7 text-white" strokeWidth={2} />
+                </div>
+
+                <h3 className="text-xl font-bold text-slate-800 mb-3">{t.name}</h3>
+
+                {/* Meta info */}
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                    <HelpCircle className="w-4 h-4" />
+                    {t.details}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                    <Clock className="w-4 h-4" />
+                    {t.duration}
+                  </div>
+                </div>
+
+                <span className="flex items-center gap-1.5 text-xs text-slate-500 mb-4">
+                  <Users2 className="w-3.5 h-3.5" />
+                  {t.target}
+                </span>
+
+                {/* Pricing */}
+                <div className="flex items-baseline gap-2 mb-5">
+                  <span className="text-slate-400 text-sm line-through">{t.price}</span>
+                  <span className="text-2xl font-bold text-slate-800">{t.discountedPrice}</span>
+                  <span className="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">50% OFF</span>
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-2 mb-6 flex-1">
+                  {t.features.map((feature, fi) => (
+                    <li key={fi} className="flex items-center gap-2 text-sm text-slate-600">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  className={`w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl bg-gradient-to-r ${t.gradient} text-white font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-100 transition-all duration-200`}
+                >
+                  Take Test
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
