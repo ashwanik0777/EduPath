@@ -1273,7 +1273,6 @@ export default function AdminDashboardPage() {
 
         {activeTab === "websiteManagement" && (
           <WebsiteManagementTab
-            focusedWebsitePages={focusedWebsitePages}
             websiteSettings={websiteSettings}
             setWebsiteSettings={setWebsiteSettings}
             websiteAnnouncements={websiteAnnouncements}
@@ -1281,9 +1280,6 @@ export default function AdminDashboardPage() {
             setAnnouncementInput={setAnnouncementInput}
             inputClass={inputClass}
             primaryButtonClass={primaryButtonClass}
-            activeTabSetter={(tabId) => setActiveTab(tabId as TabKey)}
-            pageIdToWebsiteTab={pageIdToWebsiteTab as Record<string, string>}
-            toggleWebsitePageStatus={toggleWebsitePageStatus}
             addAnnouncement={addAnnouncement}
             toggleAnnouncement={toggleAnnouncement}
             askConfirmation={askConfirmation}
