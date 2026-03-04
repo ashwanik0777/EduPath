@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Brain, Target, BookOpen, Users, TrendingUp, Award, CheckCircle2, Sparkles } from "lucide-react"
+import { Brain, Target, BookOpen, Users, TrendingUp, Award, Sparkles } from "lucide-react"
 
 const features = [
   {
@@ -10,8 +10,14 @@ const features = [
     description:
       "Advanced algorithms analyze your responses to provide accurate career recommendations tailored to your unique profile.",
     gradient: "from-violet-500 to-purple-600",
-    bg: "from-violet-50 to-purple-50",
+    glow: "shadow-violet-200",
+    ring: "ring-violet-200",
+    iconColor: "text-violet-600",
+    iconBg: "bg-violet-50",
     border: "border-violet-100",
+    hoverBorder: "hover:border-violet-200",
+    tag: "AI",
+    tagColor: "bg-violet-100 text-violet-700",
   },
   {
     icon: Target,
@@ -19,8 +25,14 @@ const features = [
     description:
       "Get matched with careers and colleges that align with your interests, skills, and academic performance.",
     gradient: "from-rose-500 to-pink-600",
-    bg: "from-rose-50 to-pink-50",
+    glow: "shadow-rose-200",
+    ring: "ring-rose-200",
+    iconColor: "text-rose-600",
+    iconBg: "bg-rose-50",
     border: "border-rose-100",
+    hoverBorder: "hover:border-rose-200",
+    tag: "Smart",
+    tagColor: "bg-rose-100 text-rose-700",
   },
   {
     icon: BookOpen,
@@ -28,8 +40,14 @@ const features = [
     description:
       "Access detailed information about 500+ colleges, courses, admission requirements, and career prospects.",
     gradient: "from-emerald-500 to-teal-600",
-    bg: "from-emerald-50 to-teal-50",
+    glow: "shadow-emerald-200",
+    ring: "ring-emerald-200",
+    iconColor: "text-emerald-600",
+    iconBg: "bg-emerald-50",
     border: "border-emerald-100",
+    hoverBorder: "hover:border-emerald-200",
+    tag: "500+",
+    tagColor: "bg-emerald-100 text-emerald-700",
   },
   {
     icon: Users,
@@ -37,8 +55,14 @@ const features = [
     description:
       "Connect with experienced counselors and mentors who provide personalized advice for your educational journey.",
     gradient: "from-blue-500 to-cyan-600",
-    bg: "from-blue-50 to-cyan-50",
+    glow: "shadow-blue-200",
+    ring: "ring-blue-200",
+    iconColor: "text-blue-600",
+    iconBg: "bg-blue-50",
     border: "border-blue-100",
+    hoverBorder: "hover:border-blue-200",
+    tag: "1:1",
+    tagColor: "bg-blue-100 text-blue-700",
   },
   {
     icon: TrendingUp,
@@ -46,8 +70,14 @@ const features = [
     description:
       "Monitor your academic progress, set goals, and track your journey towards your dream career.",
     gradient: "from-amber-500 to-orange-600",
-    bg: "from-amber-50 to-orange-50",
+    glow: "shadow-amber-200",
+    ring: "ring-amber-200",
+    iconColor: "text-amber-600",
+    iconBg: "bg-amber-50",
     border: "border-amber-100",
+    hoverBorder: "hover:border-amber-200",
+    tag: "Live",
+    tagColor: "bg-amber-100 text-amber-700",
   },
   {
     icon: Award,
@@ -55,8 +85,14 @@ const features = [
     description:
       "Learn from thousands of students who have successfully found their ideal career path through our platform.",
     gradient: "from-indigo-500 to-blue-600",
-    bg: "from-indigo-50 to-blue-50",
+    glow: "shadow-indigo-200",
+    ring: "ring-indigo-200",
+    iconColor: "text-indigo-600",
+    iconBg: "bg-indigo-50",
     border: "border-indigo-100",
+    hoverBorder: "hover:border-indigo-200",
+    tag: "10k+",
+    tagColor: "bg-indigo-100 text-indigo-700",
   },
 ]
 
@@ -180,18 +216,36 @@ export default function FeaturesSection() {
             return (
               <div
                 key={index}
-                className={`group relative p-7 rounded-2xl bg-gradient-to-br ${feature.bg} border ${feature.border} hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300`}
+                className={`group relative p-7 rounded-2xl bg-white border ${feature.border} ${feature.hoverBorder} hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300`}
               >
-                <div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                >
-                  <Icon className="h-7 w-7 text-white" strokeWidth={2} />
+                {/* Icon block */}
+                <div className="flex items-start justify-between mb-5">
+                  <div className="relative">
+                    {/* soft glow ring on hover */}
+                   
+                    <div
+                      className={`relative w-16 h-16 rounded-2xl ${feature.iconBg} border ${feature.border} flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm group-hover:shadow-md ${feature.glow}`}
+                    >
+                      {/* gradient shine strip at top */}
+                      
+                      <Icon
+                        className={`h-8 w-8 ${feature.iconColor} group-hover:scale-110 transition-transform duration-200`}
+                        strokeWidth={1.8}
+                      />
+                    </div>
+                  </div>
+
+                  {/* tag badge */}
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${feature.tagColor}`}>
+                    {feature.tag}
+                  </span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">{feature.title}</h3>
+
+                <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-slate-900 transition-colors">{feature.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed">{feature.description}</p>
-                <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <CheckCircle2 className="w-5 h-5 text-slate-300" />
-                </div>
+
+                {/* bottom accent line */}
+                <div className={`mt-5 h-[2px] rounded-full bg-gradient-to-r ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
               </div>
             )
           })}
