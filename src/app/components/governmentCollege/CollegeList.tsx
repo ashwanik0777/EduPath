@@ -113,16 +113,47 @@ type ApiCollege = {
 }
 
 const facilityIcons: { [key: string]: React.ReactElement } = {
-  Library: <Library className="w-5 h-5 text-indigo-600" />,
-  Hostel: <Home className="w-5 h-5 text-indigo-600" />,
-  Labs: <Beaker className="w-5 h-5 text-indigo-600" />,
-  "Wi-Fi": <Wifi className="w-5 h-5 text-indigo-600" />,
-  "Sports Complex": <Dumbbell className="w-5 h-5 text-indigo-600" />,
-  "Digital Classrooms": <Monitor className="w-5 h-5 text-indigo-600" />,
-  "Computer Lab": <Monitor className="w-5 h-5 text-indigo-600" />,
+  Library: <Library className="w-3.5 h-3.5 text-slate-500" />,
+  Hostel: <Home className="w-3.5 h-3.5 text-slate-500" />,
+  Labs: <Beaker className="w-3.5 h-3.5 text-slate-500" />,
+  "Wi-Fi": <Wifi className="w-3.5 h-3.5 text-slate-500" />,
+  "Sports Complex": <Dumbbell className="w-3.5 h-3.5 text-slate-500" />,
+  "Digital Classrooms": <Monitor className="w-3.5 h-3.5 text-slate-500" />,
+  "Computer Lab": <Monitor className="w-3.5 h-3.5 text-slate-500" />,
 }
 
-const courseIcon = <BookOpen className="w-5 h-5 text-indigo-600 inline-block mr-1" />
+const ownershipColors = {
+  "Central Government": {
+    border: "border-indigo-200",
+    hoverBorder: "hover:border-indigo-300",
+    accent: "from-indigo-500 to-indigo-600",
+    badge: "bg-indigo-100 text-indigo-700",
+    chip: "border-indigo-200 bg-indigo-50 text-indigo-700",
+    btn: "border-indigo-300 bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
+    nameColor: "text-indigo-900",
+    loc: "text-indigo-500",
+  },
+  "State Government": {
+    border: "border-emerald-200",
+    hoverBorder: "hover:border-emerald-300",
+    accent: "from-emerald-500 to-emerald-600",
+    badge: "bg-emerald-100 text-emerald-700",
+    chip: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    btn: "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
+    nameColor: "text-emerald-900",
+    loc: "text-emerald-600",
+  },
+  "Private": {
+    border: "border-violet-200",
+    hoverBorder: "hover:border-violet-300",
+    accent: "from-violet-500 to-violet-600",
+    badge: "bg-violet-100 text-violet-700",
+    chip: "border-violet-200 bg-violet-50 text-violet-700",
+    btn: "border-violet-300 bg-violet-50 text-violet-700 hover:bg-violet-100",
+    nameColor: "text-violet-900",
+    loc: "text-violet-600",
+  },
+}
 
 function CollegeCard({ name, location, ownership, courses, facilities, eligibilitySummary, admissionProcess, eligibilityPageUrl }: {
   name: string;
@@ -134,50 +165,98 @@ function CollegeCard({ name, location, ownership, courses, facilities, eligibili
   admissionProcess: string;
   eligibilityPageUrl: string;
 }) {
+  const c = ownershipColors[ownership as keyof typeof ownershipColors] || ownershipColors["Central Government"]
+  const shortLabel = ownership === "Central Government" ? "Central" : ownership === "State Government" ? "State" : "Private"
+
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 flex flex-col">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <a href={eligibilityPageUrl} target="_blank" rel="noopener noreferrer" className="text-xl font-semibold text-[#2E358B] hover:text-indigo-700 inline-flex items-center gap-1">
+    <div className={`group relative bg-white rounded-3xl border-2 ${c.border} ${c.hoverBorder} hover:-translate-y-1 hover:shadow-xl transition-all duration-300 p-6 flex flex-col gap-4 overflow-hidden`}>
+      {/* Top accent bar */}
+      <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${c.accent} rounded-t-3xl`} />
+      {/* Bottom hover accent */}
+      <div className={`absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r ${c.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+
+      {/* Header */}
+      <div className="flex items-start justify-between gap-3 pt-2">
+        <a
+          href={eligibilityPageUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`text-base font-bold ${c.nameColor} hover:underline inline-flex items-start gap-1 leading-snug`}
+        >
           {name}
-          <ExternalLink className="w-4 h-4" />
+          <ExternalLink className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 opacity-50" />
         </a>
-        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${ownership === "State Government" ? "bg-emerald-100 text-emerald-700" : ownership === "Central Government" ? "bg-cyan-100 text-cyan-700" : "bg-violet-100 text-violet-700"}`}>
-          {ownership}
+        <span className={`flex-shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full ${c.badge}`}>
+          {shortLabel}
         </span>
       </div>
-      <p className="text-indigo-600 font-medium mb-4 inline-flex items-center gap-1"><MapPin className="w-4 h-4" />{location}</p>
-      <div className="mb-4">
-        <h4 className="text-gray-700 font-semibold mb-1">Courses Offered</h4>
-        <ul className="flex flex-wrap gap-3 text-indigo-600 text-sm font-medium">
-          {courses.map((course, i) => (
-            <li
-              key={i}
-              className="flex items-center border border-indigo-300 rounded-full px-3 py-1"
-            >
-              {courseIcon}
-              {course}
-            </li>
-          ))}
-        </ul>
+
+      {/* Location */}
+      <div className={`flex items-center gap-1.5 text-sm font-medium ${c.loc}`}>
+        <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+        {location}
       </div>
-      <div>
-        <h4 className="text-gray-700 font-semibold mb-1">Facilities</h4>
-        <ul className="flex flex-wrap gap-3 text-indigo-600 text-sm font-medium">
-          {facilities.map((fac, i) => (
-            <li
+
+      {/* Courses */}
+      <div className="space-y-1.5">
+        <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Courses Offered</h4>
+        <div className="flex flex-wrap gap-1.5">
+          {courses.slice(0, 4).map((course, i) => (
+            <span
               key={i}
-              className="flex items-center gap-1 border border-indigo-300 rounded-full px-2 py-1"
+              className={`inline-flex items-center gap-1 text-xs font-medium border rounded-full px-2.5 py-1 ${c.chip}`}
+            >
+              <BookOpen className="w-3 h-3" />
+              {course.length > 18 ? course.slice(0, 18) + "…" : course}
+            </span>
+          ))}
+          {courses.length > 4 && (
+            <span className="text-xs text-slate-400 px-2 py-1">+{courses.length - 4} more</span>
+          )}
+        </div>
+      </div>
+
+      {/* Facilities */}
+      <div className="space-y-1.5">
+        <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Facilities</h4>
+        <div className="flex flex-wrap gap-1.5">
+          {facilities.slice(0, 5).map((fac, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-1 text-xs font-medium border border-slate-200 rounded-full px-2.5 py-1 bg-white text-slate-600"
             >
               {facilityIcons[fac] || null}
               {fac}
-            </li>
+            </span>
           ))}
-        </ul>
+          {facilities.length > 5 && (
+            <span className="text-xs text-slate-400 px-2">+{facilities.length - 5}</span>
+          )}
+        </div>
       </div>
-      <div className="mt-4 space-y-2 text-sm text-slate-700">
-        <p><span className="font-semibold">Eligibility:</span> {eligibilitySummary || "Check official college eligibility page for latest criteria."}</p>
-        <p><span className="font-semibold">Admission Process:</span> {admissionProcess || "Check official admission portal for steps and timelines."}</p>
-      </div>
+
+      {/* Eligibility */}
+      {(eligibilitySummary || admissionProcess) && (
+        <div className="space-y-1 text-xs text-slate-600 border-t border-slate-100 pt-3">
+          {eligibilitySummary && (
+            <p><span className="font-semibold text-slate-700">Eligibility: </span>{eligibilitySummary.length > 90 ? eligibilitySummary.slice(0, 90) + "…" : eligibilitySummary}</p>
+          )}
+          {admissionProcess && (
+            <p><span className="font-semibold text-slate-700">Admission: </span>{admissionProcess.length > 90 ? admissionProcess.slice(0, 90) + "…" : admissionProcess}</p>
+          )}
+        </div>
+      )}
+
+      {/* CTA */}
+      <a
+        href={eligibilityPageUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`mt-auto inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold border-2 ${c.btn} hover:-translate-y-0.5 hover:shadow-md transition-all duration-200`}
+      >
+        View Details
+        <ExternalLink className="w-3.5 h-3.5" />
+      </a>
     </div>
   )
 }
@@ -315,18 +394,65 @@ export default function CollegeList({ ownershipFilter, streamFilter, searchQuery
     return c.ownership === ownershipFilter && streamMatches(c)
   })
 
+  const categoryLabel = ownershipFilter === "Central Government" ? "Central Government" : ownershipFilter === "State Government" ? "State Government" : "Private"
+  const categoryColor = ownershipFilter === "Central Government" ? "indigo" : ownershipFilter === "State Government" ? "emerald" : "violet"
+
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* <h2 className="text-3xl font-bold mb-10 text-center text-[#2E358B]">Recommended Government & Private Colleges</h2> */}
-        {filtered.length === 0 ? (
-          <p className="text-center text-slate-600 mb-8">No college found. Try another college name or keyword.</p>
-        ) : null}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((c, i) => (
-            <CollegeCard key={i} {...c} />
-          ))}
+    <section className="py-16 bg-gradient-to-b from-slate-50 to-white">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+          <div className="space-y-2">
+            <span
+              className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold ${
+                categoryColor === "indigo" ? "bg-indigo-100 text-indigo-700" :
+                categoryColor === "emerald" ? "bg-emerald-100 text-emerald-700" :
+                "bg-violet-100 text-violet-700"
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              {categoryLabel} Colleges
+            </span>
+            <h2 className={`text-2xl md:text-3xl font-bold bg-gradient-to-r ${
+              categoryColor === "indigo" ? "from-indigo-700 to-indigo-500" :
+              categoryColor === "emerald" ? "from-emerald-700 to-emerald-500" :
+              "from-violet-700 to-violet-500"
+            } bg-clip-text text-transparent`}>
+              Explore {categoryLabel} Colleges
+            </h2>
+          </div>
+          {filtered.length > 0 && (
+            <div className="flex-shrink-0">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-slate-200 shadow-sm text-sm font-medium text-slate-600">
+                <span className={`w-2 h-2 rounded-full ${
+                  categoryColor === "indigo" ? "bg-indigo-500" :
+                  categoryColor === "emerald" ? "bg-emerald-500" :
+                  "bg-violet-500"
+                }`} />
+                {filtered.length} college{filtered.length !== 1 ? "s" : ""} found
+              </span>
+            </div>
+          )}
         </div>
+
+        {/* Empty state */}
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center gap-4 py-24 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center">
+              <BookOpen className="w-8 h-8 text-slate-400" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-lg font-semibold text-slate-700">No colleges found</p>
+              <p className="text-sm text-slate-500">Try adjusting your filters or search keywords.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((c, i) => (
+              <CollegeCard key={i} {...c} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
