@@ -99,9 +99,9 @@ const NAVIGATION_CONFIG: NavMenu[] = [
     label: "Colleges",
     icon: FileText,
     items: [
-      { slug: "private", label: "Private Colleges", href: "/governmentCollege/private" },
+       { slug: "central-government", label: "Central Government Colleges", href: "/governmentCollege/central-government" },
       { slug: "state-government", label: "State Government Colleges", href: "/governmentCollege/state-government" },
-      { slug: "central-government", label: "Central Government Colleges", href: "/governmentCollege/central-government" },
+      { slug: "private", label: "Private Colleges", href: "/governmentCollege/private" },
     ],
     baseRoute: "/governmentCollege",
   },
