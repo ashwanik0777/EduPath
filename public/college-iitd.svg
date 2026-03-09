@@ -1,0 +1,20 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1200" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3A8A"/>
+      <stop offset="1" stop-color="#4338CA"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g1)"/>
+  <rect x="80" y="70" width="1040" height="560" rx="28" fill="white" fill-opacity="0.08" stroke="white" stroke-opacity="0.2" stroke-width="3"/>
+  <text x="100" y="140" fill="#E0E7FF" font-size="38" font-family="Arial, sans-serif" font-weight="700">Indian Institute of Technology Delhi</text>
+  <text x="100" y="185" fill="#BFDBFE" font-size="24" font-family="Arial, sans-serif">New Delhi • Engineering</text>
+  <g fill="#C7D2FE" fill-opacity="0.85">
+    <rect x="140" y="260" width="160" height="260" rx="12"/>
+    <rect x="330" y="220" width="160" height="300" rx="12"/>
+    <rect x="520" y="180" width="160" height="340" rx="12"/>
+    <rect x="710" y="220" width="160" height="300" rx="12"/>
+    <rect x="900" y="260" width="160" height="260" rx="12"/>
+  </g>
+  <text x="100" y="590" fill="#F8FAFC" font-size="28" font-family="Arial, sans-serif" font-weight="700">IIT Delhi</text>
+</svg>

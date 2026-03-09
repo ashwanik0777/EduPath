@@ -1,0 +1,20 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g4" x1="0" y1="0" x2="1200" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7F1D1D"/>
+      <stop offset="1" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g4)"/>
+  <rect x="80" y="70" width="1040" height="560" rx="28" fill="white" fill-opacity="0.08" stroke="white" stroke-opacity="0.2" stroke-width="3"/>
+  <text x="100" y="140" fill="#FEF3C7" font-size="38" font-family="Arial, sans-serif" font-weight="700">Jawaharlal Nehru University</text>
+  <text x="100" y="185" fill="#FDE68A" font-size="24" font-family="Arial, sans-serif">New Delhi • Liberal Arts &amp; Sciences</text>
+  <g fill="#FDE68A" fill-opacity="0.88">
+    <rect x="170" y="250" width="860" height="260" rx="16"/>
+    <rect x="250" y="210" width="120" height="300" rx="12" fill="#FCD34D"/>
+    <rect x="430" y="210" width="120" height="300" rx="12" fill="#FCD34D"/>
+    <rect x="610" y="210" width="120" height="300" rx="12" fill="#FCD34D"/>
+    <rect x="790" y="210" width="120" height="300" rx="12" fill="#FCD34D"/>
+  </g>
+  <text x="100" y="590" fill="#FFFBEB" font-size="28" font-family="Arial, sans-serif" font-weight="700">JNU</text>
+</svg>

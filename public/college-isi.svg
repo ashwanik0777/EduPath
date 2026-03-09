@@ -1,0 +1,27 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="1200" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#g3)"/>
+  <rect x="80" y="70" width="1040" height="560" rx="28" fill="white" fill-opacity="0.08" stroke="white" stroke-opacity="0.2" stroke-width="3"/>
+  <text x="100" y="140" fill="#EDE9FE" font-size="38" font-family="Arial, sans-serif" font-weight="700">Indian Statistical Institute</text>
+  <text x="100" y="185" fill="#DDD6FE" font-size="24" font-family="Arial, sans-serif">Kolkata • Statistics &amp; Mathematics</text>
+  <g stroke="#C4B5FD" stroke-width="4" fill="none">
+    <polyline points="140,520 260,410 380,460 500,340 620,390 740,280 860,320 980,230"/>
+    <line x1="140" y1="520" x2="980" y2="520"/>
+    <line x1="140" y1="220" x2="140" y2="520"/>
+  </g>
+  <g fill="#C4B5FD">
+    <circle cx="260" cy="410" r="8"/>
+    <circle cx="380" cy="460" r="8"/>
+    <circle cx="500" cy="340" r="8"/>
+    <circle cx="620" cy="390" r="8"/>
+    <circle cx="740" cy="280" r="8"/>
+    <circle cx="860" cy="320" r="8"/>
+    <circle cx="980" cy="230" r="8"/>
+  </g>
+  <text x="100" y="590" fill="#F5F3FF" font-size="28" font-family="Arial, sans-serif" font-weight="700">ISI Kolkata</text>
+</svg>
