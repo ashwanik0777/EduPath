@@ -94,7 +94,7 @@ function ImageSlider({ slides, autoPlay = true, autoPlayInterval = 5000 }: {
               className="w-full h-full bg-cover bg-center bg-no-repeat transition-transform duration-1000 hover:scale-105"
               style={{ backgroundImage: `url(${slide.image})` }}
             >
-              {/* Light overlay for text readability */}
+
               <div className="absolute inset-0 bg-black/40" />
 
               <div className="relative z-10 flex items-center justify-center h-full">

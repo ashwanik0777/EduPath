@@ -26,7 +26,6 @@ const Quiz: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [alreadyCompleted, setAlreadyCompleted] = useState(false);
 
-  // On mount, check if user already completed quiz
   useEffect(() => {
     fetch("/api/auth/me", { credentials: "include" })
       .then(res => res.json())
@@ -37,28 +36,22 @@ const Quiz: React.FC = () => {
       });
   }, []);
 
-  // Prepare options for current question
   const getOptions = (): Option[] => {
     const base = `/quiz/questions/${current}`;
-    // Most questions have 6 or 8 options, some have a single file for multiple options
     if (current === 2) {
-      // Special case for question 2
       return [
         { img: `${base}/1 2 3 4 6.png`, label: '1 2 3 4 6' },
         { img: `${base}/5.png`, label: '5' },
       ];
     }
-    // For others, check for up to 8 options
     return Array.from({ length: 8 }, (_, i) => ({
       img: `${base}/${i + 1}.png`,
       label: `${i + 1}`,
     }));
   };
 
-  // Get question image
   const getQuestionImg = () => `/quiz/questions/${current}/Q.png`;
 
-  // Timer logic
   useEffect(() => {
     setTimer(QUESTION_TIME);
     setSelected(null);
@@ -75,20 +68,17 @@ const Quiz: React.FC = () => {
       });
     }, 1000);
     return () => clearInterval(intervalRef.current!);
-    // eslint-disable-next-line
   }, [current]);
 
-  // Handle answer selection
   const handleSelect = (idx: number) => {
     if (selected !== null) return;
     setSelected(idx);
     setLoading(true);
     setTimeout(() => {
       handleNext(idx, false);
-    }, 500); // short delay for UI feedback
+    }, 500); 
   };
 
-  // Move to next question
   const handleNext = (selectedIdx: number | null, skipped: boolean) => {
     setAnswers((prev) => [
       ...prev,
@@ -105,17 +95,14 @@ const Quiz: React.FC = () => {
     }
   };
 
-  // UI
-  const options = getOptions().filter((opt) => !opt.img.includes('8.png') || current >= 7); // Only show 8th option if exists
+  const options = getOptions().filter((opt) => !opt.img.includes('8.png') || current >= 7); 
 
-  // If already completed, block quiz and redirect
   useEffect(() => {
     if (alreadyCompleted) {
       window.location.href = "/studentDashboard";
     }
   }, [alreadyCompleted]);
 
-  // Submit quiz results to backend when finished
   useEffect(() => {
     if (showSummary && answers.length === TOTAL_QUESTIONS) {
       setSubmitting(true);
@@ -208,9 +195,8 @@ const Quiz: React.FC = () => {
             </button>
           ))}
         </div>
-        {/* Next/Skip Button (hidden, auto handled) */}
+
         <div className="h-8" />
-        {/* Footer */}
         <div className="mt-4 text-gray-400 text-xs">You have 30 seconds for each question. Answer quickly for best results!</div>
       </div>
     </div>
