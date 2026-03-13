@@ -87,7 +87,7 @@ export default function CTASection() {
                 key={i}
                 className={`group relative rounded-2xl bg-gradient-to-br ${s.bg} border ${s.border} p-6 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden`}
               >
-                {/* Step number watermark */}
+
                 <span className="absolute top-3 right-4 text-5xl font-black text-slate-100 select-none leading-none">
                   {s.step}
                 </span>
