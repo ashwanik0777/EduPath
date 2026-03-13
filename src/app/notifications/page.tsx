@@ -6,7 +6,6 @@ const NotificationsPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to scholarship notifications by default
     router.replace('/notifications/scholarship');
   }, [router]);
 
